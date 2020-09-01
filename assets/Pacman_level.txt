@@ -1,0 +1,69 @@
+:bg_image maze_new.png
+:pellet_image pellet.png
+
+:tile 
+:tile_symbol w
+:tile_collision 1
+:tile_width 32
+
+:tile
+:tile_symbol -
+:tile_collision 0
+:tile_width 32
+
+:tile
+:tile_symbol o
+:tile_collision 0
+:tile_width 32
+:tile_exclude_pellet 1
+
+:tile
+:tile_symbol s
+:tile_collision 1
+:tile_width 16
+
+:tile
+:tile_symbol g
+:tile_collision 1
+:tile_width 32
+:tile_is_gate 1
+
+
+:tile_height 32
+
+:layout_offset -112 0
+
+:layout 32
+
+ooooswwwwwwwwwwwwwwwwwwwwwwwwwwws
+oooos-------------w-------------s
+oooos-------------w-------------s
+oooos--www--wwww-----wwww--www--s
+oooos--www--wwww-----wwww--www--s
+oooos-------------w-------------s
+oooos-------------w-------------s
+oooos--www--w--wwwwwww--w--www--s
+oooos-------w-----w-----w-------s
+oooos-------w-----w-----w-------s
+oooosww--w--wwww--w--wwww--w--wws
+oooos----w-----------------w----s
+oooos----w-----------------w----s
+oooos--www--w--wwgggww--w--www--s
+oooos-------w--w-----w--w-------s
+oooos-------w--w-----w--w-------s
+oooos--www--w--wwwwwww--w--www--s
+oooos----w--w-----------w--w----s
+oooos----w--w-----------w--w----s
+oooosww--w--w--wwwwwww--w--w--wws
+oooos---------------------------s
+oooos---------------------------s
+oooos--www--wwww--w--wwww--www--s
+oooos----w--------w--------w----s
+oooos----w--------w--------w----s
+oooosww--w--w--wwwwwww--w--w--wws
+oooos-------w-----w-----w-------s
+oooos-------w-----w-----w-------s
+oooos--www--wwww--w--wwww--www--s
+oooos---------------------------s
+oooos---------------------------s
+ooooswwwwwwwwwwwwwwwwwwwwwwwwwwws

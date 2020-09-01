@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\src">
+      <UniqueIdentifier>{ca5a838f-6c40-4a98-ada4-26a0eb596aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{588a7aeb-227e-47cd-885d-8f6ee0cefb81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{b3942bbc-61ac-4e89-bc0c-fc44b2defee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\Utilities">
+      <UniqueIdentifier>{8b4190e4-1c4d-4685-b0c4-b320871ec617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\Graphics">
+      <UniqueIdentifier>{1c93a2e0-6c2b-4db1-a795-837cd8aec089}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\Math">
+      <UniqueIdentifier>{300625de-d91c-48f9-95fe-c26c2aa301df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\Game">
+      <UniqueIdentifier>{9b20a9a8-bf57-4fa6-90c5-26a6a25117cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\cherry.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\pellet.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\pacmanWalking.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\maze_new.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\APPLE.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\monster3.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\monster-4.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\monster-green.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\monster-red.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\strawberry.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Game\gameHelper.cpp">
+      <Filter>Source Files\src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\PacManGame.cpp">
+      <Filter>Source Files\src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Window.cpp">
+      <Filter>Source Files\src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Animation2D.cpp">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Camera.cpp">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Rectangle.cpp">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\shaderManager.cpp">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Sprite.cpp">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Texture.cpp">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\AARectangle.cpp">
+      <Filter>Source Files\src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Circle.cpp">
+      <Filter>Source Files\src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Line2D.cpp">
+      <Filter>Source Files\src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Shape.cpp">
+      <Filter>Source Files\src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Triangle.cpp">
+      <Filter>Source Files\src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\FileCommandLoader.cpp">
+      <Filter>Source Files\src\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\glad.c">
+      <Filter>Source Files\src\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\resourceManager.cpp">
+      <Filter>Source Files\src\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\Utils.cpp">
+      <Filter>Source Files\src\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\main.cpp">
+      <Filter>Source Files\src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Excluder.cpp">
+      <Filter>Source Files\src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\PacmanLevel.cpp">
+      <Filter>Source Files\src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Actor.cpp">
+      <Filter>Source Files\src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\PacmanNew.cpp">
+      <Filter>Source Files\src\Game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Game\gameHelper.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Window.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Animation2D.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Camera.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Rectangle.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\shaderManager.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Sprite.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Texture.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Transform.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\AARectangle.h">
+      <Filter>Source Files\src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Circle.h">
+      <Filter>Source Files\src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Line2D.h">
+      <Filter>Source Files\src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Shape.h">
+      <Filter>Source Files\src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Triangle.h">
+      <Filter>Source Files\src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\FileCommandLoader.h">
+      <Filter>Source Files\src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\resourceManager.h">
+      <Filter>Source Files\src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\Utils.h">
+      <Filter>Source Files\src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Excluder.h">
+      <Filter>Source Files\src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\BoundaryEdge.h">
+      <Filter>Source Files\src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\PacManGame.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\GhostAI.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\PacmanLevel.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Actor.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\PacmanNew.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\sprite.fs">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\sprite.vs">
+      <Filter>Shader Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\Pacman_level.txt">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="assets\pacmanWalking.txt">
+      <Filter>Assets</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
