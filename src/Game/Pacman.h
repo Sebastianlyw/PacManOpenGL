@@ -2,14 +2,14 @@
 #include "Actor.h"
 #include <stdint.h>
 
-class PacmanNew : public Actor
+class Pacman : public Actor
 {
 public:
 	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed) override;
 	virtual void Update(double dt) override;
 	virtual void SetMovementDirection(PacmanMovement movementDir) override;
 
-	PacmanNew();
+	Pacman();
 	void ResetToFirstAnimation();
 	void EatenByGhost();
 	void ResetScore();

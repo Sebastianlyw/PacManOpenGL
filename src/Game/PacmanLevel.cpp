@@ -3,7 +3,7 @@
 #include "..//Graphics/ShaderManager.h"
 #include "..//Utilities/resourceManager.h"
 #include "gameHelper.h"
-
+#include "PacManGame.h"
 
 PacmanLevel::PacmanLevel()
 {
@@ -21,7 +21,7 @@ bool PacmanLevel::Init(const std::string& levelPath)
 }
 
 
-void PacmanLevel::Update(float dt, PacmanNew& pacman) 
+void PacmanLevel::Update(float dt, Pacman& pacman) 
 {
 	//Collision checking game logic here. 
 	for (const auto & wall : mWalls)

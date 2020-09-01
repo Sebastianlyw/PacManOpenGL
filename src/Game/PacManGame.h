@@ -5,7 +5,7 @@
 #include "../Graphics/shaderManager.h"
 #include "../Graphics/Camera.h"
 #include "..//Graphics/TextRender.h"
-#include "PacmanNew.h"
+#include "Pacman.h"
 #include "PacmanLevel.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -46,8 +46,8 @@ private:
 
 	void ResetGame();
 
-	PacmanNew* pacManPlayer;
-	PacmanNew* pacManScore;
+	Pacman* pacManPlayer;
+	Pacman* pacManScore;
 	PacmanLevel* mLevel;
 	PacmanMovement mPressedDirection;
 	TextRenderer* mTextRender;

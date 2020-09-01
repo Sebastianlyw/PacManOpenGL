@@ -15,9 +15,9 @@ void PacmanGame::Init()
 	mLevel = new PacmanLevel();
 	mLevel->Init("./assets/Pacman_level.txt");
 
-	pacManPlayer = new PacmanNew();
+	pacManPlayer = new Pacman();
 	pacManPlayer->Init("./assets/pacmanwalking.png", mLevel->GetPacmanSpawnPosition() , PACMAN_SPEED);
-	pacManScore = new PacmanNew();
+	pacManScore = new Pacman();
 	pacManScore->Init("./assets/pacmanwalking.png", vec2(0,0), 0);
 
 

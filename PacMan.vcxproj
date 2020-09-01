@@ -141,7 +141,7 @@
     <ClCompile Include="src\Game\main.cpp" />
     <ClCompile Include="src\Game\PacManGame.cpp" />
     <ClCompile Include="src\Game\PacmanLevel.cpp" />
-    <ClCompile Include="src\Game\PacmanNew.cpp" />
+    <ClCompile Include="src\Game\Pacman.cpp" />
     <ClCompile Include="src\Game\Window.cpp" />
     <ClCompile Include="src\Graphics\Animation2D.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
@@ -178,10 +178,11 @@
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="src\Game\Actor.h" />
     <ClInclude Include="src\Game\gameHelper.h" />
+    <ClInclude Include="src\Game\Ghost.h" />
     <ClInclude Include="src\Game\GhostAI.h" />
     <ClInclude Include="src\Game\PacManGame.h" />
     <ClInclude Include="src\Game\PacmanLevel.h" />
-    <ClInclude Include="src\Game\PacmanNew.h" />
+    <ClInclude Include="src\Game\Pacman.h" />
     <ClInclude Include="src\Game\Window.h" />
     <ClInclude Include="src\Graphics\Animation2D.h" />
     <ClInclude Include="src\Graphics\Camera.h" />

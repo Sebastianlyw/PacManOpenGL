@@ -5,11 +5,11 @@
 #include <vector>
 #include "gameHelper.h"
 #include "GhostAI.h"
-#include "PacmanNew.h"
 #include <random>
 #include "../Graphics/Sprite.h"
 #include "../Graphics/Camera.h"
 
+class Pacman;
 using namespace glm;
 class PacmanLevel
 {
@@ -17,7 +17,7 @@ public:
 
 	PacmanLevel();
 	bool Init(const std::string& levelPath);
-	void Update(float dt, PacmanNew& pacman);
+	void Update(float dt, Pacman& pacman);
 	void Draw(float dt);
 	void ResetLevel();
 

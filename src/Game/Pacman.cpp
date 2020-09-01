@@ -1,14 +1,14 @@
-#include "PacmanNew.h"
+#include "Pacman.h"
 #include "..//Utilities/Utils.h"
 #include "gameHelper.h"
 #include "..//Utilities/resourceManager.h"
 
-PacmanNew::PacmanNew():mIsDying(false)
+Pacman::Pacman():mIsDying(false)
 {
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 }
 
-void PacmanNew::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
+void Pacman::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
 {
 	Actor::Init(spritePath, initialPos, movementSpeed);
 
@@ -21,7 +21,7 @@ void PacmanNew::Init(const char* spritePath, const vec2& initialPos, uint32_t mo
 	ResetGhostEatenMultiplier();
 }
 
-void PacmanNew::Update(double dt)
+void Pacman::Update(double dt)
 {
 	if (mIsDying)
 	{
@@ -33,7 +33,7 @@ void PacmanNew::Update(double dt)
 	Actor::Update(dt);
 }
 
-void PacmanNew::SetMovementDirection(PacmanMovement movementDir)
+void Pacman::SetMovementDirection(PacmanMovement movementDir)
 {
 	PacmanMovement currentDirection = GetMovementDirection();
 
@@ -62,36 +62,36 @@ void PacmanNew::SetMovementDirection(PacmanMovement movementDir)
 	Actor::SetMovementDirection(movementDir);
 }
 
-void PacmanNew::ResetToFirstAnimation()
+void Pacman::ResetToFirstAnimation()
 {
 	//SetAnimation("move_left", true);
 	Stop();
 }
 
-void PacmanNew::EatenByGhost()
+void Pacman::EatenByGhost()
 {
 	//SetAnimation("death", false);
 	mIsDying = true;
 	ResetGhostEatenMultiplier();
 }
 
-void PacmanNew::ResetScore()
+void Pacman::ResetScore()
 {
 	mScore = 0;
 }
 
-void PacmanNew::AteItem(uint32_t value)
+void Pacman::AteItem(uint32_t value)
 {
 	AddToScore(value);
 }
 
-void PacmanNew::AteGhost(uint32_t value)
+void Pacman::AteGhost(uint32_t value)
 {
 	AddToScore(value * mGhostMultiplier);
 	mGhostMultiplier *= 2;
 }
 
-void PacmanNew::AddToScore(uint32_t value)
+void Pacman::AddToScore(uint32_t value)
 {
 	mScore += value;
 }
