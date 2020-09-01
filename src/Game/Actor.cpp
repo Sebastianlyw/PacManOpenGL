@@ -88,7 +88,7 @@ void Actor::AddAnimation(const char* animationName, bool looped)
 
 AARectangle Actor::GetEatingBoundingBox() const
 {
-	return AARectangle::Inset(GetBoundingBox(), vec2(20, 20));
+	return AARectangle::Inset(GetBoundingBox(), vec2(10, 10));
 }
 
 

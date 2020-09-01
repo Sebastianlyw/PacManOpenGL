@@ -1,8 +1,11 @@
 #include "PacmanGame.h"
 #include "gameHelper.h"
+#include<iostream>
+#include<sstream>
 
 PacmanGame::PacmanGame()
 {
+
 }
 
 void PacmanGame::Init()
@@ -24,12 +27,17 @@ void PacmanGame::Init()
 	pacManNew->Init("./assets/pacmanwalking.png",PACMAN_INITIAL_POSITION,PACMAN_SPEED,true);
 	pacManNew->SetMovementSpeed(PACMAN_SPEED);
 	
+	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
+	mTextRender->Load("./assets/OCRAEXT.TTF",24);
+//	ss << ;
+	
 }
 
 
 PacmanGame::~PacmanGame()
 {
 	delete pacManNew;
+	delete mTextRender;
 }
 
 void PacmanGame::Update(float dt)
@@ -77,14 +85,18 @@ void PacmanGame::UpdateViewport(glm::ivec2 aspectratio)
 
 void PacmanGame::Render(float dt)
 {
-
 	ShaderManager shader = ResourceManager::GetShader("sprite");
 	shader.Use().SetMatrix4("projection", camera->Get_Projection());
 	shader.SetMatrix4("model_matrx", pacManNew->Transformation());
 	glActiveTexture(GL_TEXTURE0);
-	
 	pacManNew->Draw(dt);
 	mLevel.Draw(dt);
+
+	std::stringstream my_ss;
+	my_ss << this->pacManNew->Score();
+	string res = my_ss.str();
+	mTextRender->RenderText("Scores: " + res, WINDOWSIZE.x / 4, 5, 1.0f, glm::uvec3(0, 1, 1));
+
 //	shader.SetMatrix4("model_matrx", mLevel.GetBackground()->transformation.Get());
 	//mLevel.GetBackground()->draw(0, AnimationType::Idle);
 

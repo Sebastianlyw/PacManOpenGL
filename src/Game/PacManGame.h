@@ -4,6 +4,7 @@
 #include "../Graphics/Sprite.h"
 #include "../Graphics/shaderManager.h"
 #include "../Graphics/Camera.h"
+#include "..//Graphics/TextRender.h"
 #include "PacmanNew.h"
 #include "PacmanLevel.h"
 #include <glad/glad.h>
@@ -51,4 +52,6 @@ private:
 	PacmanNew* pacManNew;
 	PacmanLevel mLevel;
 	PacmanMovement mPressedDirection;
+	TextRenderer* mTextRender;
+
 };

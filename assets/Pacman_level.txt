@@ -4,34 +4,34 @@
 :tile 
 :tile_symbol w
 :tile_collision 1
-:tile_width 32
+:tile_width 24
 
 :tile
 :tile_symbol -
 :tile_collision 0
-:tile_width 32
+:tile_width 24
 
 :tile
 :tile_symbol o
 :tile_collision 0
-:tile_width 32
+:tile_width 24
 :tile_exclude_pellet 1
 
 :tile
 :tile_symbol s
 :tile_collision 1
-:tile_width 16
+:tile_width 12
 
 :tile
 :tile_symbol g
 :tile_collision 1
-:tile_width 32
+:tile_width 24
 :tile_is_gate 1
 
 
-:tile_height 32
+:tile_height 24
 
-:layout_offset -112 0
+:layout_offset -84 40
 
 :layout 32
 

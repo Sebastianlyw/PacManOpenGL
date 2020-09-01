@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <map>
 #include <string>
-#include "../Graphics/shaderManager.h"
+#include "../Graphics/ShaderManager.h"
 
 class ResourceManager
 {

@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\_TrueAxis\PacManOpenGL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\_TrueAxis\PacManOpenGL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,14 +90,16 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\_TrueAxis\PacManOpenGL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <NoEntryPoint>
       </NoEntryPoint>
       <EntryPointSymbol>
       </EntryPointSymbol>
+      <AdditionalLibraryDirectories>D:\_TrueAxis\PacManOpenGL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,11 +125,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\_TrueAxis\PacManOpenGL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\_TrueAxis\PacManOpenGL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -141,8 +146,9 @@
     <ClCompile Include="src\Graphics\Animation2D.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
     <ClCompile Include="src\Graphics\Rectangle.cpp" />
-    <ClCompile Include="src\Graphics\shaderManager.cpp" />
+    <ClCompile Include="src\Graphics\ShaderManager.cpp" />
     <ClCompile Include="src\Graphics\Sprite.cpp" />
+    <ClCompile Include="src\Graphics\TextRender.cpp" />
     <ClCompile Include="src\Graphics\Texture.cpp" />
     <ClCompile Include="src\Math\AARectangle.cpp" />
     <ClCompile Include="src\Math\Circle.cpp" />
@@ -168,6 +174,8 @@
     <Image Include="assets\strawberry.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ft2build.h" />
+    <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="src\Game\Actor.h" />
     <ClInclude Include="src\Game\gameHelper.h" />
     <ClInclude Include="src\Game\GhostAI.h" />
@@ -178,8 +186,9 @@
     <ClInclude Include="src\Graphics\Animation2D.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
     <ClInclude Include="src\Graphics\Rectangle.h" />
-    <ClInclude Include="src\Graphics\shaderManager.h" />
+    <ClInclude Include="src\Graphics\ShaderManager.h" />
     <ClInclude Include="src\Graphics\Sprite.h" />
+    <ClInclude Include="src\Graphics\TextRender.h" />
     <ClInclude Include="src\Graphics\Texture.h" />
     <ClInclude Include="src\Graphics\Transform.h" />
     <ClInclude Include="src\Math\AARectangle.h" />
@@ -196,10 +205,16 @@
   <ItemGroup>
     <None Include="shaders\sprite.fs" />
     <None Include="shaders\sprite.vs" />
+    <None Include="shaders\text.fs" />
+    <None Include="shaders\text.vs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\pacmanWalking.txt" />
     <Text Include="assets\Pacman_level.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\LoraFont.ttf" />
+    <Font Include="assets\OCRAEXT.TTF" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

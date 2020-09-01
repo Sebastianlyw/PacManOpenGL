@@ -1,7 +1,7 @@
 #include "PacmanLevel.h"
 #include "..//Utilities/FileCommandLoader.h"
 #include "PacmanNew.h"
-#include "..//Graphics/shaderManager.h"
+#include "..//Graphics/ShaderManager.h"
 #include "..//Utilities/resourceManager.h"
 #include "gameHelper.h"
 
@@ -84,7 +84,8 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	{
 		imageName = FileCommandLoader::ReadString(params);
 		mBackground = new Sprite(("./" + std::string("assets/") + imageName).c_str());
-		mBackground->transformation.scale = glm::vec2(WINDOWSIZE.x, WINDOWSIZE.y);
+		mBackground->transformation.scale = glm::vec2(BACKGROUND_SIZE.x, BACKGROUND_SIZE.y);
+		mBackground->transformation.position = glm::vec2(0, 40);
 		assert(mBackground->IsLoaded() && "Didn't load the bg image");
 	};
 	fileLoader.AddCommand(bgImageCommand);
@@ -238,9 +239,8 @@ void PacmanLevel::ResetLevel()
 void PacmanLevel::ResetPellets() 
 {
 	mPellets.clear();
-	const uint32_t PELLET_SIZE = 45;
 	const uint32_t PADDING = static_cast<uint32_t>(mTileHeight);
-	uint32_t startingY = mLayoutOffset.y + PADDING + mTileHeight - 30;
+	uint32_t startingY = mLayoutOffset.y + PADDING + mTileHeight - 20;
 	uint32_t startingX = PADDING;
 	const uint32_t LEVEL_HEIGHT = mLayoutOffset.y + 32 * mTileHeight;
 	Pellet p;

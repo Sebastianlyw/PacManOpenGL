@@ -86,9 +86,6 @@
     <ClCompile Include="src\Graphics\Rectangle.cpp">
       <Filter>Source Files\src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\shaderManager.cpp">
-      <Filter>Source Files\src\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\Sprite.cpp">
       <Filter>Source Files\src\Graphics</Filter>
     </ClCompile>
@@ -137,6 +134,12 @@
     <ClCompile Include="src\Game\PacmanNew.cpp">
       <Filter>Source Files\src\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\ShaderManager.cpp">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\TextRender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game\gameHelper.h">
@@ -152,9 +155,6 @@
       <Filter>Source Files\src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Rectangle.h">
-      <Filter>Source Files\src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\shaderManager.h">
       <Filter>Source Files\src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Sprite.h">
@@ -211,6 +211,18 @@
     <ClInclude Include="src\Game\PacmanNew.h">
       <Filter>Source Files\src\Game</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\ShaderManager.h">
+      <Filter>Source Files\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ft2build.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\TextRender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.fs">
@@ -219,6 +231,8 @@
     <None Include="shaders\sprite.vs">
       <Filter>Shader Files</Filter>
     </None>
+    <None Include="shaders\text.vs" />
+    <None Include="shaders\text.fs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\Pacman_level.txt">
@@ -227,5 +241,9 @@
     <Text Include="assets\pacmanWalking.txt">
       <Filter>Assets</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\LoraFont.ttf" />
+    <Font Include="assets\OCRAEXT.TTF" />
   </ItemGroup>
 </Project>
