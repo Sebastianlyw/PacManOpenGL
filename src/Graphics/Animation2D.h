@@ -8,9 +8,8 @@ using namespace std;
 
 enum AnimationType
 {
-	Idle,
-	Run,
-	Jump
+	Walking,
+	Death
 };
 
 class Animation2D
@@ -26,6 +25,7 @@ public:
 	void SetAnimationSpeed(float newspeed);
 
 	void Pause();
+	inline void PlayOneFrame() { mCurrentFrameIndex = 3;  }
 
 private:
 	double mAnimCursor;

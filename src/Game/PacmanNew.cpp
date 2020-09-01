@@ -1,10 +1,16 @@
 #include "PacmanNew.h"
 #include "..//Utilities/Utils.h"
 #include "gameHelper.h"
+#include "..//Utilities/resourceManager.h"
 
-void PacmanNew::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed, bool updateSpriteOnMovement)
+PacmanNew::PacmanNew():mIsDying(false)
 {
-	Actor::Init(spritePath, initialPos, movementSpeed, updateSpriteOnMovement);
+	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
+}
+
+void PacmanNew::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
+{
+	Actor::Init(spritePath, initialPos, movementSpeed);
 
 	mSprite->AddAnimation("./assets/pacmanWalking.txt", true);
 	mSprite->transformation.scale = PACMAN_SIZE;
@@ -33,27 +39,23 @@ void PacmanNew::SetMovementDirection(PacmanMovement movementDir)
 
 	if (movementDir == PACMAN_MOVEMENT_LEFT && currentDirection != PACMAN_MOVEMENT_LEFT)
 	{
-		mSprite->transformation.angle = 0;
-		//SetAnimation("move_left", true);
+		mSprite->transformation.rotation = 0;
 		ResetDelta();
 	}
 	else if (movementDir == PACMAN_MOVEMENT_RIGHT && currentDirection != PACMAN_MOVEMENT_RIGHT)
 	{
-		mSprite->transformation.angle = glm::pi<double>();
-		//SetAnimation("move_right", true);
+		mSprite->transformation.rotation = glm::pi<double>();
 		ResetDelta();
 	}
 	else if (movementDir == PACMAN_MOVEMENT_DOWN && currentDirection != PACMAN_MOVEMENT_DOWN)
 	{
-		mSprite->transformation.angle = glm::pi<double>() / 2 * 3;
-		//SetAnimation("move_down", true);
+		mSprite->transformation.rotation = glm::pi<double>() / 2 * 3;
 		ResetDelta();
 	}
 	else if (movementDir == PACMAN_MOVEMENT_UP && currentDirection != PACMAN_MOVEMENT_UP)
 	{
 
-		mSprite->transformation.angle = glm::pi<double>() / 2;
-		//SetAnimation("move_up", true);
+		mSprite->transformation.rotation = glm::pi<double>() / 2;
 		ResetDelta();
 	}
 

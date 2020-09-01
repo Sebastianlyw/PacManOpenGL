@@ -37,7 +37,6 @@ public:
 	void Update(float dt);
 	void InputUpdate(float dt);//vector<Action> actions);
 	void UpdatePacmanMovement();
-	void UpdateViewport(glm::ivec2 aspectratio);
 
 	void Render(float dt);
 
@@ -45,13 +44,12 @@ public:
 
 private:
 
-	unique_ptr<Camera> camera;
-	/*unique_ptr<ResourceManager> resourceManager;*/
+	void ResetGame();
 
-//	Sprite* background;
-	PacmanNew* pacManNew;
-	PacmanLevel mLevel;
+	PacmanNew* pacManPlayer;
+	PacmanNew* pacManScore;
+	PacmanLevel* mLevel;
 	PacmanMovement mPressedDirection;
 	TextRenderer* mTextRender;
-
+	uint16_t mLives;
 };

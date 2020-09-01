@@ -28,6 +28,14 @@
 :tile_width 24
 :tile_is_gate 1
 
+:tile
+:tile_symbol p
+:tile_collision 0
+:tile_width 24
+:tile_pacman_spawn 1
+:tile_offset -8 0
+:tile_exclude_pellet 1
+
 
 :tile_height 24
 
@@ -64,6 +72,6 @@ oooosww--w--w--wwwwwww--w--w--wws
 oooos-------w-----w-----w-------s
 oooos-------w-----w-----w-------s
 oooos--www--wwww--w--wwww--www--s
-oooos---------------------------s
+oooos-------------p-------------s
 oooos---------------------------s
 ooooswwwwwwwwwwwwwwwwwwwwwwwwwwws

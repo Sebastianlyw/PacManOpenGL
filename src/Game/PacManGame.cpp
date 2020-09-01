@@ -3,118 +3,97 @@
 #include<iostream>
 #include<sstream>
 
-PacmanGame::PacmanGame()
+PacmanGame::PacmanGame():mLives(MAX_LIVES)
 {
 
 }
 
 void PacmanGame::Init()
-{
-	/*resourceManager = make_unique<ResourceManager>();*/
+{	
+	//level backgroud, pellet and fruit bonus item. 
+	//use different shader for different postprocessing effect. 
+	mLevel = new PacmanLevel();
+	mLevel->Init("./assets/Pacman_level.txt");
 
-	camera = make_unique<Camera>(WINDOWSIZE.x, WINDOWSIZE.y);
-	mLevel.Init("./assets/Pacman_level.txt");
-	
-	//background = new Sprite("./assets/background.png");
-//	background->transformation.scale = glm::vec2(800, 800);
+	pacManPlayer = new PacmanNew();
+	pacManPlayer->Init("./assets/pacmanwalking.png", mLevel->GetPacmanSpawnPosition() , PACMAN_SPEED);
+	pacManScore = new PacmanNew();
+	pacManScore->Init("./assets/pacmanwalking.png", vec2(0,0), 0);
 
 
-	// load shaders
-	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
-
-	//pacMan = new Pacman();
-	pacManNew = new PacmanNew();
-	pacManNew->Init("./assets/pacmanwalking.png",PACMAN_INITIAL_POSITION,PACMAN_SPEED,true);
-	pacManNew->SetMovementSpeed(PACMAN_SPEED);
-	
 	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
-	mTextRender->Load("./assets/OCRAEXT.TTF",24);
-//	ss << ;
-	
+	mTextRender->Load("./assets/OCRAEXT.TTF",28);
 }
 
+void PacmanGame::ResetGame()
+{
+	mLives = MAX_LIVES;
+}
 
 PacmanGame::~PacmanGame()
 {
-	delete pacManNew;
+	delete pacManPlayer;
+	delete pacManScore;
 	delete mTextRender;
+	delete mLevel;
 }
 
 void PacmanGame::Update(float dt)
 {
 	UpdatePacmanMovement();
-	pacManNew->Update(dt);
-	mLevel.Update(dt, *pacManNew);
+	pacManPlayer->Update(dt);
+	mLevel->Update(dt, *pacManPlayer);
 }
 
 void PacmanGame::InputUpdate(float dt)
 {
 	//if (this->State == GAME_ACTIVE)
 	{
-	
-	
 
 		if (this->Keys[GLFW_KEY_A])
 		{
 			mPressedDirection = PACMAN_MOVEMENT_LEFT;
-			pacManNew->SetMovementDirection(PACMAN_MOVEMENT_LEFT);
+			pacManPlayer->SetMovementDirection(PACMAN_MOVEMENT_LEFT);
 		}
 		if (this->Keys[GLFW_KEY_D])
 		{
 			mPressedDirection = PACMAN_MOVEMENT_RIGHT;
-			pacManNew->SetMovementDirection(PACMAN_MOVEMENT_RIGHT);
+			pacManPlayer->SetMovementDirection(PACMAN_MOVEMENT_RIGHT);
 		}
 		if (this->Keys[GLFW_KEY_W])
 		{
 			mPressedDirection = PACMAN_MOVEMENT_UP;
-			pacManNew->SetMovementDirection(PACMAN_MOVEMENT_UP);
+			pacManPlayer->SetMovementDirection(PACMAN_MOVEMENT_UP);
 		}
 		if (this->Keys[GLFW_KEY_S])
 		{
 			mPressedDirection = PACMAN_MOVEMENT_DOWN;
-			pacManNew->SetMovementDirection(PACMAN_MOVEMENT_DOWN);
+			pacManPlayer->SetMovementDirection(PACMAN_MOVEMENT_DOWN);
 		}
 	}
 }
 
-
-void PacmanGame::UpdateViewport(glm::ivec2 aspectratio)
-{
-	camera->UpdateViewport(aspectratio.x, aspectratio.y);
-}
-
 void PacmanGame::Render(float dt)
 {
-	ShaderManager shader = ResourceManager::GetShader("sprite");
-	shader.Use().SetMatrix4("projection", camera->Get_Projection());
-	shader.SetMatrix4("model_matrx", pacManNew->Transformation());
-	glActiveTexture(GL_TEXTURE0);
-	pacManNew->Draw(dt);
-	mLevel.Draw(dt);
+	//glActiveTexture(GL_TEXTURE0);
+	pacManPlayer->Draw(dt);
+	mLevel->Draw(dt);
 
+	//Draw score
 	std::stringstream my_ss;
-	my_ss << this->pacManNew->Score();
-	string res = my_ss.str();
-	mTextRender->RenderText("Scores: " + res, WINDOWSIZE.x / 4, 5, 1.0f, glm::uvec3(0, 1, 1));
-
-//	shader.SetMatrix4("model_matrx", mLevel.GetBackground()->transformation.Get());
-	//mLevel.GetBackground()->draw(0, AnimationType::Idle);
-
-	//shader.SetMatrix4("model_matrx", mLevel.GetBackground()->transformation.Get());
-	//mLevel.GetBackground()->draw(0, AnimationType::Idle);
-
-	//shader.SetMatrix4("model_matrx", pacMan->Transformation());
-//	pacMan->draw(dt);
-
-	//To Do , draw level contents: like  pellets  and power ups. 
+	my_ss << this->pacManPlayer->Score();
+	mTextRender->Render("SCORE: " + my_ss.str(), WINDOWSIZE.x / 2 - 70, 10, 1.0f, glm::uvec3(0, 1, 1 ));
 
 
-	//Shaders->Textured_Shader()->use();
-	//Shaders->Textured_Shader()->Send_Mat4("projection", );
-
-
-	//Shaders->Textured_Shader()->Send_Mat4("model_matrx", background->transformation());
+	//Draw lives:
+	for (int i = 0; i < this->mLives; i++)
+	{
+		pacManScore->SetTransformation(vec2(20 + i * 40, WINDOWSIZE.y - 40), PACMAN_SIZE, 0);
+		pacManScore->Draw(0);
+	}
 	
+
+
 
 }
 
@@ -123,9 +102,9 @@ void PacmanGame::UpdatePacmanMovement()
 {
 	if (mPressedDirection != PACMAN_MOVEMENT_NONE)
 	{
-		if (!mLevel.WillCollide(pacManNew->GetBoundingBox(), mPressedDirection))
+		if (!mLevel->WillCollide(pacManPlayer->GetBoundingBox(), mPressedDirection))
 		{
-			pacManNew->SetMovementDirection(mPressedDirection);
+			pacManPlayer->SetMovementDirection(mPressedDirection);
 		}
 	}
 }

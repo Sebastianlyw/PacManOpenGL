@@ -233,6 +233,8 @@
     </None>
     <None Include="shaders\text.vs" />
     <None Include="shaders\text.fs" />
+    <None Include="shaders\level.fs" />
+    <None Include="shaders\level.vs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\Pacman_level.txt">
@@ -245,5 +247,7 @@
   <ItemGroup>
     <Font Include="assets\LoraFont.ttf" />
     <Font Include="assets\OCRAEXT.TTF" />
+    <Font Include="assets\desyrel.ttf" />
+    <Font Include="assets\PrintClearly.otf" />
   </ItemGroup>
 </Project>

@@ -40,28 +40,11 @@ Window::Window(int width, int height)
 	startFrame = 0;
 	lastFrame = 0;
 	delta = 0;
-
-	camera = make_unique<Camera>(0, 0);
-
 }
 
 Window::~Window()
 {
 	glfwTerminate();
-}
-
-void Window::Resize()
-{
-	int width, height;
-	glfwGetWindowSize(window_ptr, &width, &height);
-	if (width != m_width || height != m_height)
-	{
-		m_width = width;
-		m_height = height;
-		glViewport(0, 0, width, height);
-		camera->UpdateViewport(width, height);
-		printf("resized \n");
-	}
 }
 
 void Window::Mainloop()

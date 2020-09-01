@@ -203,6 +203,8 @@
     <ClInclude Include="src\Utilities\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\level.fs" />
+    <None Include="shaders\level.vs" />
     <None Include="shaders\sprite.fs" />
     <None Include="shaders\sprite.vs" />
     <None Include="shaders\text.fs" />
@@ -213,8 +215,10 @@
     <Text Include="assets\Pacman_level.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Font Include="assets\desyrel.ttf" />
     <Font Include="assets\LoraFont.ttf" />
     <Font Include="assets\OCRAEXT.TTF" />
+    <Font Include="assets\PrintClearly.otf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

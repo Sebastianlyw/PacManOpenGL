@@ -1,15 +1,15 @@
 #include "Actor.h"
 #include "..//Utilities/Utils.h"
+#include "..//Utilities/resourceManager.h"
 #include <cmath>
 
 
-void Actor::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed, bool updateSpriteOnMovement)
+void Actor::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
 {
 	mMovementDirection = PACMAN_MOVEMENT_NONE;
 	mSprite = new Sprite(spritePath);
 	mSprite->SetPosition(initialPos);
 
-	mUpdateSpriteOnUpdate = updateSpriteOnMovement;
 	mMovementSpeed = movementSpeed;
 	mDelta = vec2(0.f);
 }
@@ -57,7 +57,7 @@ void Actor::Update(double dt)
 		mSprite->Update(dt);
 	}
 
-	if (mUpdateSpriteOnUpdate && mMovementDirection == PACMAN_MOVEMENT_NONE)
+	if (mMovementDirection == PACMAN_MOVEMENT_NONE)
 	{
 		mSprite->Update(dt);
 	}
@@ -65,7 +65,17 @@ void Actor::Update(double dt)
 
 void Actor::Draw(double dt)
 {
-	mSprite->draw(dt, AnimationType::Idle);
+	ShaderManager shader = ResourceManager::GetShader("sprite");
+	shader.Use().SetMatrix4("projection", MainCameraProjection);
+	shader.SetMatrix4("model_matrx", this->GetTransformation());
+	mSprite->draw(dt, AnimationType::Walking);
+}
+
+void Actor::SetTransformation(vec2 position, vec2 scale, float rotation) const
+{
+	mSprite->transformation.position = position;
+	mSprite->transformation.scale = scale;
+	mSprite->transformation.rotation = rotation;
 }
 
 void Actor::Stop()

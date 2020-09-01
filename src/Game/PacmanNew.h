@@ -5,10 +5,11 @@
 class PacmanNew : public Actor
 {
 public:
-	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed, bool updateSpriteOnMovement) override;
+	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed) override;
 	virtual void Update(double dt) override;
 	virtual void SetMovementDirection(PacmanMovement movementDir) override;
 
+	PacmanNew();
 	void ResetToFirstAnimation();
 	void EatenByGhost();
 	void ResetScore();

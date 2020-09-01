@@ -41,10 +41,17 @@ void Sprite::Stop()
 
 void Sprite::draw(double deltatime, AnimationType type)
 {
-
 	if (!mAnimations.empty() && mAnimations[type])
 	{
-		mAnimations[type]->play(*texture, *rectangle, deltatime);
+		if(deltatime > 0)
+		{
+			mAnimations[type]->play(*texture, *rectangle, deltatime);
+		}
+		else
+		{
+			mAnimations[type]->PlayOneFrame();
+			mAnimations[type]->play(*texture, *rectangle, deltatime);
+		}
 	}
 
 	texture->Bind();

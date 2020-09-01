@@ -19,4 +19,4 @@ private:
 	glm::mat4 projection;
 };
 
-static unique_ptr<Camera> camera;
+//static unique_ptr<Camera> MainCamera;

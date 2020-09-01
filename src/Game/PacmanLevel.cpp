@@ -1,9 +1,14 @@
 #include "PacmanLevel.h"
 #include "..//Utilities/FileCommandLoader.h"
-#include "PacmanNew.h"
 #include "..//Graphics/ShaderManager.h"
 #include "..//Utilities/resourceManager.h"
 #include "gameHelper.h"
+
+
+PacmanLevel::PacmanLevel()
+{
+	ResourceManager::LoadShader("./shaders/level.vs", "./shaders/level.fs", nullptr, "level");
+}
 
 bool PacmanLevel::Init(const std::string& levelPath) 
 {
@@ -38,17 +43,7 @@ void PacmanLevel::Update(float dt, PacmanNew& pacman)
 			if (pacman.GetEatingBoundingBox().Intersects(pellet.mBBox))
 			{
 				pellet.eaten = true;
-
 				pacman.AteItem(pellet.score);
-
-			/*	if (pellet.powerPellet)
-				{
-					pacman.ResetGhostEatenMultiplier();
-					for (auto& ghost : ghosts)
-					{
-						ghost.SetStateToVulnerable();
-					}
-				}*/
 			}
 		}
 	}
@@ -56,10 +51,10 @@ void PacmanLevel::Update(float dt, PacmanNew& pacman)
 
 void PacmanLevel::Draw(float dt)
 {
-	//Drawa pellets:
-	ShaderManager shader = ResourceManager::GetShader("sprite");
-	shader.Use().SetMatrix4("model_matrx", mBackground->transformation.Get());
-	mBackground->draw(0, AnimationType::Idle);
+	ShaderManager shader = ResourceManager::GetShader("level");
+	shader.Use().SetMatrix4("projection", MainCameraProjection);
+	shader.SetMatrix4("model_matrx", mBackground->transformation.Get());
+	mBackground->draw(0);
 
 	for (const auto& pellet : mPellets)
 	{
@@ -67,7 +62,7 @@ void PacmanLevel::Draw(float dt)
 		{
 			mPelletSprite->transformation.position = pellet.mBBox.GetCenterPoint();
 			shader.SetMatrix4("model_matrx", mPelletSprite->transformation.Get());
-			mPelletSprite->draw(0, AnimationType::Idle);
+			mPelletSprite->draw(0);
 		}
 	}
 
@@ -137,7 +132,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	tileCollisionCommand.command = "tile_collision";
 	tileCollisionCommand.parseFunc = [this](ParseFuncParams params)
 	{
-		mTiles.back().collidable = FileCommandLoader::ReadInt(params);
+		mTiles.back().collidable = FileCommandLoader::ReadInt(params) > 0;
 	};
 	fileLoader.AddCommand(tileCollisionCommand);
 
@@ -153,9 +148,18 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	tileExcludePelletCommand.command = "tile_exclude_pellet";
 	tileExcludePelletCommand.parseFunc = [this](ParseFuncParams params)
 	{
-		mTiles.back().excludePelletTile = FileCommandLoader::ReadInt(params);
+		mTiles.back().excludePelletTile = FileCommandLoader::ReadInt(params) > 0;
 	};
 	fileLoader.AddCommand(tileExcludePelletCommand);
+
+	Command tilePacmanSpawnPointCommand;
+	tilePacmanSpawnPointCommand.command = "tile_pacman_spawn";
+	tilePacmanSpawnPointCommand.parseFunc = [this](ParseFuncParams params)
+	{
+		mTiles.back().pacmanSpawnTile = FileCommandLoader::ReadInt(params) > 0;
+	};
+
+	fileLoader.AddCommand(tilePacmanSpawnPointCommand);
 
 	glm::vec2 layoutOffset;
 	Command layoutOffsetCommand;
@@ -182,12 +186,16 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 			{
 				tile->position = glm::vec2(startingX, layoutOffset.y);
 
-				if (tile->collidable > 0)
+				if (tile->collidable)
 				{
 					Excluder wall;
 					wall.Init(AARectangle(glm::vec2(startingX, layoutOffset.y), tile->width, static_cast<int>(mTileHeight)));
 
 					mWalls.push_back(wall);
+				}
+				if (tile->pacmanSpawnTile > 0)
+				{
+					mPacmanSpawnPosition = vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y);
 				}
 				startingX += tile->width;
 			}
