@@ -1,4 +1,4 @@
-:bg_image maze_new.png
+:bg_image mazeVV.png
 :pellet_image pellet.png
 
 :tile 

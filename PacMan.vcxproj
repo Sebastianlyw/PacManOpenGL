@@ -166,6 +166,7 @@
   <ItemGroup>
     <Image Include="assets\APPLE.png" />
     <Image Include="assets\cherry.png" />
+    <Image Include="assets\mazeVV.png" />
     <Image Include="assets\maze_new.png" />
     <Image Include="assets\monster-4.png" />
     <Image Include="assets\monster-green.png" />

@@ -66,6 +66,9 @@
     <Image Include="assets\strawberry.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="assets\mazeVV.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game\gameHelper.cpp">

@@ -6,7 +6,7 @@
 
 static const uint32_t PACMAN_SPEED = 150; 
 static const uint32_t PELLET_SIZE = 30;
-static const uint32_t GHOST_MOVEMENT_SPEED =120;
+static const uint32_t GHOST_MOVEMENT_SPEED =100;
 static const uint32_t GHOST_MOVEMENT_SPEED_SLOW = 260;
 static const uint32_t GHOST_VULNERABE_TIME = 6;
 static const uint16_t MAX_LIVES = 4;

@@ -151,8 +151,8 @@ void PacmanGame::InputUpdate(float dt)
 void PacmanGame::Render(float dt)
 {
 	//glActiveTexture(GL_TEXTURE0);
-	mPacman->Draw(dt);
 	mLevel->Draw(dt);
+	mPacman->Draw(dt);
 	mGhost->Draw(dt);
 	//Draw score
 	std::stringstream my_ss;
