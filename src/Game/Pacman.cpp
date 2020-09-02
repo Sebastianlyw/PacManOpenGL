@@ -41,6 +41,7 @@ void Pacman::Reset()
 
 void Pacman::ResetToSpwanPosition()
 {
+	mIsDying = false;
 	Actor::ResetToSpwanPosition();
 }
 
@@ -75,13 +76,11 @@ void Pacman::SetMovementDirection(PacmanMovement movementDir)
 
 void Pacman::ResetToFirstAnimation()
 {
-	//SetAnimation("move_left", true);
 	Stop();
 }
 
 void Pacman::EatenByGhost()
 {
-	//SetAnimation("death", false);
 	mIsDying = true;
 	ResetGhostEatenMultiplier();
 }

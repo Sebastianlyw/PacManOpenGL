@@ -17,16 +17,14 @@ class Ghost;
 class PacmanLevel;
 class GhostAI;
 
-// Initial velocity of the player paddle
-
-enum Type
+enum PacmanGameState
 {
-	MOVE_UP,
-	MOVE_DOWN,
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	SHOOT
+	ENTER_TO_START = 0,
+	GAME_ALIVE,
+	LOST_LIFE,
+	GAME_OVER
 };
+
 
 class PacmanGame
 {
@@ -48,13 +46,15 @@ public:
 private:
 
 	void ResetGame();
+	void ResetLevel();
 
 	GhostAI* mGhostAI;
 	Ghost* mGhost;
-	Pacman* mPacMan;
+	Pacman* mPacman;
 	Pacman* pacManLive;
 	PacmanLevel* mLevel;
 	PacmanMovement mPressedDirection;
 	TextRenderer* mTextRender;
 	uint16_t mLives;
+	PacmanGameState mGameState;
 };

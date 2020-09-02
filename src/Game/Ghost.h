@@ -33,8 +33,10 @@ public:
 
 	inline bool IsDead() const { return mState == GHOST_STATE_DEAD; }
 	inline bool IsVulnerable() const { return mState == GHOST_STATE_VULNERABLE; }
+	inline bool IsInvulnerable() const { return mState == GHOST_STATE_INVULNERABLE; }
 	inline void LockCanChangeDirection() { mCanChangeDirection = false; }
 	inline bool CanChangeDirection() const { return mCanChangeDirection; }
+	inline uint32_t GetScore() const { return mScore; }
 private:
 
 	void SetGhostState(GhostState state);

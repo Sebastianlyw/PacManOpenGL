@@ -53,6 +53,12 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 			{
 				pellet.eaten = true;
 				pacman.AteItem(pellet.score);
+
+				if (pellet.powerPellet)
+				{
+					pacman.ResetGhostEatenMultiplier();
+					redGhost.SetToVulnerable();
+				}
 			}
 		}
 	}
@@ -313,6 +319,21 @@ void PacmanLevel::ResetPellets()
 			}
 		}
 	}
+}
+
+bool PacmanLevel::IsLevelOver() const
+{
+	uint32_t numEaten = 0;
+
+	for (const auto& pellet : mPellets)
+	{
+		if (!pellet.powerPellet && pellet.eaten)
+		{
+			++numEaten;
+		}
+	}
+
+	return numEaten >= mPellets.size() - 4;
 }
 
 

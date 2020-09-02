@@ -10,6 +10,7 @@ void Ghost::Init(const char* spritePath, const vec2& initialPos, uint32_t moveme
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 	Actor::Init(spritePath, initialPos, movementSpeed);
 	mScore = GHOST_SCORE;
+	mState = GHOST_STATE_INVULNERABLE;
 }
 
 

@@ -22,8 +22,8 @@ public:
 	void Update(float dt, Pacman& pacman, Ghost& redGhost);
 	void Draw(float dt);
 	void ResetLevel();
-
 	bool WillCollide(const AARectangle& abbox, PacmanMovement direction) const;
+	bool IsLevelOver() const;
 	inline Sprite* GetBackground() { return mBackground; }
 	inline Sprite* GetPelletSprite() { return mPelletSprite; }
 	inline vec2 GetLayoutOffset() const { return mLayoutOffset; }
@@ -50,12 +50,13 @@ private:
 		int powerPellet = 0;
 		int eaten = 0;
 	};
+
+	bool LoadLevel(const std::string& path);
+	Tile* GetTileBySymbol(char symbol);
+	void ResetPellets();
 	
 	Sprite* mBackground;
 	Sprite* mPelletSprite;
-	bool LoadLevel(const std::string& path);	
-	Tile* GetTileBySymbol(char symbol);
-	void ResetPellets();
 	
 	std::vector<Excluder> mWalls;
 	std::vector<Tile> mTiles;
