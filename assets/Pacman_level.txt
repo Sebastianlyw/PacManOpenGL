@@ -36,6 +36,14 @@
 :tile_offset -8 0
 :tile_exclude_pellet 1
 
+:tile
+:tile_symbol r
+:tile_collision 0
+:tile_width 24
+:tile_redghost_spawn 1
+:tile_offset -12 0
+:tile_exclude_pellet 1
+
 
 :tile_height 24
 
@@ -49,7 +57,7 @@ oooos-------------w-------------s
 oooos--www--wwww-----wwww--www--s
 oooos--www--wwww-----wwww--www--s
 oooos-------------w-------------s
-oooos-------------w-------------s
+oooos---r---------w-------------s
 oooos--www--w--wwwwwww--w--www--s
 oooos-------w-----w-----w-------s
 oooos-------w-----w-----w-------s

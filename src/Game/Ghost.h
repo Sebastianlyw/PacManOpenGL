@@ -1,9 +1,5 @@
 #pragma once
-
 #include "Actor.h"
-#include "..//Utilities/Utils.h"
-#include "..//Math/AARectangle.h"
-
 
 enum GhostName
 {
@@ -15,14 +11,36 @@ enum GhostName
 
 enum GhostState
 {
-	GHOST_STATE_ALIVE = 0,
-	GHOST_STATE_VULNERABLE,
-	GHOST_STATE_VULNERABLE_ENDING,
+	GHOST_STATE_VULNERABLE = 0,
+	GHOST_STATE_INVULNERABLE,
 	GHOST_STATE_DEAD
 };
 
+class Pacman;
+
 class Ghost : public Actor
 {
+public:
 
+	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed) override;
+	virtual void SetMovementDirection(PacmanMovement direction) override;
+	virtual void Stop() override;
 
-}
+	void Update(double dt, Pacman& pacman);
+	void SetToVulnerable();
+	void EatenByPacman();
+	void ResetToSpwanPosition();
+
+	inline bool IsDead() const { return mState == GHOST_STATE_DEAD; }
+	inline bool IsVulnerable() const { return mState == GHOST_STATE_VULNERABLE; }
+	inline void LockCanChangeDirection() { mCanChangeDirection = false; }
+	inline bool CanChangeDirection() const { return mCanChangeDirection; }
+private:
+
+	void SetGhostState(GhostState state);
+	GhostState mState;
+	double mGhostTimer;
+	uint32_t mScore;
+	glm::vec2 mSpwanPos;
+	bool mCanChangeDirection;
+};

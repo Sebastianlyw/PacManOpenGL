@@ -6,9 +6,11 @@
 
 void Actor::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
 {
+	mInitialPosition = initialPos;
 	mMovementDirection = PACMAN_MOVEMENT_NONE;
 	mSprite = new Sprite(spritePath);
 	mSprite->SetPosition(initialPos);
+	mSprite->SetSize(PACMAN_SIZE);
 
 	mMovementSpeed = movementSpeed;
 	mDelta = vec2(0.f);
@@ -84,6 +86,12 @@ void Actor::Stop()
 	//mSprite->Stop();
 }
 
+
+void Actor::ResetToSpwanPosition()
+{
+	mSprite->SetPosition(mInitialPosition);
+	SetMovementDirection(PACMAN_MOVEMENT_NONE);
+}
 //
 //AARectangle Actor::GetEatingBoundingBox() const
 //{

@@ -13,7 +13,6 @@ void Pacman::Init(const char* spritePath, const vec2& initialPos, uint32_t movem
 	Actor::Init(spritePath, initialPos, movementSpeed);
 
 	mSprite->AddAnimation("./assets/pacmanWalking.txt", true);
-	mSprite->transformation.scale = PACMAN_SIZE;
 
 	ResetToFirstAnimation();
 	ResetScore();
@@ -31,6 +30,18 @@ void Pacman::Update(double dt)
 	}
 
 	Actor::Update(dt);
+}
+
+void Pacman::Reset()
+{
+	ResetToSpwanPosition();
+	ResetScore();
+	mIsDying = false;
+}
+
+void Pacman::ResetToSpwanPosition()
+{
+	Actor::ResetToSpwanPosition();
 }
 
 void Pacman::SetMovementDirection(PacmanMovement movementDir)
@@ -73,11 +84,6 @@ void Pacman::EatenByGhost()
 	//SetAnimation("death", false);
 	mIsDying = true;
 	ResetGhostEatenMultiplier();
-}
-
-void Pacman::ResetScore()
-{
-	mScore = 0;
 }
 
 void Pacman::AteItem(uint32_t value)

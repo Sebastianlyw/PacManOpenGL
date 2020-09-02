@@ -1,6 +1,5 @@
 #pragma once
 #include "Actor.h"
-#include <stdint.h>
 
 class Pacman : public Actor
 {
@@ -8,14 +7,16 @@ public:
 	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed) override;
 	virtual void Update(double dt) override;
 	virtual void SetMovementDirection(PacmanMovement movementDir) override;
+	virtual void ResetToSpwanPosition() override;
 
 	Pacman();
 	void ResetToFirstAnimation();
 	void EatenByGhost();
-	void ResetScore();
 	void AteItem(uint32_t value);
 	void AteGhost(uint32_t value);
 
+	void Reset();
+	inline void ResetScore() { mScore = 0; }
 	inline void ResetGhostEatenMultiplier() { mGhostMultiplier = 1; }
 	inline uint32_t Score() const { return mScore; }
 

@@ -140,6 +140,12 @@
     <ClCompile Include="src\Game\Pacman.cpp">
       <Filter>Source Files\src\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Ghost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GhostAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game\gameHelper.h">
@@ -199,9 +205,6 @@
     <ClInclude Include="src\Game\PacManGame.h">
       <Filter>Source Files\src\Game</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\GhostAI.h">
-      <Filter>Source Files\src\Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\PacmanLevel.h">
       <Filter>Source Files\src\Game</Filter>
     </ClInclude>
@@ -220,11 +223,14 @@
     <ClInclude Include="src\Graphics\TextRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game\Pacman.h">
+      <Filter>Source Files\src\Game</Filter>
+    </ClInclude>
     <ClInclude Include="src\Game\Ghost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Pacman.h">
-      <Filter>Source Files\src\Game</Filter>
+    <ClInclude Include="src\Game\GhostAI.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

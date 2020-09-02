@@ -44,6 +44,30 @@ PacmanMovement GetOppositeDirection(PacmanMovement direction)
 	return PACMAN_MOVEMENT_NONE;
 }
 
+PacmanMovement GetDirectionFromVector(glm::vec2 vector)
+{
+	//since the origin is top left, reverse y for math caculation.
+	double angle = glm::atan(-vector.y, vector.x);  //Range from -PI to PI
+	double pi = glm::pi<double>();
+	if ( (angle >= -pi / 4) && (angle < pi /4) )
+	{
+		return PACMAN_MOVEMENT_RIGHT;
+	}
+	else if ( (angle >= pi / 4) && (angle < 3 * pi / 4))
+	{
+		return PACMAN_MOVEMENT_UP;
+	}
+	else if ( (angle >= 3 * pi / 4 && angle < pi)  || (angle >= -pi && angle < -3 * pi / 4) )
+	{
+		return PACMAN_MOVEMENT_LEFT;
+	}
+	else if ( (angle >= -3 * pi / 4) && (angle < -pi / 4) )
+	{
+		return PACMAN_MOVEMENT_DOWN;
+	}
+	
+}
+
 std::vector<PacmanMovement> GetPerpendicularMovements(PacmanMovement direction)
 {
 	std::vector<PacmanMovement> perpendicularDirections;
@@ -82,6 +106,5 @@ std::vector<PacmanMovement> GetOtherDirections(PacmanMovement direction)
 	}
 
 	return directions;
-
 }
 

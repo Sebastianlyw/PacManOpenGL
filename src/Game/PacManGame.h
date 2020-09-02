@@ -1,18 +1,21 @@
 #pragma once
-
-#include "../Utilities/resourceManager.h"
-#include "../Graphics/Sprite.h"
+#include  "gameHelper.h"
 #include "../Graphics/shaderManager.h"
 #include "../Graphics/Camera.h"
 #include "..//Graphics/TextRender.h"
-#include "Pacman.h"
-#include "PacmanLevel.h"
+#include "../Utilities/resourceManager.h"
+#include "../Graphics/Sprite.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+
+
 using namespace std;
 
+//forward declartions:
+class Pacman;
+class Ghost;
+class PacmanLevel;
+class GhostAI;
 
 // Initial velocity of the player paddle
 
@@ -46,8 +49,10 @@ private:
 
 	void ResetGame();
 
-	Pacman* pacManPlayer;
-	Pacman* pacManScore;
+	GhostAI* mGhostAI;
+	Ghost* mGhost;
+	Pacman* mPacMan;
+	Pacman* pacManLive;
 	PacmanLevel* mLevel;
 	PacmanMovement mPressedDirection;
 	TextRenderer* mTextRender;

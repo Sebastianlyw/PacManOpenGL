@@ -20,6 +20,7 @@ public:
 	virtual void Draw(double dt);
 
 	virtual void Stop();
+	virtual void ResetToSpwanPosition();
 	AARectangle GetEatingBoundingBox() const;
 	
 	void SetTransformation(vec2 position, vec2 scale, float rotation) const;
@@ -45,6 +46,7 @@ protected:
 	Sprite* mSprite;
 private:
 	vec2 mDelta;
+	vec2 mInitialPosition;
 	PacmanMovement mMovementDirection;
 	uint32_t mMovementSpeed;
 	bool mPlayAnimation;

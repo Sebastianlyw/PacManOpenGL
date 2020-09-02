@@ -4,6 +4,8 @@
 #include "..//Utilities/resourceManager.h"
 #include "gameHelper.h"
 #include "PacManGame.h"
+#include "Pacman.h"
+#include "Ghost.h"
 
 PacmanLevel::PacmanLevel()
 {
@@ -21,7 +23,7 @@ bool PacmanLevel::Init(const std::string& levelPath)
 }
 
 
-void PacmanLevel::Update(float dt, Pacman& pacman) 
+void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost) 
 {
 	//Collision checking game logic here. 
 	for (const auto & wall : mWalls)
@@ -33,6 +35,13 @@ void PacmanLevel::Update(float dt, Pacman& pacman)
 			vec2 offset = wall.GetCollisionOffset(pacman.GetBoundingBox());
 			pacman.MoveBy(offset);
 			pacman.Stop();
+		}
+
+		if (wall.HasCollided(redGhost.GetBoundingBox(), edge))
+		{
+			vec2 offset = wall.GetCollisionOffset(redGhost.GetBoundingBox());
+			redGhost.MoveBy(offset);
+			redGhost.Stop();
 		}
 	}
 
@@ -132,7 +141,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	tileCollisionCommand.command = "tile_collision";
 	tileCollisionCommand.parseFunc = [this](ParseFuncParams params)
 	{
-		mTiles.back().collidable = FileCommandLoader::ReadInt(params) > 0;
+		mTiles.back().isCollidable = FileCommandLoader::ReadInt(params) > 0;
 	};
 	fileLoader.AddCommand(tileCollisionCommand);
 
@@ -148,7 +157,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	tileExcludePelletCommand.command = "tile_exclude_pellet";
 	tileExcludePelletCommand.parseFunc = [this](ParseFuncParams params)
 	{
-		mTiles.back().excludePelletTile = FileCommandLoader::ReadInt(params) > 0;
+		mTiles.back().isExcludePelletTile = FileCommandLoader::ReadInt(params) > 0;
 	};
 	fileLoader.AddCommand(tileExcludePelletCommand);
 
@@ -156,10 +165,17 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	tilePacmanSpawnPointCommand.command = "tile_pacman_spawn";
 	tilePacmanSpawnPointCommand.parseFunc = [this](ParseFuncParams params)
 	{
-		mTiles.back().pacmanSpawnTile = FileCommandLoader::ReadInt(params) > 0;
+		mTiles.back().isPacmanSpawnTile = FileCommandLoader::ReadInt(params) > 0;
 	};
-
 	fileLoader.AddCommand(tilePacmanSpawnPointCommand);
+
+	Command tileRedghostSpawnPointCommand;
+	tileRedghostSpawnPointCommand.command = "tile_redghost_spawn";
+	tileRedghostSpawnPointCommand.parseFunc = [this](ParseFuncParams params)
+	{
+		mTiles.back().isRedGhostSpawnTile = FileCommandLoader::ReadInt(params) > 0;
+	};
+	fileLoader.AddCommand(tileRedghostSpawnPointCommand);
 
 	glm::vec2 layoutOffset;
 	Command layoutOffsetCommand;
@@ -186,16 +202,20 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 			{
 				tile->position = glm::vec2(startingX, layoutOffset.y);
 
-				if (tile->collidable)
+				if (tile->isCollidable)
 				{
 					Excluder wall;
 					wall.Init(AARectangle(glm::vec2(startingX, layoutOffset.y), tile->width, static_cast<int>(mTileHeight)));
 
 					mWalls.push_back(wall);
 				}
-				if (tile->pacmanSpawnTile > 0)
+				if (tile->isPacmanSpawnTile)
 				{
 					mPacmanSpawnPosition = vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y);
+				}
+				if (tile->isRedGhostSpawnTile)
+				{
+					mRedGhostSpwanPosition = vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y);
 				}
 				startingX += tile->width;
 			}
@@ -219,7 +239,6 @@ PacmanLevel::Tile* PacmanLevel::GetTileBySymbol(char symbol)
 	}
 	return nullptr;
 }
-
 
 bool PacmanLevel::WillCollide(const AARectangle& abbox, PacmanMovement direction) const 
 {
@@ -252,7 +271,7 @@ void PacmanLevel::ResetPellets()
 	uint32_t startingX = PADDING;
 	const uint32_t LEVEL_HEIGHT = mLayoutOffset.y + 32 * mTileHeight;
 	Pellet p;
-	p.score = 10;
+	p.score = PELLET_SCORE;
 	uint32_t row = 0;
 
 	for (uint32_t y = startingY; y < LEVEL_HEIGHT; y += PADDING, ++row)
@@ -274,7 +293,7 @@ void PacmanLevel::ResetPellets()
 			{
 				for (const Tile& excludedPelletTile : mExclusionTiles)
 				{
-					if (excludedPelletTile.excludePelletTile)
+					if (excludedPelletTile.isExcludePelletTile)
 					{
 						AARectangle tileAABB(excludedPelletTile.position, excludedPelletTile.width, mTileHeight);
 
