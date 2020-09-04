@@ -16,7 +16,7 @@ class Pacman;
 class Ghost;
 class PacmanLevel;
 class GhostAI;
-
+class PostEffectRender;
 enum PacmanGameState
 {
 	ENTER_TO_START = 0,
@@ -57,4 +57,5 @@ private:
 	TextRenderer* mTextRender;
 	uint16_t mLives;
 	PacmanGameState mGameState;
+	PostEffectRender* mPostEffect;
 };

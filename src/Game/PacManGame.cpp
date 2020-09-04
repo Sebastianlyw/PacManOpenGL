@@ -3,6 +3,7 @@
 #include "PacmanLevel.h"
 #include "Ghost.h"
 #include "GhostAI.h"
+#include "..//Graphics/PostEffectRender.h"
 
 #include<iostream>
 #include<sstream>
@@ -33,8 +34,12 @@ void PacmanGame::Init()
 
 	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
 	mTextRender->Load("./assets/OCRAEXT.TTF",28);
-}
 
+	ResourceManager::LoadShader("./shaders/posteffect.vs", "./shaders/posteffect.fs", nullptr, "posteffect");
+	mPostEffect = new PostEffectRender(ResourceManager::GetShader("posteffect"), WINDOWSIZE.x, WINDOWSIZE.y);
+
+}
+  
 void PacmanGame::ResetGame()
 {
 	mLives = MAX_LIVES;
@@ -124,6 +129,18 @@ void PacmanGame::InputUpdate(float dt)
 
 	//if (this->State == GAME_ACTIVE)
 	{
+		if (this->Keys[GLFW_KEY_C])
+		{
+			mPostEffect->Chaos = !mPostEffect->Chaos;
+		}
+		if (this->Keys[GLFW_KEY_V])
+		{
+			mPostEffect->Shake = !mPostEffect->Shake;
+		}
+		if (this->Keys[GLFW_KEY_B])
+		{
+			mPostEffect->Confuse = !mPostEffect->Confuse;
+		}
 
 		if (this->Keys[GLFW_KEY_A] || this->Keys[GLFW_KEY_LEFT])
 		{
@@ -150,9 +167,23 @@ void PacmanGame::InputUpdate(float dt)
 
 void PacmanGame::Render(float dt)
 {
-	//glActiveTexture(GL_TEXTURE0);
+	
+	mPostEffect->BeginRender();
+
+	
+	mPostEffect->EndRender();
+
+	mPostEffect->Render(dt);
+	//render postprocessing quad
+
 	mLevel->Draw(dt);
 	mPacman->Draw(dt);
+
+	
+
+
+
+	
 	mGhost->Draw(dt);
 	//Draw score
 	std::stringstream my_ss;
@@ -175,9 +206,8 @@ void PacmanGame::Render(float dt)
 		pacManLive->SetTransformation(vec2(20 + i * 40, WINDOWSIZE.y - 40), PACMAN_SIZE, 0);
 		pacManLive->Draw(0);
 	}
+	//
 	
-
-
 
 }
 

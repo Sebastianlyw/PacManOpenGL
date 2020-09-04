@@ -149,6 +149,9 @@
     <ClCompile Include="src\Game\GhostAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\PostEffectRender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game\gameHelper.h">
@@ -235,6 +238,9 @@
     <ClInclude Include="src\Game\GhostAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\PostEffectRender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.fs">
@@ -247,6 +253,8 @@
     <None Include="shaders\text.fs" />
     <None Include="shaders\level.fs" />
     <None Include="shaders\level.vs" />
+    <None Include="shaders\posteffect.vs" />
+    <None Include="shaders\posteffect.fs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\Pacman_level.txt">

@@ -81,6 +81,7 @@ void Rectangle::Draw()
 {
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }
 
 void Rectangle::Draw_Wireframe()

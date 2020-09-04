@@ -10,4 +10,3 @@ void main()
 {	
 	finalcolor = vertex_color * texture(sprite,vertex_uv);
 }
-
