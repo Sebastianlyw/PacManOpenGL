@@ -19,6 +19,8 @@ static const glm::mat4 MainCameraProjection = glm::ortho(0.0f, (float)WINDOWSIZE
 
 static const uint32_t SCATTER_DURATION = 10;
 static const glm::vec2 SCATTER_POS = glm::vec2(WINDOWSIZE.x - 70, 0);
+static const uint32_t CHERRY_SCORE = 100;
+
 
 enum PacmanMovement
 {

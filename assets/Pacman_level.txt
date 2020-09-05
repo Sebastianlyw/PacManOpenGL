@@ -1,5 +1,6 @@
 :bg_image mazeVV.png
 :pellet_image pellet.png
+:cherry_image cherry.png
 
 :tile 
 :tile_symbol w
@@ -44,6 +45,14 @@
 :tile_offset -12 0
 :tile_exclude_pellet 1
 
+:tile
+:tile_symbol c
+:tile_collision 0
+:tile_width 24
+:tile_cherry_spawn 1
+:tile_offset -12 0
+:tile_exclude_pellet 1
+
 
 :tile_height 24
 
@@ -63,7 +72,7 @@ oooos-------w-----w-----w-------s
 oooos-------w-----w-----w-------s
 oooosww--w--wwww--w--wwww--w--wws
 oooos----w-----------------w----s
-oooos----w-----------------w----s
+oooos----w--------------c--w----s
 oooos--www--w--wwgggww--w--www--s
 oooos-------w--w-----w--w-------s
 oooos-------w--w-----w--w-------s

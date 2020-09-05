@@ -43,6 +43,7 @@ private:
 		bool isExcludePelletTile = false;
 		bool isPacmanSpawnTile = false;
 		bool isRedGhostSpawnTile = false;
+		bool isCherrySpwanTile = false;
 		char symbol = '-';
 	};
 
@@ -54,12 +55,21 @@ private:
 		int eaten = 0;
 	};
 
+	struct Cherry
+	{
+		uint32_t score = CHERRY_SCORE;
+		AARectangle mBBox;
+		int eaten = 0;
+		Sprite* sprite;
+	};
+
 	bool LoadLevel(const std::string& path);
 	Tile* GetTileBySymbol(char symbol);
 	void ResetPellets();
 	
 	Sprite* mBackground;
 	Sprite* mPelletSprite;
+	Cherry  mCherry;
 	
 	std::vector<Excluder> mWalls;
 	std::vector<Tile> mTiles;
@@ -70,4 +80,5 @@ private:
 	vec2 mLayoutOffset;
 	vec2 mPacmanSpawnPosition;
 	vec2 mRedGhostSpwanPosition;
+	vec2 mCherryPositoin;
 };

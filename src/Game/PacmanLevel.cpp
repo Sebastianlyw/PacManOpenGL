@@ -17,6 +17,7 @@ PacmanLevel::~PacmanLevel()
 {
 	delete mBackground;
 	delete mPelletSprite;
+	delete mCherry.sprite;
 }
 
 bool PacmanLevel::Init(const std::string& levelPath) 
@@ -72,6 +73,14 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 			}
 		}
 	}
+
+	if (pacman.GetEatingBoundingBox().Intersects(mCherry.mBBox) && !mCherry.eaten)
+	{
+		mCherry.eaten = true;
+		pacman.AteItem(mCherry.score);
+		AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
+	}
+
 }
 
 void PacmanLevel::Draw(float dt)
@@ -90,6 +99,13 @@ void PacmanLevel::Draw(float dt)
 			mPelletSprite->draw(0);
 		}
 	}
+
+	if (!mCherry.eaten)
+	{
+		shader.SetMatrix4("model_matrx", mCherry.sprite->transformation.Get());
+		mCherry.sprite->draw(0);
+	}
+
 
 }
 
@@ -117,9 +133,21 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		imageName = FileCommandLoader::ReadString(params);
 		mPelletSprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
 		mPelletSprite->transformation.scale = glm::vec2(20, 20);
-		assert(mPelletSprite->IsLoaded() && "Didn't load the bg image");
+		assert(mPelletSprite->IsLoaded() && "Didn't load the pellet image");
 	};
 	fileLoader.AddCommand(pelletImageCommand);
+
+
+	Command cherryImageCommand;
+	cherryImageCommand.command = "cherry_image";
+	cherryImageCommand.parseFunc = [this, &imageName](ParseFuncParams params)
+	{
+		imageName = FileCommandLoader::ReadString(params);
+		mCherry.sprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
+		mCherry.sprite->transformation.scale = glm::vec2(20, 20);
+		assert(mCherry.sprite->IsLoaded() && "Didn't load the cherry image");
+	};
+	fileLoader.AddCommand(cherryImageCommand);
 
 	Command tileWidthCommand;
 	tileWidthCommand.command = "tile_width";
@@ -193,6 +221,15 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	};
 	fileLoader.AddCommand(tileRedghostSpawnPointCommand);
 
+	Command tileCherrySpawnPointCommand;
+	tileCherrySpawnPointCommand.command = "tile_cherry_spawn";
+	tileCherrySpawnPointCommand.parseFunc = [this](ParseFuncParams params)
+	{
+		mTiles.back().isCherrySpwanTile = FileCommandLoader::ReadInt(params) > 0;
+	};
+	fileLoader.AddCommand(tileCherrySpawnPointCommand);
+
+
 	glm::vec2 layoutOffset;
 	Command layoutOffsetCommand;
 	layoutOffsetCommand.command = "layout_offset";
@@ -232,6 +269,12 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 				if (tile->isRedGhostSpawnTile)
 				{
 					mRedGhostSpwanPosition = vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y);
+				}
+				if (tile->isCherrySpwanTile)
+				{
+					mCherry.sprite->SetPosition(vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y));
+					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y), PELLET_SIZE, PELLET_SIZE);
+					mCherry.mBBox = rect;
 				}
 				startingX += tile->width;
 			}
