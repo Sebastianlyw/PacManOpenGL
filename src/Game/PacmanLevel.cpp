@@ -27,7 +27,7 @@ PacmanLevel::~PacmanLevel()
 
 bool PacmanLevel::Init(const std::string& levelPath) 
 {
-	AudioPlayer::instance().Play(AudioPlayer::BACKGROUND, false);
+	AudioPlayer::instance().Play(AudioPlayer::BACKGROUND, true);
 	
 	bool levelLoaded = LoadLevel(levelPath);
 	if (levelLoaded)
@@ -108,8 +108,16 @@ void PacmanLevel::Draw(float dt)
 	{
 		if (!pellet.eaten)
 		{
-			mPelletSprite->transformation.position = vec3(pellet.mBBox.GetCenterPoint(),1);
+			mPelletSprite->transformation.position = vec3(pellet.mBBox.GetCenterPoint().x -5, pellet.mBBox.GetCenterPoint().y - 5,1);
+			if (pellet.powerPellet) {
+				mPelletSprite->transformation.scale = vec2(PELLET_SIZE * 2, PELLET_SIZE * 2);
+			}
+			else
+			{
+				mPelletSprite->transformation.scale = vec2(PELLET_SIZE, PELLET_SIZE);
+			}
 			shader.SetMatrix4("model_matrx", mPelletSprite->transformation.Get());
+	
 			mPelletSprite->draw(0);
 		}
 	}
@@ -150,7 +158,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	{
 		imageName = FileCommandLoader::ReadString(params);
 		mPelletSprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
-		mPelletSprite->transformation.scale = glm::vec2(20, 20);
+		mPelletSprite->transformation.scale = glm::vec2(PELLET_SIZE, PELLET_SIZE);
 		assert(mPelletSprite->IsLoaded() && "Didn't load the pellet image");
 	};
 	fileLoader.AddCommand(pelletImageCommand);
@@ -246,7 +254,6 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		mTiles.back().isCherrySpwanTile = FileCommandLoader::ReadInt(params) > 0;
 	};
 	fileLoader.AddCommand(tileCherrySpawnPointCommand);
-
 
 	glm::vec2 layoutOffset;
 	Command layoutOffsetCommand;
@@ -355,6 +362,22 @@ void PacmanLevel::ResetPellets()
 	{
 		for (uint32_t x = startingX, col = 0; x < WINDOWSIZE.x; x += PADDING, ++col)
 		{
+			if (row == 0 || row == 28)
+			{
+				if (col == 0 || col == 25)
+				{
+					p.powerPellet = 1;
+					p.score = 40;
+					p.mBBox = AARectangle(vec2(x - 12, y - 12), mTileHeight, mTileHeight);
+					mPellets.push_back(p);
+
+					p.powerPellet = 0;
+					p.score = 10;
+
+					continue;
+				}
+			}
+
 			AARectangle rect = AARectangle(vec2(x, y), PELLET_SIZE, PELLET_SIZE);
 			bool found = false;
 			for (const Excluder& wall : mWalls)

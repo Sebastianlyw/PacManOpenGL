@@ -11,8 +11,6 @@
 class Pacman;
 class Ghost;
 class GhostAI;
-class AudioPlayer;
-
 using namespace glm;
 class PacmanLevel
 {
