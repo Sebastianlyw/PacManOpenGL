@@ -94,7 +94,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <NoEntryPoint>
       </NoEntryPoint>
       <EntryPointSymbol>
@@ -159,6 +159,7 @@
     <ClCompile Include="src\Math\Line2D.cpp" />
     <ClCompile Include="src\Math\Shape.cpp" />
     <ClCompile Include="src\Math\Triangle.cpp" />
+    <ClCompile Include="src\Utilities\AudioPlayer.cpp" />
     <ClCompile Include="src\Utilities\FileCommandLoader.cpp" />
     <ClCompile Include="src\Utilities\glad.c" />
     <ClCompile Include="src\Utilities\resourceManager.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="src\Math\Line2D.h" />
     <ClInclude Include="src\Math\Shape.h" />
     <ClInclude Include="src\Math\Triangle.h" />
+    <ClInclude Include="src\Utilities\AudioPlayer.h" />
     <ClInclude Include="src\Utilities\FileCommandLoader.h" />
     <ClInclude Include="src\Utilities\resourceManager.h" />
     <ClInclude Include="src\Utilities\Utils.h" />
@@ -227,6 +229,15 @@
     <Font Include="assets\LoraFont.ttf" />
     <Font Include="assets\OCRAEXT.TTF" />
     <Font Include="assets\PrintClearly.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\Audio\pacman_beginning.wav" />
+    <Media Include="assets\Audio\pacman_chomp.wav" />
+    <Media Include="assets\Audio\pacman_death.wav" />
+    <Media Include="assets\Audio\pacman_eatfruit.wav" />
+    <Media Include="assets\Audio\pacman_eatghost.wav" />
+    <Media Include="assets\Audio\pacman_extrapac.wav" />
+    <Media Include="assets\Audio\pacman_intermission.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

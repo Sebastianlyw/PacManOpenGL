@@ -152,6 +152,9 @@
     <ClCompile Include="src\Graphics\PostEffectRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utilities\AudioPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game\gameHelper.h">
@@ -241,6 +244,9 @@
     <ClInclude Include="src\Graphics\PostEffectRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utilities\AudioPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.fs">
@@ -269,5 +275,28 @@
     <Font Include="assets\OCRAEXT.TTF" />
     <Font Include="assets\desyrel.ttf" />
     <Font Include="assets\PrintClearly.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\Audio\pacman_beginning.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\Audio\pacman_chomp.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\Audio\pacman_death.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\Audio\pacman_eatfruit.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\Audio\pacman_eatghost.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\Audio\pacman_extrapac.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\Audio\pacman_intermission.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

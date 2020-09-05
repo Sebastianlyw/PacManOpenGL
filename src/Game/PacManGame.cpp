@@ -4,9 +4,11 @@
 #include "Ghost.h"
 #include "GhostAI.h"
 #include "..//Graphics/PostEffectRender.h"
+#include "..//Utilities/AudioPlayer.h"
 
 #include<iostream>
 #include<sstream>
+
 
 PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 {
@@ -14,7 +16,10 @@ PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 }
 
 void PacmanGame::Init()
-{	
+{
+
+	//mAudioPlayer = createIrrKlangDevice();
+	//mAudioPlayer->play2D("./assets/Audio/pacman_beginning.wav");
 	//level backgroud, pellet and fruit bonus item. 
 	//use different shader for different postprocessing effect. 
 	mLevel = new PacmanLevel();
@@ -42,6 +47,7 @@ void PacmanGame::Init()
   
 void PacmanGame::ResetGame()
 {
+	ResetLevel();
 	mLives = MAX_LIVES;
 	mLevel->ResetLevel();
 }
@@ -84,11 +90,13 @@ void PacmanGame::Update(float dt)
 
 		if (mGhost->IsVulnerable() && mPacman->GetEatingBoundingBox().Intersects(mGhost->GetBoundingBox()))
 		{
+			AudioPlayer::instance().Play(AudioPlayer::EAT_GHOST, false);
 			mGhost->EatenByPacman();
 			mPacman->AteGhost(mGhost->GetScore());
 		}
 		else if (mGhost->IsInvulnerable() && mGhost->GetEatingBoundingBox().Intersects(mPacman->GetBoundingBox()))
 		{
+			AudioPlayer::instance().Play(AudioPlayer::DEATH, false);
 			mLives--;
 			mPacman->EatenByGhost();
 			mPressedDirection = PACMAN_MOVEMENT_NONE;
@@ -98,7 +106,8 @@ void PacmanGame::Update(float dt)
 		}
 		if (mLevel->IsLevelOver())
 		{
-			mGameState = ENTER_TO_START;
+			mGameState = GAME_WIN;
+			ResetGame();
 		}
 
 	}
@@ -114,6 +123,13 @@ void PacmanGame::Update(float dt)
 			mGameState = GAME_OVER;
 		}
 	}	
+	else if (mGameState == GAME_WIN)
+	{
+		if (this->Keys[GLFW_KEY_ENTER])
+		{
+			mGameState = GAME_ALIVE;
+		}
+	}
 }
 
 void PacmanGame::ResetLevel()
@@ -193,11 +209,15 @@ void PacmanGame::Render(float dt)
 	//Render enter to start
 	if (mGameState == ENTER_TO_START)
 	{
-		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 70, WINDOWSIZE.y/2, 1.0f, glm::uvec3(0.2, 1, 1));
+		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 70, WINDOWSIZE.y/2, 1.0f, glm::uvec3(1, 1, 0));
 	}
 	else if (mGameState == GAME_OVER)
 	{
 		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 70, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 0.2, 0.2));
+	}
+	else if (mGameState == GAME_WIN)
+	{
+		mTextRender->Render("You Win the Game! Enter to restart.", 200, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 1, 0));
 	}
 
 	//Draw lives:

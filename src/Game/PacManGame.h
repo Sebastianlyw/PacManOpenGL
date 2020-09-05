@@ -8,7 +8,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-
 using namespace std;
 
 //forward declartions:
@@ -17,12 +16,14 @@ class Ghost;
 class PacmanLevel;
 class GhostAI;
 class PostEffectRender;
+
 enum PacmanGameState
 {
 	ENTER_TO_START = 0,
 	GAME_ALIVE,
 	LOST_LIFE,
-	GAME_OVER
+	GAME_OVER,
+	GAME_WIN
 };
 
 

@@ -6,14 +6,23 @@
 #include "PacManGame.h"
 #include "Pacman.h"
 #include "Ghost.h"
+#include "../Utilities/AudioPlayer.h"
 
 PacmanLevel::PacmanLevel()
 {
 	ResourceManager::LoadShader("./shaders/level.vs", "./shaders/level.fs", nullptr, "level");
 }
 
+PacmanLevel::~PacmanLevel()
+{
+	delete mBackground;
+	delete mPelletSprite;
+}
+
 bool PacmanLevel::Init(const std::string& levelPath) 
 {
+	AudioPlayer::instance().Play(AudioPlayer::BACKGROUND, false);
+	
 	bool levelLoaded = LoadLevel(levelPath);
 	if (levelLoaded)
 	{
@@ -53,6 +62,7 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 			{
 				pellet.eaten = true;
 				pacman.AteItem(pellet.score);
+				AudioPlayer::instance().Play(AudioPlayer::CHOMP, false);
 
 				if (pellet.powerPellet)
 				{

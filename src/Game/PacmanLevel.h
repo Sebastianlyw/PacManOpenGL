@@ -12,12 +12,15 @@
 class Pacman;
 class Ghost;
 class GhostAI;
+class AudioPlayer;
+
 using namespace glm;
 class PacmanLevel
 {
 public:
 
 	PacmanLevel();
+	~PacmanLevel();
 	bool Init(const std::string& levelPath);
 	void Update(float dt, Pacman& pacman, Ghost& redGhost);
 	void Draw(float dt);
