@@ -8,23 +8,25 @@
 
 #include<iostream>
 #include<sstream>
+#include"..//Graphics/Sprite.h"
+
+	
 
 
 PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 {
 
 }
-
+	
 void PacmanGame::Init()
 {
-
 	//mAudioPlayer = createIrrKlangDevice();
 	//mAudioPlayer->play2D("./assets/Audio/pacman_beginning.wav");
 	//level backgroud, pellet and fruit bonus item. 
 	//use different shader for different postprocessing effect. 
 	mLevel = new PacmanLevel();
 	mLevel->Init("./assets/Pacman_level.txt");
-
+	
 	mPacman = new Pacman();
 	mPacman->Init("./assets/pacmanwalking.png", mLevel->GetPacmanSpawnPosition() , PACMAN_SPEED);
 	
@@ -35,12 +37,13 @@ void PacmanGame::Init()
 	mGhostAI->Init(*mGhost, mGhost->GetBoundingBox().GetWidth(), SCATTER_POS, GhostName::RED);
 
 	pacManLive = new Pacman();
-	pacManLive->Init("./assets/pacmanwalking.png", vec2(0,0), 0);
+	pacManLive->Init("./assets/pacmanwalking.png", vec3(0.f), 0);
 
 	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
 	mTextRender->Load("./assets/OCRAEXT.TTF",28);
 
 	ResourceManager::LoadShader("./shaders/posteffect.vs", "./shaders/posteffect.fs", nullptr, "posteffect");
+	ResourceManager::LoadShader("./shaders/skybox.vs", "./shaders/skybox.fs", nullptr, "skybox");
 	mPostEffect = new PostEffectRender(ResourceManager::GetShader("posteffect"), WINDOWSIZE.x, WINDOWSIZE.y);
 
 }
@@ -195,11 +198,7 @@ void PacmanGame::Render(float dt)
 	mLevel->Draw(dt);
 	mPacman->Draw(dt);
 
-	
 
-
-
-	
 	mGhost->Draw(dt);
 	//Draw score
 	std::stringstream my_ss;
@@ -209,24 +208,28 @@ void PacmanGame::Render(float dt)
 	//Render enter to start
 	if (mGameState == ENTER_TO_START)
 	{
-		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 70, WINDOWSIZE.y/2, 1.0f, glm::uvec3(1, 1, 0));
+		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 100, WINDOWSIZE.y/2, 1.0f, glm::uvec3(1, 1, 0));
 	}
 	else if (mGameState == GAME_OVER)
 	{
-		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 70, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 0.2, 0.2));
+		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 100, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 0.2, 0.2));
 	}
 	else if (mGameState == GAME_WIN)
 	{
-		mTextRender->Render("You Win the Game! Enter to restart.", 200, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 1, 0));
+		mTextRender->Render("You Win the Game! Enter to restart.", 100, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 1, 0));
 	}
 
+	
+	
 	//Draw lives:
 	for (int i = 0; i < this->mLives; i++)
 	{
-		pacManLive->SetTransformation(vec2(20 + i * 40, WINDOWSIZE.y - 40), PACMAN_SIZE, 0);
+		pacManLive->SetTransformation(vec3(20 + i * 40, WINDOWSIZE.y - 40, 1), PACMAN_SIZE, 0);
 		pacManLive->Draw(0);
 	}
 	//
+	
+
 	
 
 }

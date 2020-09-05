@@ -4,7 +4,7 @@
 class Pacman : public Actor
 {
 public:
-	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed) override;
+	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed) override;
 	virtual void Update(double dt) override;
 	virtual void SetMovementDirection(PacmanMovement movementDir) override;
 	virtual void ResetToSpwanPosition() override;

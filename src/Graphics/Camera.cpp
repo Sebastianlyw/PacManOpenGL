@@ -1,20 +1,34 @@
 #include "Camera.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include "..//Game/gameHelper.h"
 
-Camera::Camera(int window_width, int window_height)
+Camera::Camera()
 {
-	projection = glm::ortho(0.0f, (float)window_width, (float)window_height, 0.0f, -1.0f, 1.0f);
+	fov = 50.0f;
+	cameraPos = glm::vec3(WINDOWSIZE.x / 2 , WINDOWSIZE.y + 350, 800.0f);
+	cameraTarget = glm::vec3(WINDOWSIZE.x / 2, WINDOWSIZE.y / 2, -1);
+	vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+	vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+	cameraUp = -glm::cross(cameraDirection, cameraRight);
+
 }
 
-Camera::~Camera()
+
+glm::mat4 Camera::GetPerspectiveProjection()
 {
+	return glm::perspective(glm::radians(fov), -(float)WINDOWSIZE.x / (float)WINDOWSIZE.y, -1.0f, 100.0f);;
 }
 
-glm::mat4 Camera::Get_Projection()
+
+mat4 Camera::GetOrthoPrjection()
 {
-	return projection;
+	return glm::ortho(0.0f, (float)WINDOWSIZE.x, (float)WINDOWSIZE.y, 0.0f, -1.0f, 1.0f);
 }
 
-void Camera::UpdateViewport(int new_width, int new_height)
+//View transformation , from world space to camer view space. 
+mat4 Camera::GetViewMatrix()
 {
-	projection = glm::ortho(0.0f, (float)new_width, (float)new_height, 0.0f, -1.0f, 1.0f);
+	return ::lookAt(cameraPos, cameraTarget, cameraUp);
 }
+

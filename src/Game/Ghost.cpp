@@ -5,7 +5,7 @@
 #include "..//Utilities/resourceManager.h"
 #include "..//Math/AARectangle.h"
 
-void Ghost::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
+void Ghost::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
 {
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 	Actor::Init(spritePath, initialPos, movementSpeed);

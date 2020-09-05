@@ -27,11 +27,11 @@ public:
 
 	inline glm::vec2 Size() const { return transformation.scale; }
 	inline bool IsLoaded() const { return (texture->Getdata() != NULL); }
-	inline glm::vec2 Position() const { return transformation.position; }
-	inline void SetPosition(const glm::vec2& position) { transformation.position = position; }
+	inline glm::vec3 Position() const { return transformation.position; }
+	inline void SetPosition(const glm::vec3& position) { transformation.position = position; }
 	inline void SetSize(const glm::vec2& size) { transformation.scale = size; }
 	inline void SetRotation(const float rotation) { transformation.rotation = rotation; }
-	inline void MoveBy(const glm::vec2& delta) { transformation.position += delta; }
+	inline void MoveBy(const glm::vec2& delta) { transformation.position += glm::vec3(delta,0); }
 	inline bool IsFinishedPlayingAnimation() const { return false; } //return mAnimationPlayer.IsFinishedPlaying(); }
 	
 private:

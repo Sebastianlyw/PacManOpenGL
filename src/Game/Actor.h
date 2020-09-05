@@ -15,7 +15,7 @@ class Actor
 public:
 
 	virtual ~Actor() { delete mSprite; }
-	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed);
+	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed);
 	virtual void Update(double dt);
 	virtual void Draw(double dt);
 
@@ -23,7 +23,7 @@ public:
 	virtual void ResetToSpwanPosition();
 	AARectangle GetEatingBoundingBox() const;
 	
-	void SetTransformation(vec2 position, vec2 scale, float rotation) const;
+	void SetTransformation(vec3 position, vec2 scale, float rotation) const;
 	inline vec2 Position() { return mSprite->transformation.position; }
 	inline vec2 Size() { return mSprite->transformation.scale; }
 	inline float Rotation() { return mSprite->transformation.rotation; }
@@ -46,7 +46,7 @@ protected:
 	Sprite* mSprite;
 private:
 	vec2 mDelta;
-	vec2 mInitialPosition;
+	vec3 mInitialPosition;
 	PacmanMovement mMovementDirection;
 	uint32_t mMovementSpeed;
 	bool mPlayAnimation;

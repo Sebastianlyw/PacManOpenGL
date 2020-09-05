@@ -22,7 +22,7 @@ class Ghost : public Actor
 {
 public:
 
-	virtual void Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed) override;
+	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed) override;
 	virtual void SetMovementDirection(PacmanMovement direction) override;
 	virtual void Stop() override;
 

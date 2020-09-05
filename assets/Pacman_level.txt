@@ -50,7 +50,7 @@
 :tile_collision 0
 :tile_width 24
 :tile_cherry_spawn 1
-:tile_offset -12 0
+:tile_offset -12 -12
 :tile_exclude_pellet 1
 
 
@@ -74,8 +74,8 @@ oooosww--w--wwww--w--wwww--w--wws
 oooos----w-----------------w----s
 oooos----w--------------c--w----s
 oooos--www--w--wwgggww--w--www--s
-oooos-------w--w-----w--w-------s
-oooos-------w--w-----w--w-------s
+oooos-------w--wwwwwww--w-------s
+oooos-------w--wwwwwww--w-------s
 oooos--www--w--wwwwwww--w--www--s
 oooos----w--w-----------w--w----s
 oooos----w--w-----------w--w----s

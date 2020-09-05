@@ -8,7 +8,7 @@ Pacman::Pacman():mIsDying(false)
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 }
 
-void Pacman::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
+void Pacman::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
 {
 	Actor::Init(spritePath, initialPos, movementSpeed);
 

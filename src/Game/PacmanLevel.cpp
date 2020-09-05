@@ -7,6 +7,10 @@
 #include "Pacman.h"
 #include "Ghost.h"
 #include "../Utilities/AudioPlayer.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "..//Graphics/Camera.h"
 
 PacmanLevel::PacmanLevel()
 {
@@ -16,6 +20,7 @@ PacmanLevel::PacmanLevel()
 PacmanLevel::~PacmanLevel()
 {
 	delete mBackground;
+	delete mSkybox;
 	delete mPelletSprite;
 	delete mCherry.sprite;
 }
@@ -86,15 +91,24 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 void PacmanLevel::Draw(float dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("level");
-	shader.Use().SetMatrix4("projection", MainCameraProjection);
+
+	// pass projection matrix to shader (note that in this case it could change every frame)
+	shader.Use().SetMatrix4("projection", Camera::instance().GetPerspectiveProjection());
+	shader.SetMatrix4("view", Camera::instance().GetViewMatrix());
+	
+	shader.SetInteger("isSkybox", 1);
+	shader.SetMatrix4("model_matrx", mSkybox->transformation.Get());
+	mSkybox->draw(0);
+	shader.SetFloat("isSkybox", 0 );
 	shader.SetMatrix4("model_matrx", mBackground->transformation.Get());
 	mBackground->draw(0);
+	
 
 	for (const auto& pellet : mPellets)
 	{
 		if (!pellet.eaten)
 		{
-			mPelletSprite->transformation.position = pellet.mBBox.GetCenterPoint();
+			mPelletSprite->transformation.position = vec3(pellet.mBBox.GetCenterPoint(),1);
 			shader.SetMatrix4("model_matrx", mPelletSprite->transformation.Get());
 			mPelletSprite->draw(0);
 		}
@@ -121,8 +135,12 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		imageName = FileCommandLoader::ReadString(params);
 		mBackground = new Sprite(("./" + std::string("assets/") + imageName).c_str());
 		mBackground->transformation.scale = glm::vec2(BACKGROUND_SIZE.x, BACKGROUND_SIZE.y);
-		mBackground->transformation.position = glm::vec2(0, 40);
+		mBackground->transformation.position = glm::vec3(0, 40,0);
+		mSkybox = new Sprite("./assets/galaxy.png");
+		mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x * 4, WINDOWSIZE.y * 4);
+		mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x),-(float)(WINDOWSIZE.y), -20);
 		assert(mBackground->IsLoaded() && "Didn't load the bg image");
+		assert(mSkybox->IsLoaded() && "Didn't load the bg image");
 	};
 	fileLoader.AddCommand(bgImageCommand);
 
@@ -144,7 +162,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	{
 		imageName = FileCommandLoader::ReadString(params);
 		mCherry.sprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
-		mCherry.sprite->transformation.scale = glm::vec2(20, 20);
+		mCherry.sprite->transformation.scale = PACMAN_SIZE;
 		assert(mCherry.sprite->IsLoaded() && "Didn't load the cherry image");
 	};
 	fileLoader.AddCommand(cherryImageCommand);
@@ -264,16 +282,16 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 				}
 				if (tile->isPacmanSpawnTile)
 				{
-					mPacmanSpawnPosition = vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y);
+					mPacmanSpawnPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
 				}
 				if (tile->isRedGhostSpawnTile)
 				{
-					mRedGhostSpwanPosition = vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y);
+					mRedGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
 				}
 				if (tile->isCherrySpwanTile)
 				{
-					mCherry.sprite->SetPosition(vec2(startingX + tile->offset.x, layoutOffset.y + tile->offset.y));
-					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y), PELLET_SIZE, PELLET_SIZE);
+					mCherry.sprite->SetPosition(vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2));
+					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
 					mCherry.mBBox = rect;
 				}
 				startingX += tile->width;

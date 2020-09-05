@@ -62,7 +62,7 @@ Rectangle::Rectangle() :
 
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, NULL);
-
+	glEnable(GL_DEPTH_TEST);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 

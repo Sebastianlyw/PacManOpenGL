@@ -7,7 +7,6 @@
 #include "GhostAI.h"
 #include <random>
 #include "../Graphics/Sprite.h"
-#include "../Graphics/Camera.h"
 
 class Pacman;
 class Ghost;
@@ -30,8 +29,8 @@ public:
 	inline Sprite* GetBackground() { return mBackground; }
 	inline Sprite* GetPelletSprite() { return mPelletSprite; }
 	inline vec2 GetLayoutOffset() const { return mLayoutOffset; }
-	inline vec2 GetPacmanSpawnPosition() { return mPacmanSpawnPosition; }
-	inline vec2 GetRedghostSpwanPosition() { return mRedGhostSpwanPosition; }
+	inline vec3 GetPacmanSpawnPosition() { return mPacmanSpawnPosition; }
+	inline vec3 GetRedghostSpwanPosition() { return mRedGhostSpwanPosition; }
 
 private:
 	struct Tile
@@ -67,6 +66,7 @@ private:
 	Tile* GetTileBySymbol(char symbol);
 	void ResetPellets();
 	
+	Sprite* mSkybox;
 	Sprite* mBackground;
 	Sprite* mPelletSprite;
 	Cherry  mCherry;
@@ -78,7 +78,7 @@ private:
 
 	size_t mTileHeight;
 	vec2 mLayoutOffset;
-	vec2 mPacmanSpawnPosition;
-	vec2 mRedGhostSpwanPosition;
-	vec2 mCherryPositoin;
+	vec3 mPacmanSpawnPosition;
+	vec3 mRedGhostSpwanPosition;
+	vec3 mCherryPositoin;
 };

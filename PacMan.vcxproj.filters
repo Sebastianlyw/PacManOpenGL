@@ -69,6 +69,12 @@
     <Image Include="assets\mazeVV.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\skybox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\galaxy.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game\gameHelper.cpp">
@@ -261,6 +267,8 @@
     <None Include="shaders\level.vs" />
     <None Include="shaders\posteffect.vs" />
     <None Include="shaders\posteffect.fs" />
+    <None Include="shaders\skybox.vs" />
+    <None Include="shaders\skybox.fs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\Pacman_level.txt">

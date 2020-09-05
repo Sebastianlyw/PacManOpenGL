@@ -168,6 +168,7 @@
   <ItemGroup>
     <Image Include="assets\APPLE.png" />
     <Image Include="assets\cherry.png" />
+    <Image Include="assets\galaxy.png" />
     <Image Include="assets\mazeVV.png" />
     <Image Include="assets\maze_new.png" />
     <Image Include="assets\monster-4.png" />
@@ -176,6 +177,7 @@
     <Image Include="assets\monster3.png" />
     <Image Include="assets\pacmanWalking.png" />
     <Image Include="assets\pellet.png" />
+    <Image Include="assets\skybox.png" />
     <Image Include="assets\strawberry.png" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +217,8 @@
     <None Include="shaders\level.vs" />
     <None Include="shaders\posteffect.fs" />
     <None Include="shaders\posteffect.vs" />
+    <None Include="shaders\skybox.fs" />
+    <None Include="shaders\skybox.vs" />
     <None Include="shaders\sprite.fs" />
     <None Include="shaders\sprite.vs" />
     <None Include="shaders\text.fs" />

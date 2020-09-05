@@ -58,5 +58,5 @@ private:
 	TextRenderer* mTextRender;
 	uint16_t mLives;
 	PacmanGameState mGameState;
-	PostEffectRender* mPostEffect;
+	PostEffectRender* mPostEffect;		
 };

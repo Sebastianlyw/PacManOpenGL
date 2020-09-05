@@ -3,8 +3,12 @@
 #include "..//Utilities/resourceManager.h"
 #include <cmath>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-void Actor::Init(const char* spritePath, const vec2& initialPos, uint32_t movementSpeed)
+
+void Actor::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
 {
 	mInitialPosition = initialPos;
 	mMovementDirection = PACMAN_MOVEMENT_NONE;
@@ -68,12 +72,13 @@ void Actor::Update(double dt)
 void Actor::Draw(double dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("sprite");
-	shader.Use().SetMatrix4("projection", MainCameraProjection);
+	shader.Use().SetMatrix4("projection", Camera::instance().GetPerspectiveProjection());
+	shader.SetMatrix4("view", Camera::instance().GetViewMatrix());
 	shader.SetMatrix4("model_matrx", this->GetTransformation());
 	mSprite->draw(dt, AnimationType::Walking);
 }
 
-void Actor::SetTransformation(vec2 position, vec2 scale, float rotation) const
+void Actor::SetTransformation(vec3 position, vec2 scale, float rotation) const
 {
 	mSprite->transformation.position = position;
 	mSprite->transformation.scale = scale;
