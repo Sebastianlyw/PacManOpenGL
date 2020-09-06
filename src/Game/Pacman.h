@@ -8,6 +8,7 @@ public:
 	virtual void Update(double dt) override;
 	virtual void SetMovementDirection(PacmanMovement movementDir) override;
 	virtual void ResetToSpwanPosition() override;
+	virtual void Draw(double dt) override;
 
 	Pacman();
 	void ResetToFirstAnimation();
@@ -19,6 +20,8 @@ public:
 	inline void ResetScore() { mScore = 0; }
 	inline void ResetGhostEatenMultiplier() { mGhostMultiplier = 1; }
 	inline uint32_t Score() const { return mScore; }
+	inline bool IsSpeedUp() const { return mSpeedUp; }
+	inline void SetSpeedUp(bool speedUp) { mSpeedUp = speedUp; }
 
 private:
 	void AddToScore(uint32_t value);
@@ -26,5 +29,7 @@ private:
 	uint32_t mScore;
 	uint32_t mGhostMultiplier;
 	bool mIsDying;//play dying animation
+	bool mSpeedUp;
+	double mSpeedUpTimer;
 };
 

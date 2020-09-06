@@ -12,6 +12,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "..//Graphics/Camera.h"
 
+
+namespace {
+	const float SUPER_PELLET_OFFSET = 12;
+}
 PacmanLevel::PacmanLevel()
 {
 	ResourceManager::LoadShader("./shaders/level.vs", "./shaders/level.fs", nullptr, "level");
@@ -23,6 +27,7 @@ PacmanLevel::~PacmanLevel()
 	delete mSkybox;
 	delete mPelletSprite;
 	delete mCherry.sprite;
+	delete mApple.sprite;
 }
 
 bool PacmanLevel::Init(const std::string& levelPath) 
@@ -40,6 +45,7 @@ bool PacmanLevel::Init(const std::string& levelPath)
 
 void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost) 
 {
+	/*mSkybox->transformation.position.y -= dt * 20;*/
 	//Collision checking game logic here. 
 	for (const auto & wall : mWalls)
 	{
@@ -72,8 +78,12 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 
 				if (pellet.powerPellet)
 				{
+					AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
 					pacman.ResetGhostEatenMultiplier();
-					redGhost.SetToVulnerable();
+					if (!redGhost.IsDead())
+					{
+						redGhost.SetToVulnerable();
+					}
 				}
 			}
 		}
@@ -83,6 +93,15 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 	{
 		mCherry.eaten = true;
 		pacman.AteItem(mCherry.score);
+		AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
+	}
+
+	if (pacman.GetEatingBoundingBox().Intersects(mApple.mBBox) && !mApple.eaten)
+	{
+		mApple.eaten = true;
+		pacman.AteItem(mApple.score);
+		pacman.SetSpeedUp(true);
+		pacman.SetMovementSpeed(PACMAN_SPEED_UP);
 		AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
 	}
 
@@ -96,10 +115,16 @@ void PacmanLevel::Draw(float dt)
 	shader.Use().SetMatrix4("projection", Camera::instance().GetPerspectiveProjection());
 	shader.SetMatrix4("view", Camera::instance().GetViewMatrix());
 	
-	shader.SetInteger("isSkybox", 1);
+	shader.SetInteger("isSkyBox", 1);
+	mGameTimer += dt/80;
+	if (mGameTimer >= 1)
+	{
+		mGameTimer = 0;
+	}
+	shader.SetFloat("deltaTime", mGameTimer);
 	shader.SetMatrix4("model_matrx", mSkybox->transformation.Get());
 	mSkybox->draw(0);
-	shader.SetFloat("isSkybox", 0 );
+	shader.SetFloat("isSkyBox", 0 );
 	shader.SetMatrix4("model_matrx", mBackground->transformation.Get());
 	mBackground->draw(0);
 	
@@ -110,6 +135,7 @@ void PacmanLevel::Draw(float dt)
 		{
 			mPelletSprite->transformation.position = vec3(pellet.mBBox.GetCenterPoint().x -5, pellet.mBBox.GetCenterPoint().y - 5,1);
 			if (pellet.powerPellet) {
+				mPelletSprite->transformation.position.y -= SUPER_PELLET_OFFSET;
 				mPelletSprite->transformation.scale = vec2(PELLET_SIZE * 2, PELLET_SIZE * 2);
 			}
 			else
@@ -129,6 +155,13 @@ void PacmanLevel::Draw(float dt)
 	}
 
 
+	if (!mApple.eaten)
+	{
+		shader.SetMatrix4("model_matrx", mApple.sprite->transformation.Get());
+		mApple.sprite->draw(0);
+	}
+
+
 }
 
 bool PacmanLevel::LoadLevel(const std::string& path) 
@@ -144,9 +177,9 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		mBackground = new Sprite(("./" + std::string("assets/") + imageName).c_str());
 		mBackground->transformation.scale = glm::vec2(BACKGROUND_SIZE.x, BACKGROUND_SIZE.y);
 		mBackground->transformation.position = glm::vec3(0, 40,0);
-		mSkybox = new Sprite("./assets/galaxy.png");
-		mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x * 4, WINDOWSIZE.y * 4);
-		mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x),-(float)(WINDOWSIZE.y), -20);
+		mSkybox = new Sprite("./assets/space3-2.png");
+		mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x*3, WINDOWSIZE.y*3);
+		mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x),-(float)(WINDOWSIZE.y*1.2), -20);
 		assert(mBackground->IsLoaded() && "Didn't load the bg image");
 		assert(mSkybox->IsLoaded() && "Didn't load the bg image");
 	};
@@ -174,6 +207,17 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		assert(mCherry.sprite->IsLoaded() && "Didn't load the cherry image");
 	};
 	fileLoader.AddCommand(cherryImageCommand);
+
+	Command appleImageCommand;
+	appleImageCommand.command = "apple_image";
+	appleImageCommand.parseFunc = [this, &imageName](ParseFuncParams params)
+	{
+		imageName = FileCommandLoader::ReadString(params);
+		mApple.sprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
+		mApple.sprite->transformation.scale = PACMAN_SIZE;
+		assert(mApple.sprite->IsLoaded() && "Didn't load the cherry image");
+	};
+	fileLoader.AddCommand(appleImageCommand);
 
 	Command tileWidthCommand;
 	tileWidthCommand.command = "tile_width";
@@ -255,6 +299,14 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	};
 	fileLoader.AddCommand(tileCherrySpawnPointCommand);
 
+	Command tileAppleSpawnPointCommand;
+	tileAppleSpawnPointCommand.command = "tile_apple_spawn";
+	tileAppleSpawnPointCommand.parseFunc = [this](ParseFuncParams params)
+	{
+		mTiles.back().isAppleSpwanTile = FileCommandLoader::ReadInt(params) > 0;
+	};
+	fileLoader.AddCommand(tileAppleSpawnPointCommand);
+
 	glm::vec2 layoutOffset;
 	Command layoutOffsetCommand;
 	layoutOffsetCommand.command = "layout_offset";
@@ -300,6 +352,12 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 					mCherry.sprite->SetPosition(vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2));
 					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
 					mCherry.mBBox = rect;
+				}
+				if (tile->isAppleSpwanTile)
+				{
+					mApple.sprite->SetPosition(vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2));
+					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
+					mApple.mBBox = rect;
 				}
 				startingX += tile->width;
 			}
@@ -368,7 +426,7 @@ void PacmanLevel::ResetPellets()
 				{
 					p.powerPellet = 1;
 					p.score = 40;
-					p.mBBox = AARectangle(vec2(x - 12, y - 12), mTileHeight, mTileHeight);
+					p.mBBox = AARectangle(vec2(x - SUPER_PELLET_OFFSET, y), PELLET_SIZE, PELLET_SIZE);
 					mPellets.push_back(p);
 
 					p.powerPellet = 0;

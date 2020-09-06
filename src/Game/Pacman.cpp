@@ -2,6 +2,12 @@
 #include "..//Utilities/Utils.h"
 #include "gameHelper.h"
 #include "..//Utilities/resourceManager.h"
+#include <GLFW/glfw3.h>
+
+namespace 
+{
+	const uint32_t SPEEDUP_DURATION = 6;
+}
 
 Pacman::Pacman():mIsDying(false)
 {
@@ -29,6 +35,18 @@ void Pacman::Update(double dt)
 		return;
 	}
 
+	if (mSpeedUp)
+	{
+		mSpeedUpTimer += dt;
+		if (mSpeedUpTimer > SPEEDUP_DURATION)
+		{
+			mSpeedUpTimer = 0;
+			mSpeedUp = false;
+			SetMovementSpeed(PACMAN_SPEED);
+			mSprite->SetSize(PACMAN_SIZE);
+		}
+	}
+
 	Actor::Update(dt);
 }
 
@@ -43,6 +61,19 @@ void Pacman::ResetToSpwanPosition()
 {
 	mIsDying = false;
 	Actor::ResetToSpwanPosition();
+}
+
+void Pacman::Draw(double dt)
+{
+	ShaderManager shader = ResourceManager::GetShader("sprite");
+
+
+	float timeValue = glfwGetTime();
+	float greenValue = (sin(timeValue *10) / 2.0f) + 0.5f;
+	shader.Use().SetInteger("isVulnerable", false);
+	shader.Use().SetFloat("sinColor", greenValue);
+	shader.SetInteger("isSpeedUp", this->mSpeedUp);
+	Actor::Draw(dt);
 }
 
 void Pacman::SetMovementDirection(PacmanMovement movementDir)

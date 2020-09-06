@@ -91,21 +91,29 @@ void PacmanGame::Update(float dt)
 
 		mGhost->Update(dt, *mPacman);
 
-		if (mGhost->IsVulnerable() && mPacman->GetEatingBoundingBox().Intersects(mGhost->GetBoundingBox()))
+		if (mGhost->IsVulnerable())
 		{
-			AudioPlayer::instance().Play(AudioPlayer::EAT_GHOST, false);
-			mGhost->EatenByPacman();
-			mPacman->AteGhost(mGhost->GetScore());
+			mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x * 1.25, PACMAN_SIZE.y * 1.25));
+			if (mPacman->GetEatingBoundingBox().Intersects(mGhost->GetBoundingBox()))
+			{
+				AudioPlayer::instance().Play(AudioPlayer::EAT_GHOST, false);
+				mGhost->EatenByPacman();
+				mPacman->AteGhost(mGhost->GetScore());
+			}
 		}
-		else if (mGhost->IsInvulnerable() && mGhost->GetEatingBoundingBox().Intersects(mPacman->GetBoundingBox()))
+		else if (mGhost->IsInvulnerable())
 		{
-			AudioPlayer::instance().Play(AudioPlayer::DEATH, false);
-			mLives--;
-			mPacman->EatenByGhost();
-			mPressedDirection = PACMAN_MOVEMENT_NONE;
-			mPacman->SetMovementDirection(mPressedDirection);
-			mGameState = LOST_LIFE;
-			return;
+			mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x, PACMAN_SIZE.y ));
+			if (mGhost->GetEatingBoundingBox().Intersects(mPacman->GetBoundingBox()))
+			{
+				AudioPlayer::instance().Play(AudioPlayer::DEATH, false);
+				mLives--;
+				mPacman->EatenByGhost();
+				mPressedDirection = PACMAN_MOVEMENT_NONE;
+				mPacman->SetMovementDirection(mPressedDirection);
+				mGameState = LOST_LIFE;
+				return;
+			}
 		}
 		if (mLevel->IsLevelOver())
 		{

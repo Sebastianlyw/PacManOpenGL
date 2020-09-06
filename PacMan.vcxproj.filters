@@ -48,9 +48,6 @@
     <Image Include="assets\maze_new.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="assets\APPLE.png">
-      <Filter>Assets</Filter>
-    </Image>
     <Image Include="assets\monster3.png">
       <Filter>Assets</Filter>
     </Image>
@@ -69,10 +66,13 @@
     <Image Include="assets\mazeVV.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="assets\skybox.png">
+    <Image Include="assets\galaxy.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="assets\galaxy.png">
+    <Image Include="assets\space1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\apple.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

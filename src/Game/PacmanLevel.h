@@ -41,6 +41,7 @@ private:
 		bool isPacmanSpawnTile = false;
 		bool isRedGhostSpawnTile = false;
 		bool isCherrySpwanTile = false;
+		bool isAppleSpwanTile = false;
 		char symbol = '-';
 	};
 
@@ -60,6 +61,14 @@ private:
 		Sprite* sprite;
 	};
 
+	struct Apple
+	{
+		uint32_t score = APPLE_SCORE;
+		AARectangle mBBox;
+		int eaten = 0;
+		Sprite* sprite;
+	};
+
 	bool LoadLevel(const std::string& path);
 	Tile* GetTileBySymbol(char symbol);
 	void ResetPellets();
@@ -68,6 +77,7 @@ private:
 	Sprite* mBackground;
 	Sprite* mPelletSprite;
 	Cherry  mCherry;
+	Apple	mApple;
 	
 	std::vector<Excluder> mWalls;
 	std::vector<Tile> mTiles;
@@ -78,5 +88,5 @@ private:
 	vec2 mLayoutOffset;
 	vec3 mPacmanSpawnPosition;
 	vec3 mRedGhostSpwanPosition;
-	vec3 mCherryPositoin;
+	double_t mGameTimer;
 };

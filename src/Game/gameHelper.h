@@ -4,11 +4,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
+
+static const uint32_t PACMAN_SPEED_UP = 210;
 static const uint32_t PACMAN_SPEED = 150; 
 static const uint32_t PELLET_SIZE = 30;
 static const uint32_t GHOST_MOVEMENT_SPEED =100;
-static const uint32_t GHOST_MOVEMENT_SPEED_SLOW = 260;
-static const uint32_t GHOST_VULNERABE_TIME = 6;
+static const uint32_t GHOST_MOVEMENT_SPEED_SLOW = 60;
 static const uint16_t MAX_LIVES = 4;
 static const uint16_t GHOST_SCORE = 200;
 static const uint16_t PELLET_SCORE = 10;
@@ -20,6 +21,7 @@ static const glm::mat4 MainCameraProjection = glm::ortho(0.0f, (float)WINDOWSIZE
 static const uint32_t SCATTER_DURATION = 10;
 static const glm::vec2 SCATTER_POS = glm::vec2(WINDOWSIZE.x - 70, 0);
 static const uint32_t CHERRY_SCORE = 100;
+static const uint32_t APPLE_SCORE = 100;
 
 
 enum PacmanMovement

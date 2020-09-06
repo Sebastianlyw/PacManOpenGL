@@ -25,6 +25,7 @@ public:
 	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed) override;
 	virtual void SetMovementDirection(PacmanMovement direction) override;
 	virtual void Stop() override;
+	virtual void Draw(double dt) override;
 
 	void Update(double dt, Pacman& pacman);
 	void SetToVulnerable();

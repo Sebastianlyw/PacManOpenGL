@@ -166,7 +166,7 @@
     <ClCompile Include="src\Utilities\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="assets\APPLE.png" />
+    <Image Include="assets\apple.png" />
     <Image Include="assets\cherry.png" />
     <Image Include="assets\galaxy.png" />
     <Image Include="assets\mazeVV.png" />
@@ -177,7 +177,7 @@
     <Image Include="assets\monster3.png" />
     <Image Include="assets\pacmanWalking.png" />
     <Image Include="assets\pellet.png" />
-    <Image Include="assets\skybox.png" />
+    <Image Include="assets\space1.png" />
     <Image Include="assets\strawberry.png" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,11 @@
 #include "..//Utilities/resourceManager.h"
 #include "..//Math/AARectangle.h"
 
+namespace
+{
+	static const uint32_t GHOST_VULNERABE_DURATION = 6;
+}
+
 void Ghost::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
 {
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
@@ -24,14 +29,27 @@ void Ghost::Update(double dt, Pacman& pacman)
 	
 	mCanChangeDirection = position != Position();
 
-	/*if (IsVulnerable())
+	if (IsVulnerable())
 	{
 		mGhostTimer += dt;
-		if (mGhostTimer > GHOST_VULNERABE_TIME)
+		if (mGhostTimer > GHOST_VULNERABE_DURATION)
 		{
 			SetGhostState(GHOST_STATE_INVULNERABLE);
 		}
-	}*/
+	}
+}
+
+void Ghost::Draw(double dt)
+{
+	ShaderManager shader = ResourceManager::GetShader("sprite");
+	
+	shader.Use().SetInteger("isVulnerable", mState == GHOST_STATE_VULNERABLE);
+
+	shader.SetInteger("isSpeedUp", 0);
+	if (!this->IsDead())
+	{
+		Actor::Draw(dt);
+	}
 }
 
 void Ghost::SetMovementDirection(PacmanMovement direction)
@@ -46,7 +64,7 @@ void Ghost::Stop()
 
 void Ghost::SetToVulnerable()
 {
-	mState = GHOST_STATE_VULNERABLE;
+	SetGhostState(GHOST_STATE_VULNERABLE);
 }
 
 void Ghost::EatenByPacman()

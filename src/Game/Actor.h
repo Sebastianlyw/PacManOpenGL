@@ -36,6 +36,7 @@ public:
 	inline void SetMovementSpeed(uint32_t movementSpeed) { mMovementSpeed = movementSpeed; }
 	inline void SetPlayAnimation(bool playAnimation) { mPlayAnimation = playAnimation; }
 	virtual inline void SetMovementDirection(PacmanMovement direction) { mMovementDirection = direction; }
+	inline Sprite* GetSpirte() { return mSprite; }
 
 protected:
 

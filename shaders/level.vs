@@ -9,9 +9,9 @@ uniform mat4 projection;
 uniform mat4 model_matrx;
 uniform mat4 view;
 
-
 out vec4 vertex_color;
 out vec2 vertex_uv;
+
 
 void main()
 {

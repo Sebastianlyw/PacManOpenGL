@@ -6,17 +6,26 @@ in vec2 vertex_uv;
 
 uniform bool isSkyBox;
 
+uniform float deltaTime;
+
 uniform sampler2D sprite;
+uniform float ourColor; // we set this variable in the OpenGL code.
 
 void main()
 {
     if(isSkyBox)
     {
-        finalcolor = vertex_color * texture(sprite,vertex_uv);
+     vec2 uv = vertex_uv;
+     uv.y += deltaTime;
+     finalcolor = vertex_color * texture(sprite,uv) * vec4(1,1,1,1);
+        
+     //   uniform float dt;
     }
     else
     {
+     //finalcolor = vec4(0,ourColor,0,1);
         finalcolor = vertex_color * texture(sprite,vertex_uv)*vec4(1,1,1,0.9);
     }
-	
+
+   
 }
