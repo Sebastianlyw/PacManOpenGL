@@ -45,12 +45,6 @@
     <Image Include="assets\pacmanWalking.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="assets\maze_new.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="assets\monster3.png">
-      <Filter>Assets</Filter>
-    </Image>
     <Image Include="assets\monster-green.png">
       <Filter>Assets</Filter>
     </Image>
@@ -63,17 +57,17 @@
     <Image Include="assets\mazeVV.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="assets\galaxy.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="assets\space1.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="assets\apple.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="assets\monster-pink.png">
       <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\monster-blue.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="assets\space1.jpg">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -279,10 +273,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="assets\LoraFont.ttf" />
     <Font Include="assets\OCRAEXT.TTF" />
-    <Font Include="assets\desyrel.ttf" />
-    <Font Include="assets\PrintClearly.otf" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="assets\Audio\pacman_beginning.wav">

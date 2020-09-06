@@ -15,6 +15,8 @@
 
 namespace {
 	const float SUPER_PELLET_OFFSET = 12;
+	const float BONUS_DURATION = 13;
+	const vec2 LEVEL_MAP_OFFSET = vec2(10, 50);
 }
 PacmanLevel::PacmanLevel()
 {
@@ -26,8 +28,8 @@ PacmanLevel::~PacmanLevel()
 	delete mBackground;
 	delete mSkybox;
 	delete mPelletSprite;
-	delete mCherry.sprite;
-	delete mApple.sprite;
+	delete mCherrySprite;
+	delete mAppleSprite;
 }
 
 bool PacmanLevel::Init(const std::string& levelPath) 
@@ -120,23 +122,42 @@ void PacmanLevel::Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
 				}
 			}
 		}
-	}
-	
-	if (pacman.GetEatingBoundingBox().Intersects(mCherry.mBBox) && !mCherry.eaten)
-	{
-		mCherry.eaten = true;
-		pacman.AteItem(mCherry.score);
-		AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
+
+		if (pellet.powerPellet && pellet.eaten)
+		{
+			mPowerTimer += dt;
+			if (mPowerTimer > BONUS_DURATION)
+			{
+				mPowerTimer = 0;
+				pellet.eaten = false;
+			}
+		}
 	}
 
-	if (pacman.GetEatingBoundingBox().Intersects(mApple.mBBox) && !mApple.eaten)
+	for (int i = 0; i < mFruits.size(); i++)
 	{
-		mApple.eaten = true;
-		pacman.AteItem(mApple.score);
-		pacman.SetSpeedUp(true);
-		pacman.SetMovementSpeed(PACMAN_SPEED_UP);
-		AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
+		if (pacman.GetEatingBoundingBox().Intersects(mFruits[i].mBBox) && !mFruits[i].eaten)
+		{
+			mFruits[i].eaten = true;
+			pacman.AteItem(mFruits[i].score);
+			AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
+			if (mFruits[i].name == APPLE)
+			{
+				pacman.SetSpeedUp(true);
+				pacman.SetMovementSpeed(PACMAN_SPEED_UP);
+			}
+		}
+		if (mFruits[i].eaten)
+		{
+			mBonusTimer[i] += dt;
+			if (mBonusTimer[i] > BONUS_DURATION)
+			{
+				mBonusTimer[i] = 0;
+				mFruits[i].eaten = false;
+			}
+		}
 	}
+	
 
 }
 
@@ -149,12 +170,12 @@ void PacmanLevel::Draw(float dt)
 	shader.SetMatrix4("view", Camera::instance().GetViewMatrix());
 	
 	shader.SetInteger("isSkyBox", 1);
-	mGameTimer += dt/80;
-	if (mGameTimer >= 1)
+	mShaderTimer += dt/80;
+	if (mShaderTimer >= 1)
 	{
-		mGameTimer = 0;
+		mShaderTimer = 0;
 	}
-	shader.SetFloat("deltaTime", mGameTimer);
+	shader.SetFloat("deltaTime", mShaderTimer);
 	shader.SetMatrix4("model_matrx", mSkybox->transformation.Get());
 	mSkybox->draw(0);
 	shader.SetFloat("isSkyBox", 0 );
@@ -185,20 +206,26 @@ void PacmanLevel::Draw(float dt)
 		}
 	}
 
-	if (!mCherry.eaten)
+	for (auto fruit : mFruits)
 	{
-		shader.SetMatrix4("model_matrx", mCherry.sprite->transformation.Get());
-		mCherry.sprite->draw(0);
+		if (fruit.eaten)
+		{
+			continue;
+		}
+
+		if (fruit.name == CHERRY)
+		{
+			mCherrySprite->SetPosition(vec3(fruit.position, 0));
+			shader.SetMatrix4("model_matrx", mCherrySprite->transformation.Get());
+			mCherrySprite->draw(0);
+		}
+		else if (fruit.name == APPLE)
+		{
+			mAppleSprite->SetPosition(vec3(fruit.position, 0));
+			shader.SetMatrix4("model_matrx", mAppleSprite->transformation.Get());
+			mAppleSprite->draw(0);
+		}
 	}
-
-
-	if (!mApple.eaten)
-	{
-		shader.SetMatrix4("model_matrx", mApple.sprite->transformation.Get());
-		mApple.sprite->draw(0);
-	}
-
-
 }
 
 bool PacmanLevel::LoadLevel(const std::string& path) 
@@ -213,10 +240,10 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		imageName = FileCommandLoader::ReadString(params);
 		mBackground = new Sprite(("./" + std::string("assets/") + imageName).c_str());
 		mBackground->transformation.scale = glm::vec2(BACKGROUND_SIZE.x, BACKGROUND_SIZE.y);
-		mBackground->transformation.position = glm::vec3(0, 40,0);
-		mSkybox = new Sprite("./assets/space1.png");
-		mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x*3, WINDOWSIZE.y*3);
-		mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x),-(float)(WINDOWSIZE.y*1.2), -20);
+		mBackground->transformation.position = glm::vec3(LEVEL_MAP_OFFSET,0);
+		mSkybox = new Sprite("./assets/space2.png");
+		mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x*2.8, WINDOWSIZE.y*2.5);
+		mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x) + 150,-(float)(WINDOWSIZE.y*1.2), -20);
 		assert(mBackground->IsLoaded() && "Didn't load the bg image");
 		assert(mSkybox->IsLoaded() && "Didn't load the bg image");
 	};
@@ -239,9 +266,9 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	cherryImageCommand.parseFunc = [this, &imageName](ParseFuncParams params)
 	{
 		imageName = FileCommandLoader::ReadString(params);
-		mCherry.sprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
-		mCherry.sprite->transformation.scale = PACMAN_SIZE;
-		assert(mCherry.sprite->IsLoaded() && "Didn't load the cherry image");
+		mCherrySprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
+		mCherrySprite->transformation.scale = PACMAN_SIZE;
+		assert(mCherrySprite->IsLoaded() && "Didn't load the cherry image");
 	};
 	fileLoader.AddCommand(cherryImageCommand);
 
@@ -250,9 +277,9 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	appleImageCommand.parseFunc = [this, &imageName](ParseFuncParams params)
 	{
 		imageName = FileCommandLoader::ReadString(params);
-		mApple.sprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
-		mApple.sprite->transformation.scale = PACMAN_SIZE;
-		assert(mApple.sprite->IsLoaded() && "Didn't load the cherry image");
+		mAppleSprite = new Sprite(("./" + std::string("assets/") + imageName).c_str());
+		mAppleSprite->transformation.scale = PACMAN_SIZE;
+		assert(mAppleSprite->IsLoaded() && "Didn't load the cherry image");
 	};
 	fileLoader.AddCommand(appleImageCommand);
 
@@ -336,6 +363,14 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 	};
 	fileLoader.AddCommand(tilePinkghostSpawnPointCommand);
 
+	Command tileBlueghostSpawnPointCommand;
+	tileBlueghostSpawnPointCommand.command = "tile_blueghost_spawn";
+	tileBlueghostSpawnPointCommand.parseFunc = [this](ParseFuncParams params)
+	{
+		mTiles.back().isBlueGhostSpwanTile = FileCommandLoader::ReadInt(params) > 0;
+	};
+	fileLoader.AddCommand(tileBlueghostSpawnPointCommand);
+
 
 	Command tileCherrySpawnPointCommand;
 	tileCherrySpawnPointCommand.command = "tile_cherry_spawn";
@@ -414,17 +449,27 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 				{
 					mPinkGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2);
 				}
+				else if(tile->isBlueGhostSpwanTile)
+				{
+					mBlueGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2);
+				}
 				else if (tile->isCherrySpwanTile)
 				{
-					mCherry.sprite->SetPosition(vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2));
-					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
-					mCherry.mBBox = rect;
+					Fruit cherry;
+					cherry.position = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
+					cherry.mBBox = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
+					cherry.name = CHERRY;
+					cherry.score = CHERRY_SCORE;
+					mFruits.push_back(cherry);
 				}
 				else if (tile->isAppleSpwanTile)
 				{
-					mApple.sprite->SetPosition(vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2));
-					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
-					mApple.mBBox = rect;
+					Fruit apple;
+					apple.position = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2);
+					apple.mBBox = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
+					apple.name = APPLE;
+					apple.score = APPLE_SCORE;
+					mFruits.push_back(apple);
 				}
 
 				if (tile->isExcludePelletTile > 0)
@@ -481,8 +526,11 @@ void PacmanLevel::ResetLevel()
 
 void PacmanLevel::ResetBonusItems()
 {
-	mCherry.eaten = false;
-	mApple.eaten = false;
+	mBonusTimer.resize(mFruits.size());
+	for (auto f : mFruits)
+	{
+		f.eaten = false;
+	}
 }
 
 void PacmanLevel::ResetPellets() 
@@ -490,7 +538,7 @@ void PacmanLevel::ResetPellets()
 	mPellets.clear();
 	const uint32_t PADDING = static_cast<uint32_t>(mTileHeight);
 	uint32_t startingY = mLayoutOffset.y + PADDING + mTileHeight - 20;
-	uint32_t startingX = PADDING;
+	uint32_t startingX = PADDING ;
 	const uint32_t LEVEL_HEIGHT = mLayoutOffset.y + 32 * mTileHeight;
 	Pellet p;
 	p.score = PELLET_SCORE;
@@ -506,7 +554,7 @@ void PacmanLevel::ResetPellets()
 				{
 					p.powerPellet = 1;
 					p.score = 40;
-					p.mBBox = AARectangle(vec2(x - SUPER_PELLET_OFFSET, y), PELLET_SIZE, PELLET_SIZE);
+					p.mBBox = AARectangle(vec2(x - SUPER_PELLET_OFFSET, y), PELLET_SIZE, PELLET_SIZE + 5);
 					mPellets.push_back(p);
 
 					p.powerPellet = 0;

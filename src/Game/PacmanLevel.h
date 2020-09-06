@@ -7,11 +7,20 @@
 #include "GhostAI.h"
 #include <random>
 #include "../Graphics/Sprite.h"
+#include <vector>
 
 class Pacman;
 class Ghost;
 class GhostAI;
 using namespace glm;
+
+
+enum FRUITE_NAME
+{
+	CHERRY = 0,
+	APPLE
+};
+
 class PacmanLevel
 {
 public:
@@ -31,7 +40,7 @@ public:
 	inline vec3 GetPacmanSpawnPosition() { return mPacmanSpawnPosition; }
 	inline vec3 GetRedghostSpwanPosition() { return mRedGhostSpwanPosition; }
 	inline vec3 GetPinkghostSpwanPosition() { return mPinkGhostSpwanPosition; }
-
+	inline vec3 GetBlueghostSpwanPosition() { return  mBlueGhostSpwanPosition; }
 private:
 	struct Tile
 	{
@@ -42,6 +51,7 @@ private:
 		bool isExcludePelletTile = false;
 		bool isPacmanSpawnTile = false;
 		bool isRedGhostSpawnTile = false;
+		bool isBlueGhostSpwanTile = false;
 		bool isPinkGhostSpawnTile = false;
 		bool isCherrySpwanTile = false;
 		bool isAppleSpwanTile = false;
@@ -57,20 +67,14 @@ private:
 		int eaten = 0;
 	};
 
-	struct Cherry
-	{
-		uint32_t score = CHERRY_SCORE;
-		AARectangle mBBox;
-		int eaten = 0;
-		Sprite* sprite;
-	};
 
-	struct Apple
+	struct Fruit
 	{
 		uint32_t score = APPLE_SCORE;
 		AARectangle mBBox;
 		int eaten = 0;
-		Sprite* sprite;
+		FRUITE_NAME name = CHERRY;
+		vec2 position = vec2(0.f);
 	};
 
 	bool LoadLevel(const std::string& path);
@@ -80,19 +84,23 @@ private:
 	Sprite* mSkybox;
 	Sprite* mBackground;
 	Sprite* mPelletSprite;
-	Cherry  mCherry;
-	Apple	mApple;
+	Sprite* mAppleSprite;
+	Sprite* mCherrySprite;
 	
 	std::vector<Excluder> mWalls;
 	std::vector<Excluder> mGate;
 	std::vector<Tile> mTiles;
 	std::vector<Tile> mExclusionTiles;
 	std::vector<Pellet> mPellets;
+	std::vector<Fruit> mFruits;
 
 	size_t mTileHeight;
 	vec2 mLayoutOffset;
 	vec3 mPacmanSpawnPosition;
 	vec3 mRedGhostSpwanPosition;
 	vec3 mPinkGhostSpwanPosition;
-	double_t mGameTimer;
+	vec3 mBlueGhostSpwanPosition;
+	double_t mShaderTimer;
+	std::vector<double_t> mBonusTimer;
+	double_t mPowerTimer;
 };

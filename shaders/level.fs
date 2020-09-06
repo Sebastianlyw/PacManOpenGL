@@ -20,7 +20,7 @@ void main()
     {
      vec2 uv = vertex_uv;
      uv.y += deltaTime;
-     finalcolor = vertex_color * texture(sprite,uv) * vec4(1,1,1,1);
+     finalcolor = vertex_color * texture(sprite,uv) * vec4(1,1,1,0.9);
         
      //   uniform float dt;
     }

@@ -5,7 +5,7 @@ enum GhostName
 {
 	RED = 0,
 	PINK,
-	GREEN,
+	BLUE,
 	NUM_GHOSTS
 };
 

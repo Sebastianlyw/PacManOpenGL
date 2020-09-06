@@ -168,16 +168,14 @@
   <ItemGroup>
     <Image Include="assets\apple.png" />
     <Image Include="assets\cherry.png" />
-    <Image Include="assets\galaxy.png" />
     <Image Include="assets\mazeVV.png" />
-    <Image Include="assets\maze_new.png" />
     <Image Include="assets\monster-pink.png" />
     <Image Include="assets\monster-green.png" />
     <Image Include="assets\monster-red.png" />
-    <Image Include="assets\monster3.png" />
+    <Image Include="assets\monster-blue.png" />
     <Image Include="assets\pacmanWalking.png" />
     <Image Include="assets\pellet.png" />
-    <Image Include="assets\space1.png" />
+    <Image Include="assets\space1.jpg" />
     <Image Include="assets\strawberry.png" />
   </ItemGroup>
   <ItemGroup>
@@ -229,10 +227,7 @@
     <Text Include="assets\Pacman_level.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="assets\desyrel.ttf" />
-    <Font Include="assets\LoraFont.ttf" />
     <Font Include="assets\OCRAEXT.TTF" />
-    <Font Include="assets\PrintClearly.otf" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="assets\Audio\pacman_beginning.wav" />

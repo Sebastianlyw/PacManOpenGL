@@ -7,7 +7,8 @@
 
 namespace
 {
-	static const uint32_t GHOST_VULNERABE_DURATION = 6;
+	static const uint32_t GHOST_VULNERABE_DURATION = 5;
+	static const uint32_t GHOST_RESPAWN_DURATION = 10;
 }
 
 void Ghost::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
@@ -35,6 +36,17 @@ void Ghost::Update(double dt, Pacman& pacman)
 		if (mGhostTimer > GHOST_VULNERABE_DURATION)
 		{
 			SetGhostState(GHOST_STATE_INVULNERABLE);
+			mGhostTimer = 0;
+		}
+	}
+
+	if (IsDead())
+	{
+		mGhostTimer += dt;
+		if (mGhostTimer > GHOST_RESPAWN_DURATION)
+		{
+			SetGhostState(GHOST_STATE_INVULNERABLE);
+			mGhostTimer = 0;
 		}
 	}
 }
@@ -70,6 +82,8 @@ void Ghost::SetToVulnerable()
 void Ghost::EatenByPacman()
 {
 	SetGhostState(GHOST_STATE_DEAD);
+	mSprite->SetPosition(vec3(GHOST_RESPWAN_POSITION, 1));
+	mGhostTimer = 0; 
 }
 
 void Ghost::ResetToSpwanPosition()

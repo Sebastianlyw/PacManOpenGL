@@ -30,18 +30,6 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 			return PACMAN_MOVEMENT_NONE;
 		}
 
-		if (mState == GHOST_STATE_SCATTER)
-		{
-			mTimer += dt;
-
-			if (mTimer >= SCATTER_DURATION)
-			{
-				SetState(GHOST_STATE_CHASE);
-			}
-
-			return PACMAN_MOVEMENT_NONE;
-		}
-
 		PacmanMovement currentDir = mGhost->GetMovementDirection();
 		std::vector<PacmanMovement> tempDirections;
 		std::vector<PacmanMovement> possibleDirections;
@@ -139,13 +127,21 @@ void GhostAI::ChangeTarget(const vec2& target)
 
 vec2 GhostAI::GetChaseTarget(uint32_t dt, const Pacman& pacman, const PacmanLevel& level, const std::vector<Ghost*>& ghosts)
 {
-	switch (mName)
+	vec2 target = pacman.GetBoundingBox().GetCenterPoint();
+
+	//ToDo: more AI for different ghosts.
+	/*switch (mName)
 	{
 	case RED:
 		return  pacman.GetBoundingBox().GetCenterPoint();
 	case PINK:
 	default:
 		return  pacman.GetBoundingBox().GetCenterPoint();
+	}*/
+
+	if (mGhost->IsVulnerable())
+	{
+		target = vec2(WINDOWSIZE.x / 2, 0);
 	}
-	
+	return target;
 }

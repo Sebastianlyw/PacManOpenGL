@@ -18,32 +18,36 @@ PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 	
 void PacmanGame::Init()
 {
-	//mAudioPlayer = createIrrKlangDevice();
-	//mAudioPlayer->play2D("./assets/Audio/pacman_beginning.wav");
-	//level backgroud, pellet and fruit bonus item. 
-	//use different shader for different postprocessing effect. 
+
 	mLevel = new PacmanLevel();
 	mLevel->Init("./assets/Pacman_level.txt");
 	
 	mPacman = new Pacman();
 	mPacman->Init("./assets/pacmanwalking.png", mLevel->GetPacmanSpawnPosition() , PACMAN_SPEED);
 	
-	mGhosts.resize(2);
-	mGhostAIs.resize(2);
+	mGhosts.resize(NUM_GHOSTS);
+	mGhostAIs.resize(NUM_GHOSTS);
 	//setup ghosts
 	Ghost* redGhost = new Ghost();
-	redGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
+	redGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED + 5);
 	mGhosts[RED] = (redGhost);
 	GhostAI* redGhostAI = new GhostAI();
-	redGhostAI->Init(*redGhost, redGhost->GetBoundingBox().GetWidth(), SCATTER_POS, GhostName::RED);
+	redGhostAI->Init(*redGhost, redGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::RED);
 	mGhostAIs[RED]= (redGhostAI);
 
 	Ghost* pinkGhost = new Ghost();
-	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
+	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED - 5);
 	mGhosts[PINK]=(pinkGhost);
 	GhostAI* pinkGhostAI = new GhostAI();
-	pinkGhostAI->Init(*pinkGhost, pinkGhost->GetBoundingBox().GetWidth(), SCATTER_POS, GhostName::PINK);
+	pinkGhostAI->Init(*pinkGhost, pinkGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
 	mGhostAIs[PINK]=(pinkGhostAI);
+
+	Ghost* blueGhost = new Ghost();
+	blueGhost->Init("./assets/monster-blue.png", mLevel->GetBlueghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
+	mGhosts[BLUE] = (blueGhost);
+	GhostAI* blueGhostAI = new GhostAI();
+	blueGhostAI->Init(*blueGhost, blueGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
+	mGhostAIs[BLUE] = (blueGhostAI);
 
 	pacManLive = new Pacman();
 	pacManLive->Init("./assets/pacmanwalking.png", vec3(0.f), 0);
@@ -97,7 +101,7 @@ void PacmanGame::Update(float dt)
 		UpdatePacmanMovement();
 		mPacman->Update(dt);
 		
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < NUM_GHOSTS; i++)
 		{
 			Ghost& ghost = *mGhosts[i];
 			GhostAI& ghostAI = *mGhostAIs[i];
@@ -112,7 +116,7 @@ void PacmanGame::Update(float dt)
 
 			if (ghost.IsVulnerable())
 			{
-				mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x * 1.25, PACMAN_SIZE.y * 1.25));
+				mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x, PACMAN_SIZE.y));
 				if (mPacman->GetEatingBoundingBox().Intersects(ghost.GetBoundingBox()))
 				{
 					AudioPlayer::instance().Play(AudioPlayer::EAT_GHOST, false);
@@ -136,14 +140,10 @@ void PacmanGame::Update(float dt)
 			}
 		}
 
-	
-	
-
 		mLevel->Update(dt, *mPacman, mGhosts);
 		if (mLevel->IsLevelOver())
 		{
 			mGameState = GAME_WIN;
-			ResetGame();
 		}
 
 	}
@@ -163,6 +163,7 @@ void PacmanGame::Update(float dt)
 	{
 		if (this->Keys[GLFW_KEY_ENTER])
 		{
+			ResetGame();
 			mGameState = GAME_ALIVE;
 		}
 	}
@@ -235,7 +236,7 @@ void PacmanGame::Render(float dt)
 	//Draw score
 	std::stringstream my_ss; 
 	my_ss << this->mPacman->Score();
-	mTextRender->Render("SCORE: " + my_ss.str(), WINDOWSIZE.x / 2 - 70, 10, 1.0f, glm::uvec3(0, 1, 1 ));
+	mTextRender->Render("SCORE: " + my_ss.str(), WINDOWSIZE.x / 2 - 70, 20, 1.3f, glm::uvec3(0.3,0.6,0.8 ));
 
 	//Render enter to start
 	if (mGameState == ENTER_TO_START)
@@ -248,7 +249,7 @@ void PacmanGame::Render(float dt)
 	}
 	else if (mGameState == GAME_WIN)
 	{
-		mTextRender->Render("You Win the Game! Enter to Restart", 80, 200, 1.0f, glm::uvec3(1, 1, 0));
+		mTextRender->Render("You Won the Game! Enter to Restart", 80, 200, 1.0f, glm::uvec3(1, 1, 0));
 	}
 
 	
@@ -256,7 +257,7 @@ void PacmanGame::Render(float dt)
 	//Draw lives:
 	for (int i = 0; i < this->mLives; i++)
 	{
-		pacManLive->SetTransformation(vec3(20 + i * 40, WINDOWSIZE.y - 40, 1), PACMAN_SIZE, 0);
+		pacManLive->SetTransformation(vec3(50 + i * 40, WINDOWSIZE.y - 20, 1), PACMAN_SIZE, 0);
 		pacManLive->Draw(0);
 	}
 	//

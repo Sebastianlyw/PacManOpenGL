@@ -88,7 +88,6 @@ void Actor::SetTransformation(vec3 position, vec2 scale, float rotation) const
 void Actor::Stop()
 {
 	SetMovementDirection(PACMAN_MOVEMENT_NONE);
-	//mSprite->Stop();
 }
 
 
@@ -97,11 +96,6 @@ void Actor::ResetToSpwanPosition()
 	mSprite->SetPosition(mInitialPosition);
 	SetMovementDirection(PACMAN_MOVEMENT_NONE);
 }
-//
-//AARectangle Actor::GetEatingBoundingBox() const
-//{
-//	return AARectangle::Inset(GetBoundingBox(), Vec2D(3, 3));
-//}
 
 void Actor::AddAnimation(const char* animationName, bool looped)
 {
