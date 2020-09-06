@@ -31,6 +31,7 @@ public:
 	void Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts); 
 	void Draw(float dt);
 	void ResetLevel();
+	void ResetSkyBox();
 	void ResetBonusItems();
 	bool WillCollide(const AARectangle& abbox, PacmanMovement direction) const;
 	bool IsLevelOver() const;
@@ -103,4 +104,5 @@ private:
 	double_t mShaderTimer;
 	std::vector<double_t> mBonusTimer;
 	double_t mPowerTimer;
+	uint16_t mLevelCounter;
 };

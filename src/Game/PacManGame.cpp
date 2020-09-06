@@ -177,7 +177,6 @@ void PacmanGame::ResetLevel()
 	{
 		g->ResetToSpwanPosition();
 	}
-
 }
 
 void PacmanGame::InputUpdate(float dt)

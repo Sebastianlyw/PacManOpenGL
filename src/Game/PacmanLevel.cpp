@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "..//Graphics/Camera.h"
+#include <string>
 
 
 namespace {
@@ -241,11 +242,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		mBackground = new Sprite(("./" + std::string("assets/") + imageName).c_str());
 		mBackground->transformation.scale = glm::vec2(BACKGROUND_SIZE.x, BACKGROUND_SIZE.y);
 		mBackground->transformation.position = glm::vec3(LEVEL_MAP_OFFSET,0);
-		mSkybox = new Sprite("./assets/space2.png");
-		mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x*2.8, WINDOWSIZE.y*2.5);
-		mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x) + 150,-(float)(WINDOWSIZE.y*1.2), -20);
 		assert(mBackground->IsLoaded() && "Didn't load the bg image");
-		assert(mSkybox->IsLoaded() && "Didn't load the bg image");
 	};
 	fileLoader.AddCommand(bgImageCommand);
 
@@ -522,6 +519,15 @@ void PacmanLevel::ResetLevel()
 {
 	ResetBonusItems();
 	ResetPellets();
+	ResetSkyBox();
+}
+
+void PacmanLevel::ResetSkyBox()
+{
+	mLevelCounter++;
+	mSkybox = new Sprite(("./assets/space" + std::to_string(mLevelCounter % 4) + ".png").c_str());
+	mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x * 2.8, WINDOWSIZE.y * 2.5);
+	mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x) + 150, -(float)(WINDOWSIZE.y * 1.2), -20);
 }
 
 void PacmanLevel::ResetBonusItems()

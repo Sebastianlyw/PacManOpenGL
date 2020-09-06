@@ -175,7 +175,10 @@
     <Image Include="assets\monster-blue.png" />
     <Image Include="assets\pacmanWalking.png" />
     <Image Include="assets\pellet.png" />
-    <Image Include="assets\space1.jpg" />
+    <Image Include="assets\space1.png" />
+    <Image Include="assets\space2.png" />
+    <Image Include="assets\space3.png" />
+    <Image Include="assets\space4.png" />
     <Image Include="assets\strawberry.png" />
   </ItemGroup>
   <ItemGroup>
