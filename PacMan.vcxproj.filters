@@ -66,16 +66,7 @@
     <Image Include="assets\monster-blue.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="assets\space1.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="assets\space2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="assets\space3.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="assets\space4.png">
+    <Image Include="assets\sky.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -282,9 +273,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="assets\OCRAEXT.TTF" />
-  </ItemGroup>
-  <ItemGroup>
     <Media Include="assets\Audio\pacman_beginning.wav">
       <Filter>Resource Files</Filter>
     </Media>
@@ -306,5 +294,8 @@
     <Media Include="assets\Audio\pacman_intermission.wav">
       <Filter>Resource Files</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\emulogic.ttf" />
   </ItemGroup>
 </Project>

@@ -10,6 +10,8 @@
 #include<sstream>
 #include"..//Graphics/Sprite.h"
 
+#include <Windows.h>
+#include <limits.h>
 
 PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 {
@@ -18,7 +20,6 @@ PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 	
 void PacmanGame::Init()
 {
-
 	mLevel = new PacmanLevel();
 	mLevel->Init("./assets/Pacman_level.txt");
 	
@@ -53,7 +54,7 @@ void PacmanGame::Init()
 	pacManLive->Init("./assets/pacmanwalking.png", vec3(0.f), 0);
 
 	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
-	mTextRender->Load("./assets/OCRAEXT.TTF",28);
+	mTextRender->Load("./assets/emulogic.TTF",28);
 	ResourceManager::LoadShader("./shaders/skybox.vs", "./shaders/skybox.fs", nullptr, "skybox");
 }
   
@@ -181,6 +182,10 @@ void PacmanGame::ResetLevel()
 
 void PacmanGame::InputUpdate(float dt)
 {
+	if (this->Keys[GLFW_KEY_B])
+	{
+		mGameState = GAME_WIN;
+	}
 	if (this->Keys[GLFW_KEY_A] || this->Keys[GLFW_KEY_LEFT])
 	{
 		mPressedDirection = PACMAN_MOVEMENT_LEFT;
@@ -235,20 +240,20 @@ void PacmanGame::Render(float dt)
 	//Draw score
 	std::stringstream my_ss; 
 	my_ss << this->mPacman->Score();
-	mTextRender->Render("SCORE: " + my_ss.str(), WINDOWSIZE.x / 2 - 70, 20, 1.3f, glm::uvec3(0.3,0.6,0.8 ));
+	mTextRender->Render("SCORE: " + my_ss.str(), WINDOWSIZE.x / 2 - 150, 20, 1.25f, glm::uvec3(0.23,1,0.8));
 
 	//Render enter to start
 	if (mGameState == ENTER_TO_START)
 	{
-		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 100, 200, 1.0f, glm::uvec3(1, 1, 0));
+		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 180, 200, 1.0f, glm::uvec3(0.2, 0.99, 1));
 	}
 	else if (mGameState == GAME_OVER)
 	{
-		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 100, 200, 1.0f, glm::uvec3(1, 0.2, 0.2));
+		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 130, 200, 1.0f, glm::uvec3(1, 0.2, 0.2));
 	}
 	else if (mGameState == GAME_WIN)
 	{
-		mTextRender->Render("You Won the Game! Enter to Restart", 80, 200, 1.0f, glm::uvec3(1, 1, 0));
+		mTextRender->Render("You Won the Game!", 120, 200, 1.0f, glm::uvec3(1, 0, 1));
 	}
 
 	

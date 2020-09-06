@@ -93,13 +93,14 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <NoEntryPoint>
       </NoEntryPoint>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,14 +126,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\_TrueAxis\PacManOpenGL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\_TrueAxis\PacManOpenGL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -175,10 +177,7 @@
     <Image Include="assets\monster-blue.png" />
     <Image Include="assets\pacmanWalking.png" />
     <Image Include="assets\pellet.png" />
-    <Image Include="assets\space1.png" />
-    <Image Include="assets\space2.png" />
-    <Image Include="assets\space3.png" />
-    <Image Include="assets\space4.png" />
+    <Image Include="assets\sky.png" />
     <Image Include="assets\strawberry.png" />
   </ItemGroup>
   <ItemGroup>
@@ -230,9 +229,6 @@
     <Text Include="assets\Pacman_level.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="assets\OCRAEXT.TTF" />
-  </ItemGroup>
-  <ItemGroup>
     <Media Include="assets\Audio\pacman_beginning.wav" />
     <Media Include="assets\Audio\pacman_chomp.wav" />
     <Media Include="assets\Audio\pacman_death.wav" />
@@ -240,6 +236,9 @@
     <Media Include="assets\Audio\pacman_eatghost.wav" />
     <Media Include="assets\Audio\pacman_extrapac.wav" />
     <Media Include="assets\Audio\pacman_intermission.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\emulogic.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

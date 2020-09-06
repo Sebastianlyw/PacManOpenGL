@@ -49,6 +49,7 @@ Window::~Window()
 
 void Window::Mainloop()
 {
+	
 	while (!glfwWindowShouldClose(window_ptr))
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

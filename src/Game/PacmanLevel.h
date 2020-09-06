@@ -104,5 +104,4 @@ private:
 	double_t mShaderTimer;
 	std::vector<double_t> mBonusTimer;
 	double_t mPowerTimer;
-	uint16_t mLevelCounter;
 };

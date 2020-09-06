@@ -1,4 +1,5 @@
 #include "AudioPlayer.h"
+#include "../Game/gameHelper.h"
 
 using namespace irrklang;
 

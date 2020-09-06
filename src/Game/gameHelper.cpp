@@ -1,4 +1,5 @@
 #include "gameHelper.h"
+#include <Windows.h>
 
 glm::vec2 GetMovementVector(PacmanMovement direction)
 {
@@ -106,5 +107,15 @@ std::vector<PacmanMovement> GetOtherDirections(PacmanMovement direction)
 	}
 
 	return directions;
+}
+
+std::string GetExeutablePath()
+{
+	TCHAR szPath[MAX_PATH];
+	if (GetModuleFileName(NULL, szPath, MAX_PATH))
+	{
+		return szPath;
+	}
+	return "";
 }
 

@@ -524,8 +524,7 @@ void PacmanLevel::ResetLevel()
 
 void PacmanLevel::ResetSkyBox()
 {
-	mLevelCounter++;
-	mSkybox = new Sprite(("./assets/space" + std::to_string(mLevelCounter % 4) + ".png").c_str());
+	mSkybox = new Sprite("./assets/sky.png");
 	mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x * 2.8, WINDOWSIZE.y * 2.5);
 	mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x) + 150, -(float)(WINDOWSIZE.y * 1.2), -20);
 }

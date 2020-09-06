@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include <string>
 
 
 static const uint32_t PACMAN_SPEED_UP = 200;
@@ -35,3 +36,4 @@ PacmanMovement GetDirectionFromVector(glm::vec2 vector);
 PacmanMovement GetOppositeDirection(PacmanMovement direction);
 std::vector<PacmanMovement> GetPerpendicularMovements(PacmanMovement direction);
 std::vector<PacmanMovement> GetOtherDirections(PacmanMovement direction);
+std::string GetExeutablePath();
