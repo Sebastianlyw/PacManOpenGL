@@ -24,13 +24,13 @@ public :
 
 	void Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatterTarget, GhostName name);
 
-	PacmanMovement Update(float dt, const PacmanLevel& level, const Pacman& pacman, const Ghost& ghosts);
-	void Draw();
+	PacmanMovement Update(float dt, const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts);
+
 
 private:
 	void SetState(GhostAIState state);
 	void ChangeTarget(const vec2& target);
-	vec2 GetChaseTarget(uint32_t dt, const Pacman& pacman, const PacmanLevel& level, const Ghost& ghosts);
+	vec2 GetChaseTarget(uint32_t dt, const Pacman& pacman, const PacmanLevel& level, const std::vector<Ghost*>& ghosts);
 
 
 	Ghost* mGhost;

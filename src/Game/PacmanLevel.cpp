@@ -43,7 +43,7 @@ bool PacmanLevel::Init(const std::string& levelPath)
 }
 
 
-void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost) 
+void PacmanLevel::Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
 {
 	/*mSkybox->transformation.position.y -= dt * 20;*/
 	//Collision checking game logic here. 
@@ -58,12 +58,41 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 			pacman.Stop();
 		}
 
-		if (wall.HasCollided(redGhost.GetBoundingBox(), edge))
+	/*	for (auto& ghost : ghosts)
 		{
-			vec2 offset = wall.GetCollisionOffset(redGhost.GetBoundingBox());
-			redGhost.MoveBy(offset);
-			redGhost.Stop();
+			if (wall.HasCollided(ghost.GetBoundingBox(), edge))
+			{
+				vec2 offset = wall.GetCollisionOffset(ghost.GetBoundingBox());
+				ghost.MoveBy(offset);
+				ghost.Stop();
+			}
+		}*/
+
+	}
+
+	for (const auto& gate : mGate)
+	{
+		BoundaryEdge edge;
+
+		if (gate.HasCollided(pacman.GetBoundingBox(), edge))
+		{
+			vec2 offset = gate.GetCollisionOffset(pacman.GetBoundingBox());
+			pacman.MoveBy(offset);
+			pacman.Stop();
 		}
+
+	/*	for (size_t i = 0; i < NUM_GHOSTS; ++i)
+		{
+			Ghost& ghost = ghosts[i];
+
+			if (gate.HasCollided(ghost.GetBoundingBox(), edge))
+			{
+				vec2 offset = gate.GetCollisionOffset(ghost.GetBoundingBox());
+				ghost.MoveBy(offset);
+				ghost.Stop();
+			}
+		}*/
+
 	}
 
 	for (auto& pellet : mPellets)
@@ -80,15 +109,19 @@ void PacmanLevel::Update(float dt, Pacman& pacman, Ghost& redGhost)
 				{
 					AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
 					pacman.ResetGhostEatenMultiplier();
-					if (!redGhost.IsDead())
+				
+					for (auto& ghost : ghosts)
 					{
-						redGhost.SetToVulnerable();
+						if (!ghost->IsDead())
+						{
+							ghost->SetToVulnerable();
+						}
 					}
 				}
 			}
 		}
 	}
-
+	
 	if (pacman.GetEatingBoundingBox().Intersects(mCherry.mBBox) && !mCherry.eaten)
 	{
 		mCherry.eaten = true;
@@ -126,6 +159,10 @@ void PacmanLevel::Draw(float dt)
 	mSkybox->draw(0);
 	shader.SetFloat("isSkyBox", 0 );
 	shader.SetMatrix4("model_matrx", mBackground->transformation.Get());
+	
+	float timeValue = glfwGetTime();
+	float greenValue = (sin(timeValue * 10) / 2.0f) + 0.5f;
+	shader.Use().SetFloat("sinColor", greenValue);
 	mBackground->draw(0);
 	
 
@@ -177,7 +214,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		mBackground = new Sprite(("./" + std::string("assets/") + imageName).c_str());
 		mBackground->transformation.scale = glm::vec2(BACKGROUND_SIZE.x, BACKGROUND_SIZE.y);
 		mBackground->transformation.position = glm::vec3(0, 40,0);
-		mSkybox = new Sprite("./assets/space3-2.png");
+		mSkybox = new Sprite("./assets/space1.png");
 		mSkybox->transformation.scale = glm::vec2(WINDOWSIZE.x*3, WINDOWSIZE.y*3);
 		mSkybox->transformation.position = glm::vec3(-(float)(WINDOWSIZE.x),-(float)(WINDOWSIZE.y*1.2), -20);
 		assert(mBackground->IsLoaded() && "Didn't load the bg image");
@@ -290,6 +327,15 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		mTiles.back().isRedGhostSpawnTile = FileCommandLoader::ReadInt(params) > 0;
 	};
 	fileLoader.AddCommand(tileRedghostSpawnPointCommand);
+	
+	Command tilePinkghostSpawnPointCommand;
+	tilePinkghostSpawnPointCommand.command = "tile_pinkghost_spawn";
+	tilePinkghostSpawnPointCommand.parseFunc = [this](ParseFuncParams params)
+	{
+		mTiles.back().isPinkGhostSpawnTile = FileCommandLoader::ReadInt(params) > 0;
+	};
+	fileLoader.AddCommand(tilePinkghostSpawnPointCommand);
+
 
 	Command tileCherrySpawnPointCommand;
 	tileCherrySpawnPointCommand.command = "tile_cherry_spawn";
@@ -306,6 +352,14 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 		mTiles.back().isAppleSpwanTile = FileCommandLoader::ReadInt(params) > 0;
 	};
 	fileLoader.AddCommand(tileAppleSpawnPointCommand);
+
+	Command tileGateCommand;
+	tileGateCommand.command = "tile_is_gate";
+	tileGateCommand.parseFunc = [this](ParseFuncParams params)
+	{
+		mTiles.back().isGate = FileCommandLoader::ReadInt(params) > 0;
+	};
+	fileLoader.AddCommand(tileGateCommand);
 
 	glm::vec2 layoutOffset;
 	Command layoutOffsetCommand;
@@ -339,26 +393,45 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 
 					mWalls.push_back(wall);
 				}
+				else if (tile->isGate)
+				{
+					Excluder gate;
+
+					gate.Init(AARectangle(glm::vec2(startingX, layoutOffset.y), tile->width, static_cast<int>(mTileHeight)));
+
+					mGate.push_back(gate);
+				}
+				
 				if (tile->isPacmanSpawnTile)
 				{
 					mPacmanSpawnPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
 				}
-				if (tile->isRedGhostSpawnTile)
+				else if (tile->isRedGhostSpawnTile)
 				{
 					mRedGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
 				}
-				if (tile->isCherrySpwanTile)
+				else if (tile->isPinkGhostSpawnTile)
+				{
+					mPinkGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2);
+				}
+				else if (tile->isCherrySpwanTile)
 				{
 					mCherry.sprite->SetPosition(vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2));
 					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
 					mCherry.mBBox = rect;
 				}
-				if (tile->isAppleSpwanTile)
+				else if (tile->isAppleSpwanTile)
 				{
 					mApple.sprite->SetPosition(vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2));
 					AARectangle rect = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
 					mApple.mBBox = rect;
 				}
+
+				if (tile->isExcludePelletTile > 0)
+				{
+					mExclusionTiles.push_back(*tile);
+				}
+
 				startingX += tile->width;
 			}
 		}
@@ -402,7 +475,14 @@ bool PacmanLevel::WillCollide(const AARectangle& abbox, PacmanMovement direction
 
 void PacmanLevel::ResetLevel()
 {
+	ResetBonusItems();
 	ResetPellets();
+}
+
+void PacmanLevel::ResetBonusItems()
+{
+	mCherry.eaten = false;
+	mApple.eaten = false;
 }
 
 void PacmanLevel::ResetPellets() 

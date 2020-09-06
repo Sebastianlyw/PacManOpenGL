@@ -10,8 +10,6 @@
 #include<sstream>
 #include"..//Graphics/Sprite.h"
 
-	
-
 
 PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 {
@@ -30,36 +28,53 @@ void PacmanGame::Init()
 	mPacman = new Pacman();
 	mPacman->Init("./assets/pacmanwalking.png", mLevel->GetPacmanSpawnPosition() , PACMAN_SPEED);
 	
-	mGhost = new Ghost();
-	mGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
+	mGhosts.resize(2);
+	mGhostAIs.resize(2);
+	//setup ghosts
+	Ghost* redGhost = new Ghost();
+	redGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
+	mGhosts[RED] = (redGhost);
+	GhostAI* redGhostAI = new GhostAI();
+	redGhostAI->Init(*redGhost, redGhost->GetBoundingBox().GetWidth(), SCATTER_POS, GhostName::RED);
+	mGhostAIs[RED]= (redGhostAI);
 
-	mGhostAI = new GhostAI();
-	mGhostAI->Init(*mGhost, mGhost->GetBoundingBox().GetWidth(), SCATTER_POS, GhostName::RED);
+	Ghost* pinkGhost = new Ghost();
+	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
+	mGhosts[PINK]=(pinkGhost);
+	GhostAI* pinkGhostAI = new GhostAI();
+	pinkGhostAI->Init(*pinkGhost, pinkGhost->GetBoundingBox().GetWidth(), SCATTER_POS, GhostName::PINK);
+	mGhostAIs[PINK]=(pinkGhostAI);
 
 	pacManLive = new Pacman();
 	pacManLive->Init("./assets/pacmanwalking.png", vec3(0.f), 0);
 
 	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
 	mTextRender->Load("./assets/OCRAEXT.TTF",28);
-
-	ResourceManager::LoadShader("./shaders/posteffect.vs", "./shaders/posteffect.fs", nullptr, "posteffect");
 	ResourceManager::LoadShader("./shaders/skybox.vs", "./shaders/skybox.fs", nullptr, "skybox");
-	mPostEffect = new PostEffectRender(ResourceManager::GetShader("posteffect"), WINDOWSIZE.x, WINDOWSIZE.y);
-
 }
   
 void PacmanGame::ResetGame()
 {
 	ResetLevel();
+	mPacman->ResetScore();
 	mLives = MAX_LIVES;
 	mLevel->ResetLevel();
 }
 
 PacmanGame::~PacmanGame()
 {
+	for (auto g : mGhosts)
+	{
+		delete g;
+	}
+	mGhosts.clear();
+	for (auto a : mGhostAIs)
+	{
+		delete a;
+	}
+	mGhostAIs.clear();
+
 	delete mPacman;
-	delete mGhost;
-	delete mGhostAI;
 	delete pacManLive;
 	delete mTextRender;
 	delete mLevel;
@@ -81,40 +96,50 @@ void PacmanGame::Update(float dt)
 	{
 		UpdatePacmanMovement();
 		mPacman->Update(dt);
-		mLevel->Update(dt, *mPacman, *mGhost);
-		PacmanMovement dir = mGhostAI->Update(dt, *mLevel, *mPacman, *mGhost);
-		if (dir != mGhost->GetMovementDirection())
+		
+		for (int i = 0; i < 2; i++)
 		{
-			mGhost->SetMovementDirection(dir);
-			mGhost->LockCanChangeDirection();
-		}
-
-		mGhost->Update(dt, *mPacman);
-
-		if (mGhost->IsVulnerable())
-		{
-			mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x * 1.25, PACMAN_SIZE.y * 1.25));
-			if (mPacman->GetEatingBoundingBox().Intersects(mGhost->GetBoundingBox()))
+			Ghost& ghost = *mGhosts[i];
+			GhostAI& ghostAI = *mGhostAIs[i];
+			PacmanMovement dir = ghostAI.Update(dt, *mLevel, *mPacman, mGhosts);
+			if (dir != ghost.GetMovementDirection())
 			{
-				AudioPlayer::instance().Play(AudioPlayer::EAT_GHOST, false);
-				mGhost->EatenByPacman();
-				mPacman->AteGhost(mGhost->GetScore());
+				ghost.SetMovementDirection(dir);
+				ghost.LockCanChangeDirection();
+			}
+
+			ghost.Update(dt, *mPacman);
+
+			if (ghost.IsVulnerable())
+			{
+				mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x * 1.25, PACMAN_SIZE.y * 1.25));
+				if (mPacman->GetEatingBoundingBox().Intersects(ghost.GetBoundingBox()))
+				{
+					AudioPlayer::instance().Play(AudioPlayer::EAT_GHOST, false);
+					ghost.EatenByPacman();
+					mPacman->AteGhost(ghost.GetScore());
+				}
+			}
+			else if (ghost.IsInvulnerable())
+			{
+				mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x, PACMAN_SIZE.y));
+				if (ghost.GetEatingBoundingBox().Intersects(mPacman->GetBoundingBox()))
+				{
+					AudioPlayer::instance().Play(AudioPlayer::DEATH, false);
+					mLives--;
+					mPacman->EatenByGhost();
+					mPressedDirection = PACMAN_MOVEMENT_NONE;
+					mPacman->SetMovementDirection(mPressedDirection);
+					mGameState = LOST_LIFE;
+					return;
+				}
 			}
 		}
-		else if (mGhost->IsInvulnerable())
-		{
-			mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x, PACMAN_SIZE.y ));
-			if (mGhost->GetEatingBoundingBox().Intersects(mPacman->GetBoundingBox()))
-			{
-				AudioPlayer::instance().Play(AudioPlayer::DEATH, false);
-				mLives--;
-				mPacman->EatenByGhost();
-				mPressedDirection = PACMAN_MOVEMENT_NONE;
-				mPacman->SetMovementDirection(mPressedDirection);
-				mGameState = LOST_LIFE;
-				return;
-			}
-		}
+
+	
+	
+
+		mLevel->Update(dt, *mPacman, mGhosts);
 		if (mLevel->IsLevelOver())
 		{
 			mGameState = GAME_WIN;
@@ -147,84 +172,83 @@ void PacmanGame::ResetLevel()
 {
 	mPacman->ResetToSpwanPosition();
 	mPacman->ResetToFirstAnimation();
-	mGhost->ResetToSpwanPosition();
+	for (auto g : mGhosts)
+	{
+		g->ResetToSpwanPosition();
+	}
+
 }
 
 void PacmanGame::InputUpdate(float dt)
 {
-
-
-	//if (this->State == GAME_ACTIVE)
+	if (this->Keys[GLFW_KEY_A] || this->Keys[GLFW_KEY_LEFT])
 	{
-		if (this->Keys[GLFW_KEY_C])
-		{
-			mPostEffect->Chaos = !mPostEffect->Chaos;
-		}
-		if (this->Keys[GLFW_KEY_V])
-		{
-			mPostEffect->Shake = !mPostEffect->Shake;
-		}
-		if (this->Keys[GLFW_KEY_B])
-		{
-			mPostEffect->Confuse = !mPostEffect->Confuse;
-		}
-
-		if (this->Keys[GLFW_KEY_A] || this->Keys[GLFW_KEY_LEFT])
-		{
-			mPressedDirection = PACMAN_MOVEMENT_LEFT;
-			mPacman->SetMovementDirection(PACMAN_MOVEMENT_LEFT);
-		}
-		if (this->Keys[GLFW_KEY_D] || this->Keys[GLFW_KEY_RIGHT])
-		{
-			mPressedDirection = PACMAN_MOVEMENT_RIGHT;
-			mPacman->SetMovementDirection(PACMAN_MOVEMENT_RIGHT);
-		}
-		if (this->Keys[GLFW_KEY_W] || this->Keys[GLFW_KEY_UP])
-		{
-			mPressedDirection = PACMAN_MOVEMENT_UP;
-			mPacman->SetMovementDirection(PACMAN_MOVEMENT_UP);
-		}
-		if (this->Keys[GLFW_KEY_S] || this->Keys[GLFW_KEY_DOWN])
-		{
-			mPressedDirection = PACMAN_MOVEMENT_DOWN;
-			mPacman->SetMovementDirection(PACMAN_MOVEMENT_DOWN);
-		}
+		mPressedDirection = PACMAN_MOVEMENT_LEFT;
+		mPacman->SetMovementDirection(PACMAN_MOVEMENT_LEFT);
 	}
+	if (this->Keys[GLFW_KEY_D] || this->Keys[GLFW_KEY_RIGHT])
+	{
+		mPressedDirection = PACMAN_MOVEMENT_RIGHT;
+		mPacman->SetMovementDirection(PACMAN_MOVEMENT_RIGHT);
+	}
+	if (this->Keys[GLFW_KEY_W] || this->Keys[GLFW_KEY_UP])
+	{
+		mPressedDirection = PACMAN_MOVEMENT_UP;
+		mPacman->SetMovementDirection(PACMAN_MOVEMENT_UP);
+	}
+	if (this->Keys[GLFW_KEY_S] || this->Keys[GLFW_KEY_DOWN])
+	{
+		mPressedDirection = PACMAN_MOVEMENT_DOWN;
+		mPacman->SetMovementDirection(PACMAN_MOVEMENT_DOWN);
+	}
+	
 }
 
 void PacmanGame::Render(float dt)
 {
-	
-	mPostEffect->BeginRender();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
+	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
+	//Draw level map and pellets. 
+	ShaderManager shader = ResourceManager::GetShader("level");
+	shader.Use().SetInteger("isSuperPacman", 0);
+	for (auto ghost : mGhosts)
+	{
+		if (ghost->IsVulnerable())
+		{
+			shader.SetInteger("isSuperPacman", 1);
+			break;
+		}
+	}
 	
-	mPostEffect->EndRender();
-
-	mPostEffect->Render(dt);
-	//render postprocessing quad
 
 	mLevel->Draw(dt);
 	mPacman->Draw(dt);
 
+	for(auto ghost: mGhosts)
+	{
+		ghost->Draw(dt);
+	}
 
-	mGhost->Draw(dt);
 	//Draw score
-	std::stringstream my_ss;
+	std::stringstream my_ss; 
 	my_ss << this->mPacman->Score();
 	mTextRender->Render("SCORE: " + my_ss.str(), WINDOWSIZE.x / 2 - 70, 10, 1.0f, glm::uvec3(0, 1, 1 ));
 
 	//Render enter to start
 	if (mGameState == ENTER_TO_START)
 	{
-		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 100, WINDOWSIZE.y/2, 1.0f, glm::uvec3(1, 1, 0));
+		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 100, 200, 1.0f, glm::uvec3(1, 1, 0));
 	}
 	else if (mGameState == GAME_OVER)
 	{
-		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 100, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 0.2, 0.2));
+		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 100, 200, 1.0f, glm::uvec3(1, 0.2, 0.2));
 	}
 	else if (mGameState == GAME_WIN)
 	{
-		mTextRender->Render("You Win the Game! Enter to restart.", 100, WINDOWSIZE.y / 2, 1.0f, glm::uvec3(1, 1, 0));
+		mTextRender->Render("You Win the Game! Enter to Restart", 80, 200, 1.0f, glm::uvec3(1, 1, 0));
 	}
 
 	

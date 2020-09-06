@@ -171,7 +171,7 @@
     <Image Include="assets\galaxy.png" />
     <Image Include="assets\mazeVV.png" />
     <Image Include="assets\maze_new.png" />
-    <Image Include="assets\monster-4.png" />
+    <Image Include="assets\monster-pink.png" />
     <Image Include="assets\monster-green.png" />
     <Image Include="assets\monster-red.png" />
     <Image Include="assets\monster3.png" />

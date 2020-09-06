@@ -21,7 +21,7 @@ void GhostAI::Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatter
 	std::random_device randomDevice;
 	mRandomGenerator.seed(randomDevice());
 }
-PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& pacman, const Ghost& ghost)
+PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts)
 {
 	if (mGhost)
 	{
@@ -75,7 +75,7 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 
 		if (mState == GHOST_STATE_CHASE)
 		{
-			ChangeTarget(GetChaseTarget(dt, pacman, level, ghost));
+			ChangeTarget(GetChaseTarget(dt, pacman, level, ghosts));
 		}
 
 		
@@ -83,7 +83,7 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 
 		uint32_t lowestDistance = UINT32_MAX;
 
-		//Get the moving direction for shotest distance option.
+		//Get the moving direction for shotest distance option.	
 		for (const auto& direction : possibleDirections)
 		{
 			
@@ -103,7 +103,7 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 			}
 		}
 
-		assert(directionToGoIn != PACMAN_MOVEMENT_NONE);
+//		assert(directionToGoIn != PACMAN_MOVEMENT_NONE);
 
 		return directionToGoIn;
 	}
@@ -137,19 +137,15 @@ void GhostAI::ChangeTarget(const vec2& target)
 }
 
 
-vec2 GhostAI::GetChaseTarget(uint32_t dt, const Pacman& pacman, const PacmanLevel& level, const Ghost& ghost)
+vec2 GhostAI::GetChaseTarget(uint32_t dt, const Pacman& pacman, const PacmanLevel& level, const std::vector<Ghost*>& ghosts)
 {
-	return pacman.GetBoundingBox().GetCenterPoint();
-
-	//ToDo: Other ghost will have different moving targets.
-}
-
-
-
-void GhostAI::Draw()
-{
-	if (mGhost)
+	switch (mName)
 	{
+	case RED:
+		return  pacman.GetBoundingBox().GetCenterPoint();
+	case PINK:
+	default:
+		return  pacman.GetBoundingBox().GetCenterPoint();
 	}
+	
 }
-

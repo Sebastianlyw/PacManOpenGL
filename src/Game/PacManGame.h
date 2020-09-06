@@ -49,14 +49,13 @@ private:
 	void ResetGame();
 	void ResetLevel();
 
-	GhostAI* mGhostAI;
-	Ghost* mGhost;
+	std::vector<GhostAI*> mGhostAIs;
+	std::vector<Ghost*> mGhosts;
 	Pacman* mPacman;
 	Pacman* pacManLive;
 	PacmanLevel* mLevel;
 	PacmanMovement mPressedDirection;
 	TextRenderer* mTextRender;
 	uint16_t mLives;
-	PacmanGameState mGameState;
-	PostEffectRender* mPostEffect;		
+	PacmanGameState mGameState;	
 };

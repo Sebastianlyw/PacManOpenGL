@@ -4,7 +4,7 @@
 enum GhostName
 {
 	RED = 0,
-	BLUE,
+	PINK,
 	GREEN,
 	NUM_GHOSTS
 };
@@ -22,6 +22,7 @@ class Ghost : public Actor
 {
 public:
 
+	Ghost() {};
 	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed) override;
 	virtual void SetMovementDirection(PacmanMovement direction) override;
 	virtual void Stop() override;

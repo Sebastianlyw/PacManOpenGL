@@ -19,9 +19,10 @@ public:
 	PacmanLevel();
 	~PacmanLevel();
 	bool Init(const std::string& levelPath);
-	void Update(float dt, Pacman& pacman, Ghost& redGhost);
+	void Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts); 
 	void Draw(float dt);
 	void ResetLevel();
+	void ResetBonusItems();
 	bool WillCollide(const AARectangle& abbox, PacmanMovement direction) const;
 	bool IsLevelOver() const;
 	inline Sprite* GetBackground() { return mBackground; }
@@ -29,6 +30,7 @@ public:
 	inline vec2 GetLayoutOffset() const { return mLayoutOffset; }
 	inline vec3 GetPacmanSpawnPosition() { return mPacmanSpawnPosition; }
 	inline vec3 GetRedghostSpwanPosition() { return mRedGhostSpwanPosition; }
+	inline vec3 GetPinkghostSpwanPosition() { return mPinkGhostSpwanPosition; }
 
 private:
 	struct Tile
@@ -40,8 +42,10 @@ private:
 		bool isExcludePelletTile = false;
 		bool isPacmanSpawnTile = false;
 		bool isRedGhostSpawnTile = false;
+		bool isPinkGhostSpawnTile = false;
 		bool isCherrySpwanTile = false;
 		bool isAppleSpwanTile = false;
+		bool isGate = false;
 		char symbol = '-';
 	};
 
@@ -80,6 +84,7 @@ private:
 	Apple	mApple;
 	
 	std::vector<Excluder> mWalls;
+	std::vector<Excluder> mGate;
 	std::vector<Tile> mTiles;
 	std::vector<Tile> mExclusionTiles;
 	std::vector<Pellet> mPellets;
@@ -88,5 +93,6 @@ private:
 	vec2 mLayoutOffset;
 	vec3 mPacmanSpawnPosition;
 	vec3 mRedGhostSpwanPosition;
+	vec3 mPinkGhostSpwanPosition;
 	double_t mGameTimer;
 };

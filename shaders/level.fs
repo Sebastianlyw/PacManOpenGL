@@ -11,6 +11,9 @@ uniform float deltaTime;
 uniform sampler2D sprite;
 uniform float ourColor; // we set this variable in the OpenGL code.
 
+uniform float sinColor;
+uniform bool isSuperPacman;
+
 void main()
 {
     if(isSkyBox)
@@ -25,6 +28,10 @@ void main()
     {
      //finalcolor = vec4(0,ourColor,0,1);
         finalcolor = vertex_color * texture(sprite,vertex_uv)*vec4(1,1,1,0.9);
+        if(isSuperPacman)
+        {
+            finalcolor *= vec4(1,sinColor,1,1);
+        }
     }
 
    

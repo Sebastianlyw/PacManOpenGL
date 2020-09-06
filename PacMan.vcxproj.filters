@@ -51,9 +51,6 @@
     <Image Include="assets\monster3.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="assets\monster-4.png">
-      <Filter>Assets</Filter>
-    </Image>
     <Image Include="assets\monster-green.png">
       <Filter>Assets</Filter>
     </Image>
@@ -74,6 +71,9 @@
     </Image>
     <Image Include="assets\apple.png">
       <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\monster-pink.png">
+      <Filter>Assets</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
