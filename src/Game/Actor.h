@@ -24,6 +24,7 @@ public:
 	AARectangle GetEatingBoundingBox() const;
 	
 	void SetTransformation(vec3 position, vec2 scale, float rotation) const;
+	vec2 GetVelocity();
 	inline vec2 Position() { return mSprite->transformation.position; }
 	inline vec2 Size() { return mSprite->transformation.scale; }
 	inline float Rotation() { return mSprite->transformation.rotation; }

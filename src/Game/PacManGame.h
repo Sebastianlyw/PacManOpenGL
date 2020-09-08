@@ -1,21 +1,20 @@
 #pragma once
+
 #include  "gameHelper.h"
-#include "../Graphics/shaderManager.h"
-#include "../Graphics/Camera.h"
-#include "..//Graphics/TextRender.h"
-#include "../Utilities/resourceManager.h"
-#include "../Graphics/Sprite.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <vector>
+#include "..//Graphics/TextRender.h"
+#include "..//Graphics/ParticleRender.h"
 
 using namespace std;
 
 //forward declartions:
+class Sprite;
 class Pacman;
 class Ghost;
 class PacmanLevel;
 class GhostAI;
-class PostEffectRender;
 
 enum PacmanGameState
 {
@@ -58,4 +57,5 @@ private:
 	TextRenderer* mTextRender;
 	uint16_t mLives;
 	PacmanGameState mGameState;	
+	ParticleRender* mParticles;
 };

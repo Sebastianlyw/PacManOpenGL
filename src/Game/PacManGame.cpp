@@ -6,12 +6,12 @@
 #include "..//Graphics/PostEffectRender.h"
 #include "..//Utilities/AudioPlayer.h"
 
+#include "../Graphics/Camera.h"
+#include "../Utilities/resourceManager.h"
+#include "../Graphics/shaderManager.h"
 #include<iostream>
 #include<sstream>
 #include"..//Graphics/Sprite.h"
-
-#include <Windows.h>
-#include <limits.h>
 
 PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
 {
@@ -56,6 +56,8 @@ void PacmanGame::Init()
 	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
 	mTextRender->Load("./assets/emulogic.TTF",28);
 	ResourceManager::LoadShader("./shaders/skybox.vs", "./shaders/skybox.fs", nullptr, "skybox");
+	ResourceManager::LoadShader("./shaders/particle.vs", "./shaders/particle.fs", nullptr, "test");
+	mParticles = new ParticleRender(ResourceManager::GetShader("test"), "./assets/fire.png", 400);
 }
   
 void PacmanGame::ResetGame()
@@ -83,6 +85,7 @@ PacmanGame::~PacmanGame()
 	delete pacManLive;
 	delete mTextRender;
 	delete mLevel;
+	delete mParticles;
 }
 
 void PacmanGame::Update(float dt)
@@ -101,7 +104,12 @@ void PacmanGame::Update(float dt)
 	{
 		UpdatePacmanMovement();
 		mPacman->Update(dt);
-		
+		if (mPacman->IsSpeedUp())
+		{
+			mParticles->Update(dt, *mPacman, 2, 15);
+		}
+	
+
 		for (int i = 0; i < NUM_GHOSTS; i++)
 		{
 			Ghost& ghost = *mGhosts[i];
@@ -211,11 +219,11 @@ void PacmanGame::InputUpdate(float dt)
 
 void PacmanGame::Render(float dt)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.4f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	
 	//Draw level map and pellets. 
 	ShaderManager shader = ResourceManager::GetShader("level");
 	shader.Use().SetInteger("isSuperPacman", 0);
@@ -228,7 +236,6 @@ void PacmanGame::Render(float dt)
 		}
 	}
 	
-
 	mLevel->Draw(dt);
 	mPacman->Draw(dt);
 
@@ -256,8 +263,8 @@ void PacmanGame::Render(float dt)
 		mTextRender->Render("You Won the Game!", 120, 200, 1.0f, glm::uvec3(1, 0, 1));
 	}
 
-	
-	
+	//
+	//
 	//Draw lives:
 	for (int i = 0; i < this->mLives; i++)
 	{
@@ -265,8 +272,10 @@ void PacmanGame::Render(float dt)
 		pacManLive->Draw(0);
 	}
 	//
-	
-
+	if (mPacman->IsSpeedUp())
+	{
+		mParticles->Draw();
+	}
 	
 
 }

@@ -93,14 +93,13 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <NoEntryPoint>
       </NoEntryPoint>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -149,6 +148,7 @@
     <ClCompile Include="src\Game\Window.cpp" />
     <ClCompile Include="src\Graphics\Animation2D.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
+    <ClCompile Include="src\Graphics\ParticleRender.cpp" />
     <ClCompile Include="src\Graphics\PostEffectRender.cpp" />
     <ClCompile Include="src\Graphics\Rectangle.cpp" />
     <ClCompile Include="src\Graphics\ShaderManager.cpp" />
@@ -170,6 +170,7 @@
   <ItemGroup>
     <Image Include="assets\apple.png" />
     <Image Include="assets\cherry.png" />
+    <Image Include="assets\fire.png" />
     <Image Include="assets\mazeVV.png" />
     <Image Include="assets\monster-pink.png" />
     <Image Include="assets\monster-green.png" />
@@ -193,6 +194,7 @@
     <ClInclude Include="src\Game\Window.h" />
     <ClInclude Include="src\Graphics\Animation2D.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
+    <ClInclude Include="src\Graphics\ParticleRender.h" />
     <ClInclude Include="src\Graphics\PostEffectRender.h" />
     <ClInclude Include="src\Graphics\Rectangle.h" />
     <ClInclude Include="src\Graphics\ShaderManager.h" />
@@ -221,6 +223,8 @@
     <None Include="shaders\skybox.vs" />
     <None Include="shaders\sprite.fs" />
     <None Include="shaders\sprite.vs" />
+    <None Include="shaders\particle.fs" />
+    <None Include="shaders\particle.vs" />
     <None Include="shaders\text.fs" />
     <None Include="shaders\text.vs" />
   </ItemGroup>

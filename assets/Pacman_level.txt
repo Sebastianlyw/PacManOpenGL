@@ -36,7 +36,7 @@
 :tile_collision 0
 :tile_width 24
 :tile_pacman_spawn 1
-:tile_offset -8 0
+:tile_offset 0 0
 :tile_exclude_pellet 1
 
 :tile
@@ -113,7 +113,7 @@ oooos----w--------w--------w----s
 oooos----w--------w--------w----s
 oooosww--w--w--wwwwwww--w--w--wws
 oooos-------w-----w-----w-------s
-oooos-------w-----w-----w-------s
+oooos-------w-----w-----w-a-----s
 oooos--www--wwww--w--wwww--www--s
 oooos-------------p-------------s
 oooos---------------------------s

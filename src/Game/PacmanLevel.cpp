@@ -436,24 +436,24 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 				
 				if (tile->isPacmanSpawnTile)
 				{
-					mPacmanSpawnPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
+					mPacmanSpawnPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,0);
 				}
 				else if (tile->isRedGhostSpawnTile)
 				{
-					mRedGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
+					mRedGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,0);
 				}
 				else if (tile->isPinkGhostSpawnTile)
 				{
-					mPinkGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2);
+					mPinkGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 0);
 				}
 				else if(tile->isBlueGhostSpwanTile)
 				{
-					mBlueGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2);
+					mBlueGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 0);
 				}
 				else if (tile->isCherrySpwanTile)
 				{
 					Fruit cherry;
-					cherry.position = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,2);
+					cherry.position = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,0);
 					cherry.mBBox = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
 					cherry.name = CHERRY;
 					cherry.score = CHERRY_SCORE;

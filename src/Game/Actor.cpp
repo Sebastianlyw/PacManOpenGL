@@ -85,6 +85,13 @@ void Actor::SetTransformation(vec3 position, vec2 scale, float rotation) const
 	mSprite->transformation.rotation = rotation;
 }
 
+vec2 Actor::GetVelocity()
+{
+	vec2 v = GetMovementVector(mMovementDirection);
+	v *= mMovementSpeed;
+	return v;
+}
+
 void Actor::Stop()
 {
 	SetMovementDirection(PACMAN_MOVEMENT_NONE);
