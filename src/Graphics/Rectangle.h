@@ -30,10 +30,10 @@ public:
 	float getrotation();
 
 	//vertex array object
-	unsigned int VAO;
-	unsigned int VBO; // vertex buffer object
-	unsigned int CBO; // color buffer object
-	unsigned int UVBO; // uv buffer object
+	uint32_t VAO;
+	uint32_t VBO; // vertex buffer object
+	uint32_t CBO; // color buffer object
+	uint32_t UVBO; // uv buffer object
 private:
 
 	glm::vec2 position;

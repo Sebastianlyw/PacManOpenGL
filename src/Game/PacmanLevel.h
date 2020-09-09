@@ -15,21 +15,22 @@ class GhostAI;
 using namespace glm;
 
 
-enum FRUITE_NAME
+enum class FRUITE_NAME : unsigned char
 {
-	CHERRY = 0,
-	APPLE
+	CHERRY = 0x01,
+	APPLE  = 0x02
 };
 
 class PacmanLevel
 {
 public:
-
-	PacmanLevel();
+	PacmanLevel() :mAppleSprite(nullptr), mBackground(nullptr), mBlueGhostSpwanPosition(vec3(0)), mCherrySprite(nullptr),
+		mLayoutOffset(vec2(0)), mPacmanSpawnPosition(vec3(0)), mPelletSprite(nullptr), mPinkGhostSpwanPosition(vec3(0)),
+		mRedGhostSpwanPosition(vec3(0)), mPowerTimer(0), mSkybox(nullptr), mShaderTimer(0), mTileHeight(0) {}
 	~PacmanLevel();
 	bool Init(const std::string& levelPath);
-	void Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts); 
-	void Draw(float dt);
+	void Update(double dt, Pacman& pacman, std::vector<Ghost*>& ghosts); 
+	void Draw(double dt);
 	void ResetLevel();
 	void ResetSkyBox();
 	void ResetBonusItems();
@@ -74,7 +75,7 @@ private:
 		uint32_t score = APPLE_SCORE;
 		AARectangle mBBox;
 		int eaten = 0;
-		FRUITE_NAME name = CHERRY;
+		FRUITE_NAME name = FRUITE_NAME::CHERRY;
 		vec2 position = vec2(0.f);
 	};
 

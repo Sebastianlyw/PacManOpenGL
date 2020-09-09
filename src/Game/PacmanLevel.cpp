@@ -19,10 +19,6 @@ namespace {
 	const float BONUS_DURATION = 13;
 	const vec2 LEVEL_MAP_OFFSET = vec2(10, 50);
 }
-PacmanLevel::PacmanLevel()
-{
-	ResourceManager::LoadShader("./shaders/level.vs", "./shaders/level.fs", nullptr, "level");
-}
 
 PacmanLevel::~PacmanLevel()
 {
@@ -35,6 +31,7 @@ PacmanLevel::~PacmanLevel()
 
 bool PacmanLevel::Init(const std::string& levelPath) 
 {
+	ResourceManager::LoadShader("./shaders/level.vs", "./shaders/level.fs", nullptr, "level");
 	AudioPlayer::instance().Play(AudioPlayer::BACKGROUND, true);
 	
 	bool levelLoaded = LoadLevel(levelPath);
@@ -46,7 +43,7 @@ bool PacmanLevel::Init(const std::string& levelPath)
 }
 
 
-void PacmanLevel::Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
+void PacmanLevel::Update(double dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
 {
 	/*mSkybox->transformation.position.y -= dt * 20;*/
 	//Collision checking game logic here. 
@@ -142,7 +139,7 @@ void PacmanLevel::Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
 			mFruits[i].eaten = true;
 			pacman.AteItem(mFruits[i].score);
 			AudioPlayer::instance().Play(AudioPlayer::EAT_FRUIT, false);
-			if (mFruits[i].name == APPLE)
+			if (mFruits[i].name == FRUITE_NAME::APPLE)
 			{
 				pacman.SetSpeedUp(true);
 				pacman.SetMovementSpeed(PACMAN_SPEED_UP);
@@ -162,7 +159,7 @@ void PacmanLevel::Update(float dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
 
 }
 
-void PacmanLevel::Draw(float dt)
+void PacmanLevel::Draw(double dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("level");
 
@@ -176,13 +173,13 @@ void PacmanLevel::Draw(float dt)
 	{
 		mShaderTimer = 0;
 	}
-	shader.SetFloat("deltaTime", mShaderTimer);
+	shader.SetFloat("deltaTime", (float)mShaderTimer);
 	shader.SetMatrix4("model_matrx", mSkybox->transformation.Get());
 	mSkybox->draw(0);
 	shader.SetFloat("isSkyBox", 0 );
 	shader.SetMatrix4("model_matrx", mBackground->transformation.Get());
 	
-	float timeValue = glfwGetTime();
+	float timeValue = (float)glfwGetTime();
 	float greenValue = (sin(timeValue * 10) / 2.0f) + 0.5f;
 	shader.Use().SetFloat("sinColor", greenValue);
 	mBackground->draw(0);
@@ -214,13 +211,13 @@ void PacmanLevel::Draw(float dt)
 			continue;
 		}
 
-		if (fruit.name == CHERRY)
+		if (fruit.name == FRUITE_NAME::CHERRY)
 		{
 			mCherrySprite->SetPosition(vec3(fruit.position, 0));
 			shader.SetMatrix4("model_matrx", mCherrySprite->transformation.Get());
 			mCherrySprite->draw(0);
 		}
-		else if (fruit.name == APPLE)
+		else if (fruit.name == FRUITE_NAME::APPLE)
 		{
 			mAppleSprite->SetPosition(vec3(fruit.position, 0));
 			shader.SetMatrix4("model_matrx", mAppleSprite->transformation.Get());
@@ -405,10 +402,10 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 
 	Command layoutCommand;
 	layoutCommand.command = "layout";
-	layoutCommand.commandType = COMMAND_MULTI_LINE;
+	layoutCommand.commandType = CommandType::COMMAND_MULTI_LINE;
 	layoutCommand.parseFunc = [&layoutOffset, this](ParseFuncParams params)
 	{
-		int startingX = layoutOffset.x;
+		int startingX = (int)layoutOffset.x;
 
 		for (int c = 0; c < params.line.length(); ++c)
 		{
@@ -455,7 +452,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 					Fruit cherry;
 					cherry.position = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,0);
 					cherry.mBBox = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
-					cherry.name = CHERRY;
+					cherry.name = FRUITE_NAME::CHERRY;
 					cherry.score = CHERRY_SCORE;
 					mFruits.push_back(cherry);
 				}
@@ -464,12 +461,12 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 					Fruit apple;
 					apple.position = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 2);
 					apple.mBBox = AARectangle(vec2(startingX, layoutOffset.y + tile->offset.y), PELLET_SIZE, PELLET_SIZE);
-					apple.name = APPLE;
+					apple.name = FRUITE_NAME::APPLE;
 					apple.score = APPLE_SCORE;
 					mFruits.push_back(apple);
 				}
 
-				if (tile->isExcludePelletTile > 0)
+				if (tile->isExcludePelletTile)
 				{
 					mExclusionTiles.push_back(*tile);
 				}
@@ -542,9 +539,9 @@ void PacmanLevel::ResetPellets()
 {
 	mPellets.clear();
 	const uint32_t PADDING = static_cast<uint32_t>(mTileHeight);
-	uint32_t startingY = mLayoutOffset.y + PADDING + mTileHeight - 20;
+	uint32_t startingY = (uint32_t)mLayoutOffset.y + PADDING + (uint32_t)mTileHeight - 20;
 	uint32_t startingX = PADDING ;
-	const uint32_t LEVEL_HEIGHT = mLayoutOffset.y + 32 * mTileHeight;
+	const uint32_t LEVEL_HEIGHT = (uint32_t)mLayoutOffset.y + 32 * (uint32_t)mTileHeight;
 	Pellet p;
 	p.score = PELLET_SCORE;
 	uint32_t row = 0;
@@ -586,7 +583,7 @@ void PacmanLevel::ResetPellets()
 				{
 					if (excludedPelletTile.isExcludePelletTile)
 					{
-						AARectangle tileAABB(excludedPelletTile.position, excludedPelletTile.width, mTileHeight);
+						AARectangle tileAABB(excludedPelletTile.position, excludedPelletTile.width, (uint32_t)mTileHeight);
 
 						if (tileAABB.Intersects(rect))
 						{

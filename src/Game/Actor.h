@@ -13,7 +13,7 @@ using namespace glm;
 class Actor
 {
 public:
-
+	Actor():mDelta(vec2(0.0f)), mInitialPosition(vec3(0.0f)), mMovementDirection(PacmanMovement::PACMAN_MOVEMENT_NONE), mMovementSpeed(0), mPlayAnimation(false),mSprite(nullptr) {}
 	virtual ~Actor() { delete mSprite; }
 	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed);
 	virtual void Update(double dt);

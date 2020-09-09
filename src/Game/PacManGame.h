@@ -16,30 +16,32 @@ class Ghost;
 class PacmanLevel;
 class GhostAI;
 
-enum PacmanGameState
+enum class PacmanGameState : unsigned char
 {
-	ENTER_TO_START = 0,
-	GAME_ALIVE,
-	LOST_LIFE,
-	GAME_OVER,
-	GAME_WIN
+	ENTER_TO_START	= 0x01,
+	GAME_ALIVE		= 0x02,
+	LOST_LIFE		= 0x04,
+	GAME_OVER		= 0x08,
+	GAME_WIN		= 0x10
 };
 
 
 class PacmanGame
 {
 public:
-	PacmanGame();
+	PacmanGame() : mGameState(PacmanGameState::ENTER_TO_START), mLevel(nullptr), mLives(MAX_LIVES), mPacman(nullptr),
+				   mParticles(nullptr), mPressedDirection(PacmanMovement::PACMAN_MOVEMENT_NONE),
+		mTextRender(nullptr), pacManLive(nullptr){ }
 
 	~PacmanGame();
 
 	void Init();
 
-	void Update(float dt);
-	void InputUpdate(float dt);//vector<Action> actions);
+	void Update(double dt);
+	void InputUpdate(double dt);//vector<Action> actions);
 	void UpdatePacmanMovement();
 
-	void Render(float dt);
+	void Render(double dt);
 
 	bool Keys[1024];
 

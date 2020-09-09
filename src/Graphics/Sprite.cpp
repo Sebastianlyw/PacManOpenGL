@@ -73,6 +73,6 @@ void Sprite::AddAnimation(const char* filename, bool looped)
 
 const AARectangle Sprite::GetBoundingBox() const
 {
-	AARectangle bbox = { Position(), static_cast<unsigned int>(Size().x), static_cast<unsigned int>(Size().y) };
+	AARectangle bbox = { Position(), static_cast<uint32_t>(Size().x), static_cast<uint32_t>(Size().y) };
 	return bbox;
 }

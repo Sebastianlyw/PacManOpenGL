@@ -12,11 +12,6 @@
 #include<iostream>
 #include<sstream>
 #include"..//Graphics/Sprite.h"
-
-PacmanGame::PacmanGame():mLives(MAX_LIVES), mGameState(ENTER_TO_START)
-{
-
-}
 	
 void PacmanGame::Init()
 {
@@ -26,29 +21,29 @@ void PacmanGame::Init()
 	mPacman = new Pacman();
 	mPacman->Init("./assets/pacmanwalking.png", mLevel->GetPacmanSpawnPosition() , PACMAN_SPEED);
 	
-	mGhosts.resize(NUM_GHOSTS);
-	mGhostAIs.resize(NUM_GHOSTS);
+	mGhosts.resize(size_t(GhostName::NUM_GHOSTS));
+	mGhostAIs.resize(size_t(GhostName::NUM_GHOSTS));
 	//setup ghosts
 	Ghost* redGhost = new Ghost();
 	redGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED + 5);
-	mGhosts[RED] = (redGhost);
+	mGhosts[(int)(GhostName::RED)] = (redGhost);
 	GhostAI* redGhostAI = new GhostAI();
-	redGhostAI->Init(*redGhost, redGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::RED);
-	mGhostAIs[RED]= (redGhostAI);
+	redGhostAI->Init(*redGhost, (uint32_t)redGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::RED);
+	mGhostAIs[(int)(GhostName::RED)]= (redGhostAI);
 
 	Ghost* pinkGhost = new Ghost();
 	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED - 5);
-	mGhosts[PINK]=(pinkGhost);
+	mGhosts[(int)GhostName::PINK]=(pinkGhost);
 	GhostAI* pinkGhostAI = new GhostAI();
-	pinkGhostAI->Init(*pinkGhost, pinkGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
-	mGhostAIs[PINK]=(pinkGhostAI);
+	pinkGhostAI->Init(*pinkGhost, (uint32_t)pinkGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
+	mGhostAIs[(int)GhostName::PINK]=(pinkGhostAI);
 
 	Ghost* blueGhost = new Ghost();
 	blueGhost->Init("./assets/monster-blue.png", mLevel->GetBlueghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
-	mGhosts[BLUE] = (blueGhost);
+	mGhosts[(int)GhostName::BLUE] = (blueGhost);
 	GhostAI* blueGhostAI = new GhostAI();
-	blueGhostAI->Init(*blueGhost, blueGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
-	mGhostAIs[BLUE] = (blueGhostAI);
+	blueGhostAI->Init(*blueGhost, (uint32_t)blueGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
+	mGhostAIs[(int)GhostName::BLUE] = (blueGhostAI);
 
 	pacManLive = new Pacman();
 	pacManLive->Init("./assets/pacmanwalking.png", vec3(0.f), 0);
@@ -88,19 +83,18 @@ PacmanGame::~PacmanGame()
 	delete mParticles;
 }
 
-void PacmanGame::Update(float dt)
+void PacmanGame::Update(double dt)
 {
-
 	//ToDo: Change to simple finite state machine. 
-	if (mGameState == ENTER_TO_START)
+	if (mGameState == PacmanGameState::ENTER_TO_START)
 	{
 		if (this->Keys[GLFW_KEY_ENTER])
 		{
-			mGameState = GAME_ALIVE;
+			mGameState = PacmanGameState::GAME_ALIVE;
 			ResetLevel();
 		}
 	}
-	else if (mGameState == GAME_ALIVE)
+	else if (mGameState == PacmanGameState::GAME_ALIVE)
 	{
 		UpdatePacmanMovement();
 		mPacman->Update(dt);
@@ -110,7 +104,7 @@ void PacmanGame::Update(float dt)
 		}
 	
 
-		for (int i = 0; i < NUM_GHOSTS; i++)
+		for (int i = 0; i < (int)GhostName::NUM_GHOSTS; i++)
 		{
 			Ghost& ghost = *mGhosts[i];
 			GhostAI& ghostAI = *mGhostAIs[i];
@@ -141,9 +135,9 @@ void PacmanGame::Update(float dt)
 					AudioPlayer::instance().Play(AudioPlayer::DEATH, false);
 					mLives--;
 					mPacman->EatenByGhost();
-					mPressedDirection = PACMAN_MOVEMENT_NONE;
+					mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_NONE;
 					mPacman->SetMovementDirection(mPressedDirection);
-					mGameState = LOST_LIFE;
+					mGameState = PacmanGameState::LOST_LIFE;
 					return;
 				}
 			}
@@ -152,28 +146,28 @@ void PacmanGame::Update(float dt)
 		mLevel->Update(dt, *mPacman, mGhosts);
 		if (mLevel->IsLevelOver())
 		{
-			mGameState = GAME_WIN;
+			mGameState = PacmanGameState::GAME_WIN;
 		}
 
 	}
-	else if (mGameState == LOST_LIFE)
+	else if (mGameState == PacmanGameState::LOST_LIFE)
 	{
 		//ToDo: Render the death animation
 		if (mLives > 0)
 		{
-			mGameState = ENTER_TO_START;
+			mGameState = PacmanGameState::ENTER_TO_START;
 		}
 		else
 		{
-			mGameState = GAME_OVER;
+			mGameState = PacmanGameState::GAME_OVER;
 		}
 	}	
-	else if (mGameState == GAME_WIN)
+	else if (mGameState == PacmanGameState::GAME_WIN)
 	{
 		if (this->Keys[GLFW_KEY_ENTER])
 		{
 			ResetGame();
-			mGameState = GAME_ALIVE;
+			mGameState = PacmanGameState::GAME_ALIVE;
 		}
 	}
 }
@@ -188,36 +182,32 @@ void PacmanGame::ResetLevel()
 	}
 }
 
-void PacmanGame::InputUpdate(float dt)
+void PacmanGame::InputUpdate(double dt)
 {
-	if (this->Keys[GLFW_KEY_B])
-	{
-		mGameState = GAME_WIN;
-	}
 	if (this->Keys[GLFW_KEY_A] || this->Keys[GLFW_KEY_LEFT])
 	{
-		mPressedDirection = PACMAN_MOVEMENT_LEFT;
-		mPacman->SetMovementDirection(PACMAN_MOVEMENT_LEFT);
+		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_LEFT;
+		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_LEFT);
 	}
 	if (this->Keys[GLFW_KEY_D] || this->Keys[GLFW_KEY_RIGHT])
 	{
-		mPressedDirection = PACMAN_MOVEMENT_RIGHT;
-		mPacman->SetMovementDirection(PACMAN_MOVEMENT_RIGHT);
+		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_RIGHT;
+		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_RIGHT);
 	}
 	if (this->Keys[GLFW_KEY_W] || this->Keys[GLFW_KEY_UP])
 	{
-		mPressedDirection = PACMAN_MOVEMENT_UP;
-		mPacman->SetMovementDirection(PACMAN_MOVEMENT_UP);
+		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_UP;
+		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_UP);
 	}
 	if (this->Keys[GLFW_KEY_S] || this->Keys[GLFW_KEY_DOWN])
 	{
-		mPressedDirection = PACMAN_MOVEMENT_DOWN;
-		mPacman->SetMovementDirection(PACMAN_MOVEMENT_DOWN);
+		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_DOWN;
+		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_DOWN);
 	}
 	
 }
 
-void PacmanGame::Render(float dt)
+void PacmanGame::Render(double dt)
 {
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
@@ -247,18 +237,18 @@ void PacmanGame::Render(float dt)
 	//Draw score
 	std::stringstream my_ss; 
 	my_ss << this->mPacman->Score();
-	mTextRender->Render("SCORE: " + my_ss.str(), WINDOWSIZE.x / 2 - 150, 20, 1.25f, glm::uvec3(0.23,1,0.8));
+	mTextRender->Render("SCORE: " + my_ss.str(), (float)(WINDOWSIZE.x / 2 - 150), 20, 1.25f, glm::uvec3(0.23,1,0.8));
 
 	//Render enter to start
-	if (mGameState == ENTER_TO_START)
+	if (mGameState == PacmanGameState::ENTER_TO_START)
 	{
-		mTextRender->Render("Enter to Start", WINDOWSIZE.x / 2 - 180, 200, 1.0f, glm::uvec3(0.2, 0.99, 1));
+		mTextRender->Render("Enter to Start", (float)(WINDOWSIZE.x / 2 - 180), 200, 1.0f, glm::uvec3(0.2, 0.99, 1));
 	}
-	else if (mGameState == GAME_OVER)
+	else if (mGameState == PacmanGameState::GAME_OVER)
 	{
-		mTextRender->Render("Game Over!!! ", WINDOWSIZE.x / 2 - 130, 200, 1.0f, glm::uvec3(1, 0.2, 0.2));
+		mTextRender->Render("Game Over!!! ", (float)(WINDOWSIZE.x / 2 - 130), 200, 1.0f, glm::uvec3(1, 0.2, 0.2));
 	}
-	else if (mGameState == GAME_WIN)
+	else if (mGameState == PacmanGameState::GAME_WIN)
 	{
 		mTextRender->Render("You Won the Game!", 120, 200, 1.0f, glm::uvec3(1, 0, 1));
 	}
@@ -283,7 +273,7 @@ void PacmanGame::Render(float dt)
 
 void PacmanGame::UpdatePacmanMovement()
 {
-	if (mPressedDirection != PACMAN_MOVEMENT_NONE)
+	if (mPressedDirection != PacmanMovement::PACMAN_MOVEMENT_NONE)
 	{
 		if (!mLevel->WillCollide(mPacman->GetBoundingBox(), mPressedDirection))
 		{

@@ -21,19 +21,19 @@ class ParticleRender
 {
 public:
 	~ParticleRender();
-	ParticleRender(ShaderManager shader, std::string textureName, unsigned int amount);
-	void Update(float dt, Pacman& object, unsigned int newParticles, float offset);
+	ParticleRender(ShaderManager shader, std::string textureName, uint32_t amount);
+	void Update(double dt, Pacman& object, uint32_t newParticles, float offset);
 	void Draw();
 	inline void SetPosition(vec3 pos) { mSprite->transformation.position = pos; }
 	inline void SetScale(vec2 scale) { mSprite->transformation.scale = scale; }
 	inline glm::mat4 GetTransform() { return mSprite->transformation.Get(); }
 private:
-	unsigned int mAmount;
+	uint32_t mAmount;
 	ShaderManager mShader;
 	Sprite* mSprite;
 	std::string mSpriteFilePath;
 	std::vector<Particle> mParticles;
 	void init();
-	unsigned int firstUnusedParticle();
+	uint32_t firstUnusedParticle();
 	void respawnParticle(Particle& particle, Pacman& object, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
 };

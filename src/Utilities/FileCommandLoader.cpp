@@ -47,7 +47,7 @@ bool FileCommandLoader::LoadFile(const std::string& filePath)
 			{
 				if(commandStr == mCommands[commandIndex].command)
 				{
-					if(mCommands[commandIndex].commandType == COMMAND_ONE_LINE)
+					if(mCommands[commandIndex].commandType == CommandType::COMMAND_ONE_LINE)
 					{
 						ParseFuncParams params;
 						params.dilimitPos = dilimitPos;

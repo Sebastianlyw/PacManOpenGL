@@ -4,8 +4,7 @@
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 PacmanGame Game;
 Window::Window(int width, int height)
-	:m_width(width),
-	m_height(height)
+	:m_width(width),m_height(height),delta(0),lastFrame(0),startFrame(0), window_ptr(nullptr)
 {
 	glfwInit();
 
@@ -55,7 +54,7 @@ void Window::Mainloop()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		float currentFrame = glfwGetTime();
+		double currentFrame = glfwGetTime();
 		delta = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 

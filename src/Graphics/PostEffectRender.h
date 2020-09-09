@@ -10,17 +10,17 @@ class PostEffectRender
 {
 public:
 	ShaderManager PostProcessingShader;
-	unsigned int Width, Height;
+	uint32_t Width, Height;
 	bool Confuse, Chaos, Shake;
-	PostEffectRender(ShaderManager shader, unsigned int width, unsigned int height);
+	PostEffectRender(ShaderManager shader, uint32_t width, uint32_t height);
 	void BeginRender();
 	void EndRender();
 	void Render(float time);
 private:
 
-	unsigned int FBO; 
-	unsigned int RBO; 
-	unsigned int VAO;
-	unsigned int texture;
+	uint32_t FBO; 
+	uint32_t RBO; 
+	uint32_t VAO;
+	uint32_t texture;
 	void initRenderData();
 };

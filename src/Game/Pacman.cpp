@@ -9,7 +9,7 @@ namespace
 	const uint32_t SPEEDUP_DURATION = 6;
 }
 
-Pacman::Pacman():mIsDying(false)
+Pacman::Pacman():mIsDying(false),mScore(0),mSpeedUp(false),mSpeedUpTimer(0), mGhostMultiplier(1)
 {
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 }
@@ -68,7 +68,7 @@ void Pacman::Draw(double dt)
 	ShaderManager shader = ResourceManager::GetShader("sprite");
 
 
-	float timeValue = glfwGetTime();
+	float timeValue = (float)glfwGetTime();
 	float greenValue = (sin(timeValue *10) / 2.0f) + 0.5f;
 	shader.Use().SetInteger("isVulnerable", false);
 	shader.Use().SetFloat("sinColor", greenValue);
@@ -80,25 +80,25 @@ void Pacman::SetMovementDirection(PacmanMovement movementDir)
 {
 	PacmanMovement currentDirection = GetMovementDirection();
 
-	if (movementDir == PACMAN_MOVEMENT_LEFT && currentDirection != PACMAN_MOVEMENT_LEFT)
+	if (movementDir == PacmanMovement::PACMAN_MOVEMENT_LEFT && currentDirection != PacmanMovement::PACMAN_MOVEMENT_LEFT)
 	{
 		mSprite->transformation.rotation = 0;
 		ResetDelta();
 	}
-	else if (movementDir == PACMAN_MOVEMENT_RIGHT && currentDirection != PACMAN_MOVEMENT_RIGHT)
+	else if (movementDir == PacmanMovement::PACMAN_MOVEMENT_RIGHT && currentDirection != PacmanMovement::PACMAN_MOVEMENT_RIGHT)
 	{
-		mSprite->transformation.rotation = glm::pi<double>();
+		mSprite->transformation.rotation = glm::pi<float>();
 		ResetDelta();
 	}
-	else if (movementDir == PACMAN_MOVEMENT_DOWN && currentDirection != PACMAN_MOVEMENT_DOWN)
+	else if (movementDir == PacmanMovement::PACMAN_MOVEMENT_DOWN && currentDirection != PacmanMovement::PACMAN_MOVEMENT_DOWN)
 	{
-		mSprite->transformation.rotation = glm::pi<double>() / 2 * 3;
+		mSprite->transformation.rotation = glm::pi<float>() / 2 * 3;
 		ResetDelta();
 	}
-	else if (movementDir == PACMAN_MOVEMENT_UP && currentDirection != PACMAN_MOVEMENT_UP)
+	else if (movementDir == PacmanMovement::PACMAN_MOVEMENT_UP && currentDirection != PacmanMovement::PACMAN_MOVEMENT_UP)
 	{
 
-		mSprite->transformation.rotation = glm::pi<double>() / 2;
+		mSprite->transformation.rotation = glm::pi<float>() / 2;
 		ResetDelta();
 	}
 

@@ -22,7 +22,7 @@ static const uint32_t CHERRY_SCORE = 100;
 static const uint32_t APPLE_SCORE = 100;
 
 
-enum PacmanMovement
+enum class PacmanMovement : uint8_t
 {
 	PACMAN_MOVEMENT_NONE = 0,
 	PACMAN_MOVEMENT_UP,

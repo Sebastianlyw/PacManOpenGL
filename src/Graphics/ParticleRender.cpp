@@ -9,13 +9,13 @@ ParticleRender::~ParticleRender()
 	delete mSprite;
 }
 
-ParticleRender::ParticleRender(ShaderManager shader, std::string spriteFilePath, unsigned int amount)
+ParticleRender::ParticleRender(ShaderManager shader, std::string spriteFilePath, uint32_t amount)
 :mShader(shader), mSpriteFilePath(spriteFilePath), mAmount(amount)
 {
 	this->init();
 }
 
-void ParticleRender::Update(float dt, Pacman& object, unsigned int newParticles, float offsetLen)
+void ParticleRender::Update(double dt, Pacman& object, uint32_t newParticles, float offsetLen)
 {
     for (uint32_t i = 0; i < newParticles; ++i)
     {
@@ -27,11 +27,11 @@ void ParticleRender::Update(float dt, Pacman& object, unsigned int newParticles,
     for (uint32_t i = 0; i < this->mAmount; ++i)
     {
         Particle &p = this->mParticles[i];
-        p.Life -= dt;
+        p.Life -= (float)dt;
         if (p.Life > 0.0f)
         {
-            p.Position -= p.Velocity * dt; 
-            p.Color.a -= dt * 2.5f;
+            p.Position -= p.Velocity * (float)dt; 
+            p.Color.a -= (float)dt * 2.5f;
         }
     }
 }

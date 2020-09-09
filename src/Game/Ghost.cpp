@@ -16,7 +16,7 @@ void Ghost::Init(const char* spritePath, const vec3& initialPos, uint32_t moveme
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 	Actor::Init(spritePath, initialPos, movementSpeed);
 	mScore = GHOST_SCORE;
-	mState = GHOST_STATE_INVULNERABLE;
+	mState = GhostState::GHOST_STATE_INVULNERABLE;
 }
 
 
@@ -35,7 +35,7 @@ void Ghost::Update(double dt, Pacman& pacman)
 		mGhostTimer += dt;
 		if (mGhostTimer > GHOST_VULNERABE_DURATION)
 		{
-			SetGhostState(GHOST_STATE_INVULNERABLE);
+			SetGhostState(GhostState::GHOST_STATE_INVULNERABLE);
 			mGhostTimer = 0;
 		}
 	}
@@ -45,7 +45,7 @@ void Ghost::Update(double dt, Pacman& pacman)
 		mGhostTimer += dt;
 		if (mGhostTimer > GHOST_RESPAWN_DURATION)
 		{
-			SetGhostState(GHOST_STATE_INVULNERABLE);
+			SetGhostState(GhostState::GHOST_STATE_INVULNERABLE);
 			mGhostTimer = 0;
 		}
 	}
@@ -55,7 +55,7 @@ void Ghost::Draw(double dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("sprite");
 	
-	shader.Use().SetInteger("isVulnerable", mState == GHOST_STATE_VULNERABLE);
+	shader.Use().SetInteger("isVulnerable", mState == GhostState::GHOST_STATE_VULNERABLE);
 
 	shader.SetInteger("isSpeedUp", 0);
 	if (!this->IsDead())
@@ -71,17 +71,17 @@ void Ghost::SetMovementDirection(PacmanMovement direction)
 
 void Ghost::Stop()
 {
-	SetMovementDirection(PACMAN_MOVEMENT_NONE);
+	SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_NONE);
 }
 
 void Ghost::SetToVulnerable()
 {
-	SetGhostState(GHOST_STATE_VULNERABLE);
+	SetGhostState(GhostState::GHOST_STATE_VULNERABLE);
 }
 
 void Ghost::EatenByPacman()
 {
-	SetGhostState(GHOST_STATE_DEAD);
+	SetGhostState(GhostState::GHOST_STATE_DEAD);
 	mSprite->SetPosition(vec3(GHOST_RESPWAN_POSITION, 1));
 	mGhostTimer = 0; 
 }
@@ -91,7 +91,7 @@ void Ghost::ResetToSpwanPosition()
 	Actor::ResetToSpwanPosition();
 	mGhostTimer = 0;
 	mCanChangeDirection = true;
-	SetGhostState(GHOST_STATE_INVULNERABLE);
+	SetGhostState(GhostState::GHOST_STATE_INVULNERABLE);
 }
 
 
@@ -101,14 +101,14 @@ void Ghost::SetGhostState(GhostState state)
 	switch (mState)
 	{
 		// Ghost in normal state is invulnerable.
-	case GHOST_STATE_INVULNERABLE:
+	case GhostState::GHOST_STATE_INVULNERABLE:
 		SetMovementSpeed(GHOST_MOVEMENT_SPEED);
 		mGhostTimer = 0;
 		break;
-	case GHOST_STATE_VULNERABLE:
+	case GhostState::GHOST_STATE_VULNERABLE:
 		SetMovementSpeed(GHOST_MOVEMENT_SPEED_SLOW);
 		break;
-	case GHOST_STATE_DEAD:
+	case GhostState::GHOST_STATE_DEAD:
 		SetMovementSpeed(0);
 		break;
 	}

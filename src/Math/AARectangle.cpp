@@ -7,7 +7,7 @@ AARectangle::AARectangle(): AARectangle(vec2(0.f), vec2(0.f))
 
 }
 
-AARectangle::AARectangle(const vec2& topLeft, unsigned int width, unsigned int height)
+AARectangle::AARectangle(const vec2& topLeft, uint32_t width, uint32_t height)
 {
 	mPoints.push_back(topLeft);
 	mPoints.push_back(vec2(topLeft.x + width - 1, topLeft.y + height-1));
@@ -61,7 +61,7 @@ bool AARectangle::ContainsPoint(const vec2& point) const
 
 AARectangle AARectangle::Inset(const AARectangle& rect,const vec2& insets)
 {
-	return AARectangle(rect.GetTopLeftPoint() + insets, rect.GetWidth() - 2*insets.x, rect.GetHeight() - 2*insets.y);
+	return AARectangle(rect.GetTopLeftPoint() + insets, (uint32_t)(rect.GetWidth() - 2*insets.x), (uint32_t)(rect.GetHeight() - 2*insets.y));
 }
 
 std::vector<vec2> AARectangle::GetPoints() const

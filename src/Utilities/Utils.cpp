@@ -19,12 +19,12 @@ bool IsLessThanOrEqual(float x, float y)
 	return x < y || IsEqual(x, y);
 }
 
-float MillisecondsToSeconds(unsigned int milliseconds)
+float MillisecondsToSeconds(uint32_t milliseconds)
 {
 	return static_cast<float>(milliseconds) / 1000.0f;
 }
 
-unsigned int GetIndex(unsigned int width, unsigned int r, unsigned int c)
+uint32_t GetIndex(uint32_t width, uint32_t r, uint32_t c)
 {
 	return r * width + c;
 }

@@ -1,5 +1,5 @@
 #pragma once
-
+#include<stdint.h>
 class Texture
 {
 public:
@@ -18,5 +18,5 @@ public:
 private:
 	int width, height, numcomponents;
 	unsigned char* data;
-	unsigned int textureID;
+	uint32_t textureID;
 };

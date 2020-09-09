@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <glm/glm.hpp>
 
-enum CommandType
+enum class CommandType : unsigned char
 {
 	COMMAND_ONE_LINE = 0,
 	COMMAND_MULTI_LINE
@@ -23,7 +23,7 @@ using ParseFunc = std::function<void(const ParseFuncParams& params)>;
 
 struct Command
 {
-	CommandType commandType = COMMAND_ONE_LINE;
+	CommandType commandType = CommandType::COMMAND_ONE_LINE;
 	std::string command = "";
 	ParseFunc parseFunc = nullptr;
 };

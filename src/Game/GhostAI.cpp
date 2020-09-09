@@ -3,31 +3,25 @@
 #include "Pacman.h"
 #include <algorithm>
 
-
-GhostAI::GhostAI():mGhost(nullptr)
-{
-
-}
-
 void GhostAI::Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatterTarget, GhostName name)
 {
 	mGhost = &ghost;
 	mName = name;
 	mLookAheadDistance = lookAheadDistance;
 	mScatterTarget = scatterTarget;
-	SetState(GHOST_STATE_CHASE);
-	mLastState = GHOST_STATE_CHASE;
+	SetState(GhostAIState::GHOST_STATE_CHASE);
+	mLastState = GhostAIState::GHOST_STATE_CHASE;
 
-	std::random_device randomDevice;
-	mRandomGenerator.seed(randomDevice());
+	//std::random_device randomDevice;
+	//mRandomGenerator.seed(randomDevice());
 }
-PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts)
+PacmanMovement GhostAI::Update(double dt,const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts)
 {
 	if (mGhost)
 	{
-		if (mState == GHOST_STATE_START)
+		if (mState == GhostAIState::GHOST_STATE_START)
 		{
-			return PACMAN_MOVEMENT_NONE;
+			return PacmanMovement::PACMAN_MOVEMENT_NONE;
 		}
 
 		PacmanMovement currentDir = mGhost->GetMovementDirection();
@@ -36,7 +30,7 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 
 		possibleDirections = GetPerpendicularMovements(currentDir);
 
-		if (currentDir != PACMAN_MOVEMENT_NONE)
+		if (currentDir != PacmanMovement::PACMAN_MOVEMENT_NONE)
 		{
 			possibleDirections.push_back(currentDir);
 		}
@@ -61,13 +55,13 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 			return d1 < d2;
 		});
 
-		if (mState == GHOST_STATE_CHASE)
+		if (mState == GhostAIState::GHOST_STATE_CHASE)
 		{
-			ChangeTarget(GetChaseTarget(dt, pacman, level, ghosts));
+			ChangeTarget(GetChaseTarget(pacman, level, ghosts));
 		}
 
 		
-		PacmanMovement directionToGoIn = PACMAN_MOVEMENT_NONE;
+		PacmanMovement directionToGoIn = PacmanMovement::PACMAN_MOVEMENT_NONE;
 
 		uint32_t lowestDistance = UINT32_MAX;
 
@@ -82,7 +76,7 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 
 			bbox.MoveBy(movementVec);
 
-			uint32_t distanceToTarget = glm::distance(bbox.GetCenterPoint(), mTarget);
+			uint32_t distanceToTarget = (uint32_t)glm::distance(bbox.GetCenterPoint(), mTarget);
 
 			if (distanceToTarget < lowestDistance)
 			{
@@ -95,14 +89,14 @@ PacmanMovement GhostAI::Update(float dt,const PacmanLevel& level, const Pacman& 
 
 		return directionToGoIn;
 	}
-	return PACMAN_MOVEMENT_NONE;
+	return PacmanMovement::PACMAN_MOVEMENT_NONE;
 }
 
 
 
 void GhostAI::SetState(GhostAIState state)
 {
-	if (mState == GHOST_STATE_SCATTER || mState == GHOST_STATE_CHASE)
+	if (mState == GhostAIState::GHOST_STATE_SCATTER || mState == GhostAIState::GHOST_STATE_CHASE)
 	{
 		mLastState = mState;
 	}
@@ -110,7 +104,7 @@ void GhostAI::SetState(GhostAIState state)
 	mState = state;
 
 	switch (state) {
-	case GHOST_STATE_SCATTER:
+	case GhostAIState::GHOST_STATE_SCATTER:
 		mTimer = 0;
 		ChangeTarget(mScatterTarget);
 		break;
@@ -125,7 +119,7 @@ void GhostAI::ChangeTarget(const vec2& target)
 }
 
 
-vec2 GhostAI::GetChaseTarget(uint32_t dt, const Pacman& pacman, const PacmanLevel& level, const std::vector<Ghost*>& ghosts)
+vec2 GhostAI::GetChaseTarget(const Pacman& pacman, const PacmanLevel& level, const std::vector<Ghost*>& ghosts)
 {
 	vec2 target = pacman.GetBoundingBox().GetCenterPoint();
 

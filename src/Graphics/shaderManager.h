@@ -9,7 +9,8 @@ class ShaderManager
 {
 public:
 	unsigned int ID;
-	ShaderManager() { }
+	ShaderManager():ID(0) { }
+
 	ShaderManager &Use();
 	
 	void    Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource = nullptr); // note: geometry source code is optional 

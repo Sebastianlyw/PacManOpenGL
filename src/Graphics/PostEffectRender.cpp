@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "..//Graphics/Camera.h"
 
-PostEffectRender::PostEffectRender(ShaderManager shader, unsigned int width, unsigned int height)
+PostEffectRender::PostEffectRender(ShaderManager shader, uint32_t width, uint32_t height)
 	: PostProcessingShader(shader), Width(width), Height(height), Confuse(false), Chaos(false), Shake(false)
 {
 	glGenFramebuffers(1, &this->FBO);
@@ -88,7 +88,7 @@ void PostEffectRender::Render(float time)
 void PostEffectRender::initRenderData()
 {
 	// configure VAO/VBO
-	unsigned int VBO;
+	uint32_t VBO;
 	float vertices[] = {
 		// pos        // tex
 		-1.0f, -1.0f, 0.0f, 0.0f,

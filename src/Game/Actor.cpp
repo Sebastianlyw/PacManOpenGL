@@ -11,7 +11,7 @@
 void Actor::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
 {
 	mInitialPosition = initialPos;
-	mMovementDirection = PACMAN_MOVEMENT_NONE;
+	mMovementDirection = PacmanMovement::PACMAN_MOVEMENT_NONE;
 	mSprite = new Sprite(spritePath);
 	mSprite->SetPosition(initialPos);
 	mSprite->SetSize(PACMAN_SIZE);
@@ -22,11 +22,11 @@ void Actor::Init(const char* spritePath, const vec3& initialPos, uint32_t moveme
 
 void Actor::Update(double dt)
 {
-	if (mMovementDirection != PACMAN_MOVEMENT_NONE)
+	if (mMovementDirection != PacmanMovement::PACMAN_MOVEMENT_NONE)
 	{
 		vec2 velocity = vec2(0.f);
 		vec2 mv = GetMovementVector(mMovementDirection);
-		velocity = vec2(mv.x * mMovementSpeed *dt, mv.y * mMovementSpeed *dt);
+		velocity = vec2(double(mv.x) * mMovementSpeed *dt, double(mv.y) * mMovementSpeed *dt);
 		mDelta += velocity;
 
 		if (fabsf(mDelta.x) >= 1)
@@ -63,7 +63,7 @@ void Actor::Update(double dt)
 		mSprite->Update(dt);
 	}
 
-	if (mMovementDirection == PACMAN_MOVEMENT_NONE)
+	if (mMovementDirection == PacmanMovement::PACMAN_MOVEMENT_NONE)
 	{
 		mSprite->Update(dt);
 	}
@@ -94,14 +94,14 @@ vec2 Actor::GetVelocity()
 
 void Actor::Stop()
 {
-	SetMovementDirection(PACMAN_MOVEMENT_NONE);
+	SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_NONE);
 }
 
 
 void Actor::ResetToSpwanPosition()
 {
 	mSprite->SetPosition(mInitialPosition);
-	SetMovementDirection(PACMAN_MOVEMENT_NONE);
+	SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_NONE);
 }
 
 void Actor::AddAnimation(const char* animationName, bool looped)

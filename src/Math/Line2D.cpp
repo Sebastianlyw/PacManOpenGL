@@ -53,7 +53,7 @@ vec2 Line2D::ClosestPoint(const vec2& p, bool limitToSegment) const
 
 	vec2 p0ToP1 = mP1 - mP0;
 
-	float l2 =  p0ToP1.length() * p0ToP1.length();
+	constexpr float l2 = (float)(p0ToP1.length() * p0ToP1.length());
 
 	float dot =   glm::dot(p0ToP,p0ToP1);
 
@@ -61,7 +61,7 @@ vec2 Line2D::ClosestPoint(const vec2& p, bool limitToSegment) const
 
 	if(limitToSegment)
 	{
-		t = std::fmax(0, std::fmin(1.0f, t));
+		t = (float)std::fmax(0, std::fmin(1.0f, t));
 	}
 
 	return mP0 + p0ToP1 * t;

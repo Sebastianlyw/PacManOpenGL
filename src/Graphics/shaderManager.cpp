@@ -9,7 +9,7 @@ ShaderManager& ShaderManager::Use()
 
 void ShaderManager::Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
 {
-	unsigned int sVertex, sFragment, gShader;
+	uint32_t sVertex, sFragment, gShader;
 	// vertex ShaderManager
 	sVertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(sVertex, 1, &vertexSource, NULL);
@@ -99,7 +99,7 @@ void ShaderManager::SetMatrix4(const char* name, const glm::mat4& matrix, bool u
 }
 
 
-void ShaderManager::checkCompileErrors(unsigned int object, std::string type)
+void ShaderManager::checkCompileErrors(uint32_t object, std::string type)
 {
 	int success;
 	char infoLog[1024];
