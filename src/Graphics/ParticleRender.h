@@ -12,9 +12,9 @@
 struct Particle {
 	glm::vec2 Position, Velocity;
 	glm::vec4 Color;
-	float     Life;
+	int32_t  Life;
 
-	Particle() : Position(0.0f), Velocity(0.0f), Color(1.0f), Life(0.0f) { }
+	Particle() : Position(0.0f), Velocity(0.0f), Color(1.0f), Life(0) { }
 };
 
 class ParticleRender
@@ -22,7 +22,7 @@ class ParticleRender
 public:
 	~ParticleRender();
 	ParticleRender(ShaderManager shader, std::string textureName, uint32_t amount);
-	void Update(double dt, Pacman& object, uint32_t newParticles, float offset);
+	void Update(uint32_t dt, Pacman& object, uint32_t newParticles, float offset);
 	void Draw();
 	inline void SetPosition(vec3 pos) { mSprite->transformation.position = pos; }
 	inline void SetScale(vec2 scale) { mSprite->transformation.scale = scale; }

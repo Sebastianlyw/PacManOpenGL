@@ -4,7 +4,7 @@
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 PacmanGame Game;
 Window::Window(int width, int height)
-	:m_width(width),m_height(height),delta(0),lastFrame(0),startFrame(0), window_ptr(nullptr)
+	:m_width(width),m_height(height), window_ptr(nullptr)
 {
 	glfwInit();
 
@@ -35,10 +35,6 @@ Window::Window(int width, int height)
 	// initialize game
 	// ---------------
 	Game.Init();
-
-	startFrame = 0;
-	lastFrame = 0;
-	delta = 0;
 }
 
 Window::~Window()
@@ -48,22 +44,33 @@ Window::~Window()
 
 void Window::Mainloop()
 {
-	
+	uint32_t dtAccumulator = 0;
+	uint32_t lastFrame = 0;
+	//Lock fps approximately to 60;
+	uint32_t dt = 16;	//in milliseconds.
+
 	while (!glfwWindowShouldClose(window_ptr))
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		double currentFrame = glfwGetTime();
-		delta = currentFrame - lastFrame;
+		uint32_t currentFrame = static_cast<uint32_t>(glfwGetTime() * 1000); //convert to milliseconds.
+		uint32_t deltaTime = currentFrame - lastFrame;  //delta time per frame.
 		lastFrame = currentFrame;
 
-		Game.Update(delta);
-		Game.InputUpdate(delta);
-		Game.Render(delta);
+		dtAccumulator += deltaTime;
+		
+		while (dtAccumulator >= dt)
+		{
+			Game.Update(dt);
+			Game.Render(dt);
+			dtAccumulator -= dt;
+		}
+
+		Game.InputUpdate();
+		glfwPollEvents();
 
 		glfwSwapBuffers(window_ptr);
-		glfwPollEvents();
 	}
 }
 

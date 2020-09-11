@@ -6,11 +6,11 @@
 #include <string>
 
 
-static const uint32_t PACMAN_SPEED_UP = 200;
-static const uint32_t PACMAN_SPEED = 140; 
+static const float PACMAN_SPEED_UP = 0.2f;
+static const float PACMAN_SPEED = 0.14f;
 static const uint32_t PELLET_SIZE = 30;
-static const uint32_t GHOST_MOVEMENT_SPEED =100;
-static const uint32_t GHOST_MOVEMENT_SPEED_SLOW = 50;
+static const float GHOST_MOVEMENT_SPEED = 0.1f;
+static const float GHOST_MOVEMENT_SPEED_SLOW = 0.05f;
 static const uint16_t MAX_LIVES = 4;
 static const uint16_t GHOST_SCORE = 200;
 static const uint16_t PELLET_SCORE = 10;

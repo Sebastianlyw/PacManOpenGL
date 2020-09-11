@@ -16,7 +16,7 @@
 
 namespace {
 	const float SUPER_PELLET_OFFSET = 12;
-	const float BONUS_DURATION = 13;
+	const uint32_t BONUS_DURATION = 13000;
 	const vec2 LEVEL_MAP_OFFSET = vec2(10, 50);
 }
 
@@ -43,7 +43,7 @@ bool PacmanLevel::Init(const std::string& levelPath)
 }
 
 
-void PacmanLevel::Update(double dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
+void PacmanLevel::Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
 {
 	/*mSkybox->transformation.position.y -= dt * 20;*/
 	//Collision checking game logic here. 
@@ -159,7 +159,7 @@ void PacmanLevel::Update(double dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
 
 }
 
-void PacmanLevel::Draw(double dt)
+void PacmanLevel::Draw(uint32_t dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("level");
 
@@ -168,12 +168,12 @@ void PacmanLevel::Draw(double dt)
 	shader.SetMatrix4("view", Camera::instance().GetViewMatrix());
 	
 	shader.SetInteger("isSkyBox", 1);
-	mShaderTimer += dt/80;
-	if (mShaderTimer >= 1)
+	mShaderTimer += dt/80000.f;
+	if (mShaderTimer >= 1)  // used as offset to uv y value.  range from 0-1
 	{
 		mShaderTimer = 0;
 	}
-	shader.SetFloat("deltaTime", (float)mShaderTimer);
+	shader.SetFloat("deltaTime", mShaderTimer);
 	shader.SetMatrix4("model_matrx", mSkybox->transformation.Get());
 	mSkybox->draw(0);
 	shader.SetFloat("isSkyBox", 0 );

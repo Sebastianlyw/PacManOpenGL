@@ -37,11 +37,11 @@ public:
 
 	void Init();
 
-	void Update(double dt);
-	void InputUpdate(double dt);//vector<Action> actions);
+	void Update(uint32_t dt);
+	void InputUpdate();
 	void UpdatePacmanMovement();
 
-	void Render(double dt);
+	void Render(uint32_t dt);
 
 	bool Keys[1024];
 

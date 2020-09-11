@@ -7,11 +7,11 @@
 
 namespace
 {
-	static const uint32_t GHOST_VULNERABE_DURATION = 5;
-	static const uint32_t GHOST_RESPAWN_DURATION = 10;
+	static const uint32_t GHOST_VULNERABE_DURATION = 5000;
+	static const uint32_t GHOST_RESPAWN_DURATION = 10000;
 }
 
-void Ghost::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
+void Ghost::Init(const char* spritePath, const vec3& initialPos, float movementSpeed)
 {
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 	Actor::Init(spritePath, initialPos, movementSpeed);
@@ -20,7 +20,7 @@ void Ghost::Init(const char* spritePath, const vec3& initialPos, uint32_t moveme
 }
 
 
-void Ghost::Update(double dt, Pacman& pacman)
+void Ghost::Update(uint32_t dt, Pacman& pacman)
 {
 //	UpdateDirectionFromPacMan(&pacman);
 	
@@ -51,7 +51,7 @@ void Ghost::Update(double dt, Pacman& pacman)
 	}
 }
 
-void Ghost::Draw(double dt)
+void Ghost::Draw(uint32_t dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("sprite");
 	

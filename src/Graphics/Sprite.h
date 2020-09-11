@@ -18,8 +18,8 @@ public:
 	Transform transformation;
 	
 	void Init(const char* filename);
-	void Update(double dt);
-	void draw(double deltatime, AnimationType type = AnimationType::Walking);
+	void Update(uint32_t dt);
+	void draw(uint32_t deltatime, AnimationType type = AnimationType::Walking);
 	void draw_wireframe();
 	void AddAnimation(const char* filename, bool looped);
 	void Stop();

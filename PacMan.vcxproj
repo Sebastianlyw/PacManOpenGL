@@ -219,8 +219,6 @@
     <None Include="shaders\level.vs" />
     <None Include="shaders\posteffect.fs" />
     <None Include="shaders\posteffect.vs" />
-    <None Include="shaders\skybox.fs" />
-    <None Include="shaders\skybox.vs" />
     <None Include="shaders\sprite.fs" />
     <None Include="shaders\sprite.vs" />
     <None Include="shaders\particle.fs" />

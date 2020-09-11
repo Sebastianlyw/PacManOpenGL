@@ -15,7 +15,7 @@ void GhostAI::Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatter
 	//std::random_device randomDevice;
 	//mRandomGenerator.seed(randomDevice());
 }
-PacmanMovement GhostAI::Update(double dt,const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts)
+PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts)
 {
 	if (mGhost)
 	{

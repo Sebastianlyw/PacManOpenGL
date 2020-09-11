@@ -15,7 +15,7 @@ ParticleRender::ParticleRender(ShaderManager shader, std::string spriteFilePath,
 	this->init();
 }
 
-void ParticleRender::Update(double dt, Pacman& object, uint32_t newParticles, float offsetLen)
+void ParticleRender::Update(uint32_t dt, Pacman& object, uint32_t newParticles, float offsetLen)
 {
     for (uint32_t i = 0; i < newParticles; ++i)
     {
@@ -27,11 +27,11 @@ void ParticleRender::Update(double dt, Pacman& object, uint32_t newParticles, fl
     for (uint32_t i = 0; i < this->mAmount; ++i)
     {
         Particle &p = this->mParticles[i];
-        p.Life -= (float)dt;
-        if (p.Life > 0.0f)
+        p.Life -= dt;
+        if (p.Life > 0)
         {
-            p.Position -= p.Velocity * (float)dt; 
-            p.Color.a -= (float)dt * 2.5f;
+            p.Position -= p.Velocity * static_cast<float>(dt); 
+            p.Color.a -= dt/1000.f * 2.5f;
         }
     }
 }
@@ -42,7 +42,7 @@ void ParticleRender::Draw()
 	this->mShader.Use();
 	for (Particle particle : this->mParticles)
 	{
-		if (particle.Life > 0.0f)
+		if (particle.Life > 0)
 		{
 			this->mShader.Use().SetMatrix4("projection", Camera::instance().GetPerspectiveProjection());
 			this->mShader.SetMatrix4("view", Camera::instance().GetViewMatrix());
@@ -68,13 +68,13 @@ void ParticleRender::init()
 uint32_t ParticleRender::firstUnusedParticle()
 {
 	for (uint32_t i = lastUsedParticle; i < this->mAmount; ++i) {
-		if (this->mParticles[i].Life <= 0.0f) {
+		if (this->mParticles[i].Life <= 0) {
 			lastUsedParticle = i;
 			return i;
 		}
 	}
 	for (uint32_t i = 0; i < lastUsedParticle; ++i) {
-		if (this->mParticles[i].Life <= 0.0f) {
+		if (this->mParticles[i].Life <= 0) {
 			lastUsedParticle = i;
 			return i;
 		}
@@ -89,6 +89,6 @@ void ParticleRender::respawnParticle(Particle& particle, Pacman& object, glm::ve
 	float rColor = 0.5f + ((rand() % 100) / 100.0f);
 	particle.Position = object.Position() + random + offset;
 	particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
-	particle.Life = 1.0f;
+	particle.Life = 1000;  // 1 second.
 	particle.Velocity = object.GetVelocity() * 2.0f;
 }

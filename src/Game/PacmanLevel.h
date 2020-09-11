@@ -29,8 +29,8 @@ public:
 		mRedGhostSpwanPosition(vec3(0)), mPowerTimer(0), mSkybox(nullptr), mShaderTimer(0), mTileHeight(0) {}
 	~PacmanLevel();
 	bool Init(const std::string& levelPath);
-	void Update(double dt, Pacman& pacman, std::vector<Ghost*>& ghosts); 
-	void Draw(double dt);
+	void Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghosts);
+	void Draw(uint32_t dt);
 	void ResetLevel();
 	void ResetSkyBox();
 	void ResetBonusItems();
@@ -102,7 +102,7 @@ private:
 	vec3 mRedGhostSpwanPosition;
 	vec3 mPinkGhostSpwanPosition;
 	vec3 mBlueGhostSpwanPosition;
-	double_t mShaderTimer;
+	float mShaderTimer;
 	std::vector<double_t> mBonusTimer;
-	double_t mPowerTimer;
+	uint32_t mPowerTimer;
 };

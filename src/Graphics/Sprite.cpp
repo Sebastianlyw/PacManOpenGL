@@ -24,7 +24,7 @@ void Sprite::Init(const char* filename)
 	rectangle = new Rectangle();
 }
 
-void Sprite::Update(double dt)
+void Sprite::Update(uint32_t dt)
 {
 
 }
@@ -39,7 +39,7 @@ void Sprite::Stop()
 
 
 
-void Sprite::draw(double deltatime, AnimationType type)
+void Sprite::draw(uint32_t deltatime, AnimationType type)
 {
 	if (!mAnimations.empty() && mAnimations[type])
 	{

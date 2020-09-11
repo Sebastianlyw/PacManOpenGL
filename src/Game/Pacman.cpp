@@ -6,7 +6,7 @@
 
 namespace 
 {
-	const uint32_t SPEEDUP_DURATION = 6;
+	const uint32_t SPEEDUP_DURATION = 6000; //in milliseconds
 }
 
 Pacman::Pacman():mIsDying(false),mScore(0),mSpeedUp(false),mSpeedUpTimer(0), mGhostMultiplier(1)
@@ -14,7 +14,7 @@ Pacman::Pacman():mIsDying(false),mScore(0),mSpeedUp(false),mSpeedUpTimer(0), mGh
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 }
 
-void Pacman::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
+void Pacman::Init(const char* spritePath, const vec3& initialPos, float movementSpeed)
 {
 	Actor::Init(spritePath, initialPos, movementSpeed);
 
@@ -26,7 +26,7 @@ void Pacman::Init(const char* spritePath, const vec3& initialPos, uint32_t movem
 	ResetGhostEatenMultiplier();
 }
 
-void Pacman::Update(double dt)
+void Pacman::Update(uint32_t dt)
 {
 	if (mIsDying)
 	{
@@ -63,7 +63,7 @@ void Pacman::ResetToSpwanPosition()
 	Actor::ResetToSpwanPosition();
 }
 
-void Pacman::Draw(double dt)
+void Pacman::Draw(uint32_t dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("sprite");
 

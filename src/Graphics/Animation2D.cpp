@@ -7,7 +7,7 @@
 Animation2D::Animation2D(const char* filename, bool looped)
 	: mAnimCursor(0),
 	mCurrentFrameIndex(0),
-	mSpeed(0.05f),
+	mSpeed(50),
 	mIsPlaying(true),
 	mLooped(looped),
 	mFinisedAnimation(false)
@@ -54,7 +54,7 @@ void Animation2D::Pause()
 	mIsPlaying = !mIsPlaying;
 }
 
-void Animation2D::play(Texture& spritetexture, Rectangle& rectangle, double deltatime)
+void Animation2D::play(Texture& spritetexture, Rectangle& rectangle, uint32_t deltatime)
 {
 	if (mIsPlaying && !mFinisedAnimation)
 	{
@@ -70,7 +70,7 @@ void Animation2D::play(Texture& spritetexture, Rectangle& rectangle, double delt
 			else
 			{
 				mCurrentFrameIndex = (mCurrentFrameIndex + 1) % mFrameCount;
-				mAnimCursor = 0;
+				mAnimCursor = (mAnimCursor - mSpeed); //reset and take over the remainder to animation timer accumulator.
 			}
 		}
 
@@ -111,7 +111,7 @@ void Animation2D::play(Texture& spritetexture, Rectangle& rectangle, double delt
 	}
 }
 
-void Animation2D::SetAnimationSpeed(float newspeed)
+void Animation2D::SetAnimationSpeed(uint32_t newspeed)
 {
 	mSpeed = newspeed;
 }

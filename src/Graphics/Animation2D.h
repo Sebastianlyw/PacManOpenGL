@@ -20,18 +20,18 @@ public:
 	~Animation2D();
 
 
-	void play(Texture& spritetexture, Rectangle& rectangle, double deltatime);
+	void play(Texture& spritetexture, Rectangle& rectangle, uint32_t deltatime);
 
-	void SetAnimationSpeed(float newspeed);
+	void SetAnimationSpeed(uint32_t newspeed);
 
 	void Pause();
 	inline void PlayOneFrame() { mCurrentFrameIndex = 3;  }
 
 private:
-	double mAnimCursor;
+	uint32_t mAnimCursor;
 	int mCurrentFrameIndex;
 	int mFrameCount;
-	float mSpeed;
+	uint32_t mSpeed;
 	bool mIsPlaying;
 	bool mLooped;
 	bool mFinisedAnimation;

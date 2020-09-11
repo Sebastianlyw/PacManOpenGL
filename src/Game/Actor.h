@@ -15,9 +15,9 @@ class Actor
 public:
 	Actor():mDelta(vec2(0.0f)), mInitialPosition(vec3(0.0f)), mMovementDirection(PacmanMovement::PACMAN_MOVEMENT_NONE), mMovementSpeed(0), mPlayAnimation(false),mSprite(nullptr) {}
 	virtual ~Actor() { delete mSprite; }
-	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed);
-	virtual void Update(double dt);
-	virtual void Draw(double dt);
+	virtual void Init(const char* spritePath, const vec3& initialPos, float movementSpeed);
+	virtual void Update(uint32_t dt);
+	virtual void Draw(uint32_t dt);
 
 	virtual void Stop();
 	virtual void ResetToSpwanPosition();
@@ -34,7 +34,7 @@ public:
 	inline void MoveBy(const vec2& delta) { mSprite->MoveBy(delta); }
 	inline vec2 Position() const { return mSprite->transformation.position; }
 	inline PacmanMovement GetMovementDirection() const { return mMovementDirection; }
-	inline void SetMovementSpeed(uint32_t movementSpeed) { mMovementSpeed = movementSpeed; }
+	inline void SetMovementSpeed(float movementSpeed) { mMovementSpeed = movementSpeed; }
 	inline void SetPlayAnimation(bool playAnimation) { mPlayAnimation = playAnimation; }
 	virtual inline void SetMovementDirection(PacmanMovement direction) { mMovementDirection = direction; }
 	inline Sprite* GetSpirte() { return mSprite; }
@@ -50,7 +50,7 @@ private:
 	vec2 mDelta;
 	vec3 mInitialPosition;
 	PacmanMovement mMovementDirection;
-	uint32_t mMovementSpeed;
+	float mMovementSpeed;
 	bool mPlayAnimation;
 	
 };

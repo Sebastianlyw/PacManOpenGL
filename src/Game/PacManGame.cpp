@@ -50,7 +50,6 @@ void PacmanGame::Init()
 
 	mTextRender = new TextRenderer(WINDOWSIZE.x, WINDOWSIZE.y);
 	mTextRender->Load("./assets/emulogic.TTF",28);
-	ResourceManager::LoadShader("./shaders/skybox.vs", "./shaders/skybox.fs", nullptr, "skybox");
 	ResourceManager::LoadShader("./shaders/particle.vs", "./shaders/particle.fs", nullptr, "test");
 	mParticles = new ParticleRender(ResourceManager::GetShader("test"), "./assets/fire.png", 400);
 }
@@ -83,7 +82,7 @@ PacmanGame::~PacmanGame()
 	delete mParticles;
 }
 
-void PacmanGame::Update(double dt)
+void PacmanGame::Update(uint32_t dt)
 {
 	//ToDo: Change to simple finite state machine. 
 	if (mGameState == PacmanGameState::ENTER_TO_START)
@@ -182,7 +181,7 @@ void PacmanGame::ResetLevel()
 	}
 }
 
-void PacmanGame::InputUpdate(double dt)
+void PacmanGame::InputUpdate()
 {
 	if (this->Keys[GLFW_KEY_A] || this->Keys[GLFW_KEY_LEFT])
 	{
@@ -207,7 +206,7 @@ void PacmanGame::InputUpdate(double dt)
 	
 }
 
-void PacmanGame::Render(double dt)
+void PacmanGame::Render(uint32_t dt)
 {
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.

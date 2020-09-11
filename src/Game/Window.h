@@ -19,5 +19,4 @@ public:
 private:
 	int m_width, m_height;
 	GLFWwindow* window_ptr;
-	double startFrame, lastFrame, delta;
 };

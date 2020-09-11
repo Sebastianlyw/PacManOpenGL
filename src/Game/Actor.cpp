@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-void Actor::Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed)
+void Actor::Init(const char* spritePath, const vec3& initialPos, float movementSpeed)
 {
 	mInitialPosition = initialPos;
 	mMovementDirection = PacmanMovement::PACMAN_MOVEMENT_NONE;
@@ -20,7 +20,7 @@ void Actor::Init(const char* spritePath, const vec3& initialPos, uint32_t moveme
 	mDelta = vec2(0.f);
 }
 
-void Actor::Update(double dt)
+void Actor::Update(uint32_t dt)
 {
 	if (mMovementDirection != PacmanMovement::PACMAN_MOVEMENT_NONE)
 	{
@@ -69,7 +69,7 @@ void Actor::Update(double dt)
 	}
 }
 
-void Actor::Draw(double dt)
+void Actor::Draw(uint32_t dt)
 {
 	ShaderManager shader = ResourceManager::GetShader("sprite");
 	shader.Use().SetMatrix4("projection", Camera::instance().GetPerspectiveProjection());

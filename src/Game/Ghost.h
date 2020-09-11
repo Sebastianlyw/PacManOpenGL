@@ -23,12 +23,12 @@ class Ghost : public Actor
 public:
 
 	Ghost():mState(GhostState::GHOST_STATE_INVULNERABLE),mScore(0),mSpwanPos(vec2(0.f)),mCanChangeDirection(false),mGhostTimer(0) {}
-	virtual void Init(const char* spritePath, const vec3& initialPos, uint32_t movementSpeed) override;
+	virtual void Init(const char* spritePath, const vec3& initialPos, float movementSpeed) override;
 	virtual void SetMovementDirection(PacmanMovement direction) override;
 	virtual void Stop() override;
-	virtual void Draw(double dt) override;
+	virtual void Draw(uint32_t dt) override;
 
-	void Update(double dt, Pacman& pacman);
+	void Update(uint32_t dt, Pacman& pacman);
 	void SetToVulnerable();
 	void EatenByPacman();
 	void ResetToSpwanPosition();

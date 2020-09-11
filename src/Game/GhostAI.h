@@ -25,7 +25,7 @@ public :
 
 	void Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatterTarget, GhostName name);
 
-	PacmanMovement Update(double dt, const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts);
+	PacmanMovement Update(uint32_t dt, const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts);
 
 
 private:
