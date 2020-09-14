@@ -16,7 +16,7 @@ void Ghost::Init(const char* spritePath, const vec3& initialPos, float movementS
 {
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 	Actor::Init(spritePath, initialPos, movementSpeed);
-	mSprite->SetSize(glm::vec2(PACMAN_SIZE.x - 1, PACMAN_SIZE.y - 1));
+	mSprite->SetSize(glm::vec2(GHOST_SIZE.x - 1, GHOST_SIZE.y - 1));
 
 	mInitialPosition = initialPos;
 	mScore = GHOST_SCORE;
@@ -40,7 +40,6 @@ void Ghost::Update(uint32_t dt, Pacman& pacman)
 		if (mState == GhostState::GHOST_STATE_VULNERABLE  &&  mGhostTimer > GHOST_VULNERABE_DURATION)
 		{
 			SetGhostState(GhostState::GHOST_STATE_VULNERABLE_ENDING);
-			mGhostTimer = 0;
 		}
 		if (mState == GhostState::GHOST_STATE_VULNERABLE_ENDING && mGhostTimer > GHOST_VULNERABE_ENDING_DURATION)
 		{
@@ -66,7 +65,7 @@ void Ghost::Draw(uint32_t dt)
 	shader.Use().SetInteger("isVulnerable", mState == GhostState::GHOST_STATE_VULNERABLE);
 
 	shader.SetInteger("isSpeedUp", 0);
-	if (!this->IsDead())
+	//if (!this->IsDead())
 	{
 		Actor::Draw(dt);
 	}
@@ -102,8 +101,8 @@ void Ghost::SetToVulnerable()
 void Ghost::EatenByPacman()
 {
 	SetGhostState(GhostState::GHOST_STATE_DEAD);
-	mSprite->SetPosition(vec3(GHOST_RESPWAN_POSITION, 1));
-	mGhostTimer = 0; 
+	//mSprite->SetPosition(vec3(GHOST_RESPWAN_POSITION, 1));
+	//mGhostTimer = 0; 
 }
 
 void Ghost::ResetToSpwanPosition()

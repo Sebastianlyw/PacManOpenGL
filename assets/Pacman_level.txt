@@ -99,10 +99,10 @@ oooos-------w-----w-----w-------s
 oooosww--w--wwww--w--wwww--w--wws
 oooos----w--------r--------w----s
 oooos----w--------------c--w----s
-oooos--www--w--woogoow--w--www--s 
-oooos-------w--wyoootw--w-------s
+oooos--www--w--wooooow--w--www--s 
 oooos-------w--wooooow--w-------s
-oooos--www--w--wwgggww--w--www--s
+oooos-------w--wyoootw--w-------s
+oooos--www--w--wooooow--w--www--s
 oooos----w--w-----------w--w----s
 oooos----w--w-----------w--w----s
 oooosww--w--w--wwwwwww--w--w--wws

@@ -208,7 +208,7 @@ void GhostAI::SetState(GhostAIState state)
 		break;
 	case GhostAIState::GHOST_STATE_GO_HOME:
 		{
-			vec2 target = vec2(mHomeTarget.x + mGhost->GetBoundingBox().GetWidth() / 2, mHomeTarget.y - mGhost->GetBoundingBox().GetHeight() / 2); 
+			vec2 target = vec2(mHomeTarget.x + mGhost->GetBoundingBox().GetWidth() / 2, mHomeTarget.y + mGhost->GetBoundingBox().GetHeight() / 2); 
 			ChangeTarget(target);
 		}
 		break;

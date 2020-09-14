@@ -105,7 +105,7 @@ void PacmanLevel::Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghost
 				
 					for (auto& ghost : ghosts)
 					{
-						if (!ghost->IsDead())
+					//	if (!ghost->IsDead())
 						{
 							ghost->SetToVulnerable();
 						}
