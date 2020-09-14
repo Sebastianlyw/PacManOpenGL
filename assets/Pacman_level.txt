@@ -68,7 +68,7 @@
 :tile_collision 0
 :tile_width 24
 :tile_cherry_spawn 1
-:tile_offset -12 -12
+:tile_offset 0 0
 :tile_exclude_pellet 1
 
 :tile

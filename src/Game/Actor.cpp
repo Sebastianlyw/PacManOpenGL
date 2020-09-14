@@ -14,7 +14,6 @@ void Actor::Init(const char* spritePath, const vec3& initialPos, float movementS
 	mMovementDirection = PacmanMovement::PACMAN_MOVEMENT_NONE;
 	mSprite = new Sprite(spritePath);
 	mSprite->SetPosition(initialPos);
-	mSprite->SetSize(PACMAN_SIZE);
 
 	mMovementSpeed = movementSpeed;
 	mDelta = vec2(0.f);
@@ -28,8 +27,8 @@ void Actor::Update(uint32_t dt)
 		vec2 mv = GetMovementVector(mMovementDirection);
 		velocity = vec2(double(mv.x) * mMovementSpeed *dt, double(mv.y) * mMovementSpeed *dt);
 		mDelta += velocity;
-
-		if (fabsf(mDelta.x) >= 1)
+		float mu =1;
+		if (fabsf(mDelta.x) >= mu)
 		{
 			int dx = int(fabsf(mDelta.x));
 
@@ -44,7 +43,7 @@ void Actor::Update(uint32_t dt)
 				mDelta.x -= dx;
 			}
 		}
-		else if (fabsf(mDelta.y) >= 1)
+		else if (fabsf(mDelta.y) >= mu)
 		{
 			int dy = int(fabsf(mDelta.y));
 

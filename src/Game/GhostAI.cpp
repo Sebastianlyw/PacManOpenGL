@@ -85,6 +85,11 @@ PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacma
 			}
 		}
 
+		if (directionToGoIn == PacmanMovement::PACMAN_MOVEMENT_NONE)
+		{
+			directionToGoIn = GetOppositeDirection(currentDir);
+		}
+
 //		assert(directionToGoIn != PACMAN_MOVEMENT_NONE);
 
 		return directionToGoIn;

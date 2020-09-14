@@ -17,6 +17,7 @@ Pacman::Pacman():mIsDying(false),mScore(0),mSpeedUp(false),mSpeedUpTimer(0), mGh
 void Pacman::Init(const char* spritePath, const vec3& initialPos, float movementSpeed)
 {
 	Actor::Init(spritePath, initialPos, movementSpeed);
+	mSprite->SetSize(PACMAN_SIZE);
 
 	mSprite->AddAnimation("./assets/pacmanWalking.txt", true);
 

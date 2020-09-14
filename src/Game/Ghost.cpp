@@ -15,6 +15,8 @@ void Ghost::Init(const char* spritePath, const vec3& initialPos, float movementS
 {
 	ResourceManager::LoadShader("./shaders/sprite.vs", "./shaders/sprite.fs", nullptr, "sprite");
 	Actor::Init(spritePath, initialPos, movementSpeed);
+	mSprite->SetSize(glm::vec2(PACMAN_SIZE.x - 1, PACMAN_SIZE.y - 1));
+
 	mScore = GHOST_SCORE;
 	mState = GhostState::GHOST_STATE_INVULNERABLE;
 }

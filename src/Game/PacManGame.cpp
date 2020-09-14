@@ -25,14 +25,14 @@ void PacmanGame::Init()
 	mGhostAIs.resize(size_t(GhostName::NUM_GHOSTS));
 	//setup ghosts
 	Ghost* redGhost = new Ghost();
-	redGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED + 5);
+	redGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED + 0.01);
 	mGhosts[(int)(GhostName::RED)] = (redGhost);
 	GhostAI* redGhostAI = new GhostAI();
 	redGhostAI->Init(*redGhost, (uint32_t)redGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::RED);
 	mGhostAIs[(int)(GhostName::RED)]= (redGhostAI);
 
 	Ghost* pinkGhost = new Ghost();
-	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED - 5);
+	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED - 0.01);
 	mGhosts[(int)GhostName::PINK]=(pinkGhost);
 	GhostAI* pinkGhostAI = new GhostAI();
 	pinkGhostAI->Init(*pinkGhost, (uint32_t)pinkGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
@@ -186,22 +186,18 @@ void PacmanGame::InputUpdate()
 	if (this->Keys[GLFW_KEY_A] || this->Keys[GLFW_KEY_LEFT])
 	{
 		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_LEFT;
-		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_LEFT);
 	}
 	if (this->Keys[GLFW_KEY_D] || this->Keys[GLFW_KEY_RIGHT])
 	{
 		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_RIGHT;
-		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_RIGHT);
 	}
 	if (this->Keys[GLFW_KEY_W] || this->Keys[GLFW_KEY_UP])
 	{
 		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_UP;
-		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_UP);
 	}
 	if (this->Keys[GLFW_KEY_S] || this->Keys[GLFW_KEY_DOWN])
 	{
 		mPressedDirection = PacmanMovement::PACMAN_MOVEMENT_DOWN;
-		mPacman->SetMovementDirection(PacmanMovement::PACMAN_MOVEMENT_DOWN);
 	}
 	
 }
