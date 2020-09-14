@@ -29,12 +29,13 @@ public:
 		mRedGhostSpwanPosition(vec3(0)), mPowerTimer(0), mSkybox(nullptr), mShaderTimer(0), mTileHeight(0) {}
 	~PacmanLevel();
 	bool Init(const std::string& levelPath);
-	void Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghosts);
+	void Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghosts, std::vector<GhostAI*>& ghostAIs);
 	void Draw(uint32_t dt);
 	void ResetLevel();
 	void ResetSkyBox();
 	void ResetBonusItems();
 	bool WillCollide(const AARectangle& abbox, PacmanMovement direction) const;
+	bool WillCollide(const Ghost& ghost, GhostAI& ghostAI, PacmanMovement direction) const;
 	bool IsLevelOver() const;
 	inline Sprite* GetBackground() { return mBackground; }
 	inline Sprite* GetPelletSprite() { return mPelletSprite; }

@@ -87,7 +87,7 @@
 :layout 32
 
 ooooswwwwwwwwwwwwwwwwwwwwwwwwwwws
-oooos---r---------w-------------s
+oooos-------------w-------------s
 oooos-------------w-------------s
 oooos--www--wwww-----wwww--www--s
 oooos--www--wwww--a--wwww--www--s
@@ -97,13 +97,13 @@ oooos--www--w--wwwwwww--w--www--s
 oooos-------w-----w-----w-------s
 oooos-------w-----w-----w-------s
 oooosww--w--wwww--w--wwww--w--wws
-oooos----w--------y--------w----s
-oooos----w--------------c--w----s
+oooos----w-----------------w----s
+oooos----w--------r-----c--w----s
 oooos--www--w--wwgggww--w--www--s 
-oooos-------w--wooooow--w-------s
+oooos-------w--wyoootw--w-------s
 oooos-------w--wooooow--w-------s
 oooos--www--w--wwgggww--w--www--s
-oooos----w--w-----t-----w--w----s
+oooos----w--w-----------w--w----s
 oooos----w--w-----------w--w----s
 oooosww--w--w--wwwwwww--w--w--wws
 oooos---------------------------s

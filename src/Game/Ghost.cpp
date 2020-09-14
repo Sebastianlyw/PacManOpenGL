@@ -7,8 +7,9 @@
 
 namespace
 {
-	static const uint32_t GHOST_VULNERABE_DURATION = 5000;
-	static const uint32_t GHOST_RESPAWN_DURATION = 10000;
+	 const uint32_t GHOST_VULNERABE_DURATION = 6000;
+	 const uint32_t GHOST_VULNERABE_ENDING_DURATION = 4000;
+	 const uint32_t GHOST_RESPAWN_DURATION = 10000;
 }
 
 void Ghost::Init(const char* spritePath, const vec3& initialPos, float movementSpeed)
@@ -17,14 +18,15 @@ void Ghost::Init(const char* spritePath, const vec3& initialPos, float movementS
 	Actor::Init(spritePath, initialPos, movementSpeed);
 	mSprite->SetSize(glm::vec2(PACMAN_SIZE.x - 1, PACMAN_SIZE.y - 1));
 
+	mInitialPosition = initialPos;
 	mScore = GHOST_SCORE;
-	mState = GhostState::GHOST_STATE_INVULNERABLE;
+	mState = GhostState::GHOST_STATE_ALIVE;
+	ResetToSpwanPosition();
 }
 
 
 void Ghost::Update(uint32_t dt, Pacman& pacman)
 {
-//	UpdateDirectionFromPacMan(&pacman);
 	
 	vec2 position = Position();
 
@@ -35,14 +37,18 @@ void Ghost::Update(uint32_t dt, Pacman& pacman)
 	if (IsVulnerable())
 	{
 		mGhostTimer += dt;
-		if (mGhostTimer > GHOST_VULNERABE_DURATION)
+		if (mState == GhostState::GHOST_STATE_VULNERABLE  &&  mGhostTimer > GHOST_VULNERABE_DURATION)
 		{
-			SetGhostState(GhostState::GHOST_STATE_INVULNERABLE);
+			SetGhostState(GhostState::GHOST_STATE_VULNERABLE_ENDING);
 			mGhostTimer = 0;
+		}
+		if (mState == GhostState::GHOST_STATE_VULNERABLE_ENDING && mGhostTimer > GHOST_VULNERABE_ENDING_DURATION)
+		{
+			SetGhostState(GhostState::GHOST_STATE_ALIVE);
 		}
 	}
 
-	if (IsDead())
+	/*if (IsDead())
 	{
 		mGhostTimer += dt;
 		if (mGhostTimer > GHOST_RESPAWN_DURATION)
@@ -50,7 +56,7 @@ void Ghost::Update(uint32_t dt, Pacman& pacman)
 			SetGhostState(GhostState::GHOST_STATE_INVULNERABLE);
 			mGhostTimer = 0;
 		}
-	}
+	}*/
 }
 
 void Ghost::Draw(uint32_t dt)
@@ -69,6 +75,14 @@ void Ghost::Draw(uint32_t dt)
 void Ghost::SetMovementDirection(PacmanMovement direction)
 {
 	Actor::SetMovementDirection(direction);
+	if (mState == GhostState::GHOST_STATE_ALIVE)
+	{
+		//ToDo: Moving Animaiton
+	}
+	else if (mState == GhostState::GHOST_STATE_DEAD)
+	{
+		//Todo: dead animation.
+	}
 }
 
 void Ghost::Stop()
@@ -78,7 +92,11 @@ void Ghost::Stop()
 
 void Ghost::SetToVulnerable()
 {
-	SetGhostState(GhostState::GHOST_STATE_VULNERABLE);
+	if (mState != GhostState::GHOST_STATE_DEAD && IsVulnerable())
+	{
+		SetGhostState(GhostState::GHOST_STATE_VULNERABLE);
+	}
+
 }
 
 void Ghost::EatenByPacman()
@@ -93,25 +111,51 @@ void Ghost::ResetToSpwanPosition()
 	Actor::ResetToSpwanPosition();
 	mGhostTimer = 0;
 	mCanChangeDirection = true;
-	SetGhostState(GhostState::GHOST_STATE_INVULNERABLE);
+	SetGhostState(GhostState::GHOST_STATE_ALIVE);
+	mIsReleased = false;
+
+	if (mGhostDelegate)
+	{
+		mGhostDelegate->GhostWasResetToFirstPosition();
+	}
+
 }
 
 
+void Ghost::ReleaseFromHome()
+{
+	mIsReleased = true;
+	if (mGhostDelegate)
+	{
+		mGhostDelegate->GhostWasReleasedFromHome();
+	}
+}
+
 void Ghost::SetGhostState(GhostState state)
 {
+	if (mGhostDelegate)
+	{
+		mGhostDelegate->GhostDelegateGhostStateChangeTo(mState, state);
+	}
+
 	mState = state;
 	switch (mState)
 	{
 		// Ghost in normal state is invulnerable.
-	case GhostState::GHOST_STATE_INVULNERABLE:
+	case GhostState::GHOST_STATE_ALIVE:
+		SetMovementDirection(GetMovementDirection()); //???
 		SetMovementSpeed(GHOST_MOVEMENT_SPEED);
-		mGhostTimer = 0;
 		break;
 	case GhostState::GHOST_STATE_VULNERABLE:
+		mGhostTimer = 0;
 		SetMovementSpeed(GHOST_MOVEMENT_SPEED_SLOW);
 		break;
+	case GhostState::GHOST_STATE_VULNERABLE_ENDING:
+		mGhostTimer = 0;
+		break;
 	case GhostState::GHOST_STATE_DEAD:
-		SetMovementSpeed(0);
+		SetMovementDirection(GetMovementDirection());
+		SetMovementSpeed(GHOST_BACK_TO_PEN_SPEED);
 		break;
 	}
 }

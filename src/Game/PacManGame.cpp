@@ -13,8 +13,15 @@
 #include<sstream>
 #include"..//Graphics/Sprite.h"
 	
+
+namespace
+{
+	const uint32_t RELEASE_GHOST_DURATION = 5000;
+}
 void PacmanGame::Init()
 {
+	mReleaseGhostTimer = 0;
+
 	mLevel = new PacmanLevel();
 	mLevel->Init("./assets/Pacman_level.txt");
 	
@@ -23,27 +30,37 @@ void PacmanGame::Init()
 	
 	mGhosts.resize(size_t(GhostName::NUM_GHOSTS));
 	mGhostAIs.resize(size_t(GhostName::NUM_GHOSTS));
+
+	const vec2 RED_SCATTER_POS = vec2(WINDOWSIZE.x - 72, 0);
+	const vec2 PINK_SCATTER_POS = vec2(WINDOWSIZE.x, WINDOWSIZE.y);
+	const vec2 BLUE_SCATTER_POS = vec2(72, 0);
+
 	//setup ghosts
 	Ghost* redGhost = new Ghost();
 	redGhost->Init("./assets/monster-red.png", mLevel->GetRedghostSpwanPosition(), GHOST_MOVEMENT_SPEED + 0.01);
 	mGhosts[(int)(GhostName::RED)] = (redGhost);
 	GhostAI* redGhostAI = new GhostAI();
-	redGhostAI->Init(*redGhost, (uint32_t)redGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::RED);
+	redGhostAI->Init(*redGhost, (uint32_t)redGhost->GetBoundingBox().GetWidth(), RED_SCATTER_POS, mLevel->GetPinkghostSpwanPosition(), mLevel->GetRedghostSpwanPosition(),  GhostName::RED);
 	mGhostAIs[(int)(GhostName::RED)]= (redGhostAI);
 
 	Ghost* pinkGhost = new Ghost();
 	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED - 0.01);
 	mGhosts[(int)GhostName::PINK]=(pinkGhost);
 	GhostAI* pinkGhostAI = new GhostAI();
-	pinkGhostAI->Init(*pinkGhost, (uint32_t)pinkGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
+	pinkGhostAI->Init(*pinkGhost, (uint32_t)pinkGhost->GetBoundingBox().GetWidth(), PINK_SCATTER_POS, mLevel->GetPinkghostSpwanPosition(), mLevel->GetPinkghostSpwanPosition(), GhostName::PINK);
 	mGhostAIs[(int)GhostName::PINK]=(pinkGhostAI);
 
 	Ghost* blueGhost = new Ghost();
 	blueGhost->Init("./assets/monster-blue.png", mLevel->GetBlueghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
 	mGhosts[(int)GhostName::BLUE] = (blueGhost);
 	GhostAI* blueGhostAI = new GhostAI();
-	blueGhostAI->Init(*blueGhost, (uint32_t)blueGhost->GetBoundingBox().GetWidth(), vec2(0), GhostName::PINK);
+	blueGhostAI->Init(*blueGhost, (uint32_t)blueGhost->GetBoundingBox().GetWidth(), BLUE_SCATTER_POS, mLevel->GetPinkghostSpwanPosition(), mLevel->GetRedghostSpwanPosition(), GhostName::BLUE);
 	mGhostAIs[(int)GhostName::BLUE] = (blueGhostAI);
+
+	for (size_t i = 0; i <(int)GhostName::NUM_GHOSTS; ++i)
+	{
+		mGhosts[i]->SetGhostDelegate(mGhostAIs[i]);
+	}
 
 	pacManLive = new Pacman();
 	pacManLive->Init("./assets/pacmanwalking.png", vec3(0.f), 0);
@@ -101,12 +118,25 @@ void PacmanGame::Update(uint32_t dt)
 		{
 			mParticles->Update(dt, *mPacman, 2, 15);
 		}
-	
+		mReleaseGhostTimer += dt;
 
 		for (int i = 0; i < (int)GhostName::NUM_GHOSTS; i++)
 		{
 			Ghost& ghost = *mGhosts[i];
 			GhostAI& ghostAI = *mGhostAIs[i];
+		
+			/*if (mReleaseGhostTimer >= RELEASE_GHOST_DURATION)
+			{
+				std::cout << "is At home: " << ghostAI.IsAtHome()<<std::endl;
+
+				std::cout << "ghost.IsReleased " << ghost.IsReleased() << std::endl;
+			}*/
+			if (mReleaseGhostTimer >= RELEASE_GHOST_DURATION && ghostAI.IsAtHome() && !ghost.IsReleased())
+			{
+				mReleaseGhostTimer = 0;
+				ghost.ReleaseFromHome(); 
+			}
+
 			PacmanMovement dir = ghostAI.Update(dt, *mLevel, *mPacman, mGhosts);
 			if (dir != ghost.GetMovementDirection())
 			{
@@ -126,7 +156,7 @@ void PacmanGame::Update(uint32_t dt)
 					mPacman->AteGhost(ghost.GetScore());
 				}
 			}
-			else if (ghost.IsInvulnerable())
+			else if (!ghost.IsDead() && ghost.GetEatingBoundingBox().Intersects(mPacman->GetBoundingBox()))//(ghost.IsInvulnerable())
 			{
 				mPacman->GetSpirte()->SetSize(vec2(PACMAN_SIZE.x, PACMAN_SIZE.y));
 				if (ghost.GetEatingBoundingBox().Intersects(mPacman->GetBoundingBox()))
@@ -142,7 +172,7 @@ void PacmanGame::Update(uint32_t dt)
 			}
 		}
 
-		mLevel->Update(dt, *mPacman, mGhosts);
+		mLevel->Update(dt, *mPacman, mGhosts, mGhostAIs);
 		if (mLevel->IsLevelOver())
 		{
 			mGameState = PacmanGameState::GAME_WIN;
@@ -179,6 +209,8 @@ void PacmanGame::ResetLevel()
 	{
 		g->ResetToSpwanPosition();
 	}
+
+	mGhosts[(int)(GhostName::RED)]->ReleaseFromHome();
 }
 
 void PacmanGame::InputUpdate()

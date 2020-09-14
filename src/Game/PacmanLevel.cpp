@@ -43,14 +43,12 @@ bool PacmanLevel::Init(const std::string& levelPath)
 }
 
 
-void PacmanLevel::Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghosts)
+void PacmanLevel::Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghosts, std::vector<GhostAI*>& ghostAIs)
 {
-	/*mSkybox->transformation.position.y -= dt * 20;*/
+	BoundaryEdge edge;
 	//Collision checking game logic here. 
 	for (const auto & wall : mWalls)
 	{
-		BoundaryEdge edge;
-
 		if (wall.HasCollided(pacman.GetBoundingBox(), edge))
 		{
 			vec2 offset = wall.GetCollisionOffset(pacman.GetBoundingBox());
@@ -58,22 +56,19 @@ void PacmanLevel::Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghost
 			pacman.Stop();
 		}
 
-	/*	for (auto& ghost : ghosts)
+		for (auto& ghost : ghosts)
 		{
-			if (wall.HasCollided(ghost.GetBoundingBox(), edge))
+			if (wall.HasCollided(ghost->GetBoundingBox(), edge))
 			{
-				vec2 offset = wall.GetCollisionOffset(ghost.GetBoundingBox());
-				ghost.MoveBy(offset);
-				ghost.Stop();
+				vec2 offset = wall.GetCollisionOffset(ghost->GetBoundingBox());
+				ghost->MoveBy(offset);
+				ghost->Stop();
 			}
-		}*/
-
+		}
 	}
 
 	for (const auto& gate : mGate)
 	{
-		BoundaryEdge edge;
-
 		if (gate.HasCollided(pacman.GetBoundingBox(), edge))
 		{
 			vec2 offset = gate.GetCollisionOffset(pacman.GetBoundingBox());
@@ -81,18 +76,16 @@ void PacmanLevel::Update(uint32_t dt, Pacman& pacman, std::vector<Ghost*>& ghost
 			pacman.Stop();
 		}
 
-	/*	for (size_t i = 0; i < NUM_GHOSTS; ++i)
+		for (size_t i = 0; i < static_cast<int>(GhostName::NUM_GHOSTS); ++i)
 		{
-			Ghost& ghost = ghosts[i];
-
-			if (gate.HasCollided(ghost.GetBoundingBox(), edge))
+			GhostAI& ghostAI = *ghostAIs[i];
+			if (!(ghostAI.GoingToLeaveHome() || ghostAI.IsGoBackHome()) && gate.HasCollided(ghosts[i]->GetBoundingBox(), edge))
 			{
-				vec2 offset = gate.GetCollisionOffset(ghost.GetBoundingBox());
-				ghost.MoveBy(offset);
-				ghost.Stop();
+				vec2 offset = gate.GetCollisionOffset(ghosts[i]->GetBoundingBox());
+				ghosts[i]->MoveBy(offset);
+				ghosts[i]->Stop();
 			}
-		}*/
-
+		}
 	}
 
 	for (auto& pellet : mPellets)
@@ -437,7 +430,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 				}
 				else if (tile->isRedGhostSpawnTile)
 				{
-					mRedGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y,0);
+					mRedGhostSpwanPosition = vec3(startingX + tile->offset.x + 1, layoutOffset.y + tile->offset.y,0);
 				}
 				else if (tile->isPinkGhostSpawnTile)
 				{
@@ -445,7 +438,7 @@ bool PacmanLevel::LoadLevel(const std::string& path)
 				}
 				else if(tile->isBlueGhostSpwanTile)
 				{
-					mBlueGhostSpwanPosition = vec3(startingX + tile->offset.x, layoutOffset.y + tile->offset.y, 0);
+					mBlueGhostSpwanPosition = vec3(startingX + tile->offset.x + 1, layoutOffset.y + tile->offset.y, 0);
 				}
 				else if (tile->isCherrySpwanTile)
 				{
@@ -508,8 +501,40 @@ bool PacmanLevel::WillCollide(const AARectangle& abbox, PacmanMovement direction
 		}
 	}
 
+	for (const auto& gate : mGate)
+	{
+		if (gate.HasCollided(bbox, edge))
+		{
+			return true;
+		}
+	}
+
 	return false;
 
+}
+
+bool PacmanLevel::WillCollide(const Ghost& ghost, GhostAI& ghostAI, PacmanMovement direction) const
+{
+	AARectangle abbox = ghost.GetBoundingBox();
+	abbox.MoveBy(GetMovementVector(direction));
+	BoundaryEdge edge;
+	for (const auto& wall : mWalls)
+	{
+		if (wall.HasCollided(abbox, edge))
+		{
+			return true;
+		}
+	}
+
+	for (const auto& gate : mGate)
+	{
+		if (!(ghostAI.IsGoBackHome() || ghostAI.GoingToLeaveHome() && gate.HasCollided(abbox, edge)))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void PacmanLevel::ResetLevel()

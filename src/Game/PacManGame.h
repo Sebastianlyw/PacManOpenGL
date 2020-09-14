@@ -30,8 +30,8 @@ class PacmanGame
 {
 public:
 	PacmanGame() : mGameState(PacmanGameState::ENTER_TO_START), mLevel(nullptr), mLives(MAX_LIVES), mPacman(nullptr),
-				   mParticles(nullptr), mPressedDirection(PacmanMovement::PACMAN_MOVEMENT_NONE),
-		mTextRender(nullptr), pacManLive(nullptr){ }
+				   mParticles(nullptr), mPressedDirection(PacmanMovement::PACMAN_MOVEMENT_NONE), mReleaseGhostTimer(0),
+				   mTextRender(nullptr), pacManLive(nullptr){ }
 
 	~PacmanGame();
 
@@ -60,4 +60,5 @@ private:
 	uint16_t mLives;
 	PacmanGameState mGameState;	
 	ParticleRender* mParticles;
+	uint32_t mReleaseGhostTimer;
 };

@@ -11,18 +11,31 @@ enum class GhostName : unsigned char
 
 enum class GhostState :unsigned char
 {
-	GHOST_STATE_VULNERABLE	 = 0x01,
-	GHOST_STATE_INVULNERABLE = 0x02,
-	GHOST_STATE_DEAD		 = 0x04
+	GHOST_STATE_ALIVE			  = 0x01,
+	GHOST_STATE_VULNERABLE		  = 0x02,
+	GHOST_STATE_VULNERABLE_ENDING = 0x04,
+	GHOST_STATE_DEAD			  = 0x08
 };
 
 class Pacman;
+
+
+class GhostDelegate
+{
+public:
+	virtual ~GhostDelegate() {}
+	virtual void GhostDelegateGhostStateChangeTo(GhostState lastState, GhostState currentState) = 0;
+	virtual void GhostWasReleasedFromHome() = 0;
+	virtual void GhostWasResetToFirstPosition() = 0;
+};
+
 
 class Ghost : public Actor
 {
 public:
 
-	Ghost():mState(GhostState::GHOST_STATE_INVULNERABLE),mScore(0),mSpwanPos(vec2(0.f)),mCanChangeDirection(false),mGhostTimer(0) {}
+	Ghost():mState(GhostState::GHOST_STATE_ALIVE),mScore(0),mCanChangeDirection(false),mGhostTimer(0), mIsReleased(false),mGhostDelegate(nullptr) {}
+
 	virtual void Init(const char* spritePath, const vec3& initialPos, float movementSpeed) override;
 	virtual void SetMovementDirection(PacmanMovement direction) override;
 	virtual void Stop() override;
@@ -35,16 +48,20 @@ public:
 
 	inline bool IsDead() const { return mState == GhostState::GHOST_STATE_DEAD; }
 	inline bool IsVulnerable() const { return mState == GhostState::GHOST_STATE_VULNERABLE; }
-	inline bool IsInvulnerable() const { return mState == GhostState::GHOST_STATE_INVULNERABLE; }
 	inline void LockCanChangeDirection() { mCanChangeDirection = false; }
 	inline bool CanChangeDirection() const { return mCanChangeDirection; }
 	inline uint32_t GetScore() const { return mScore; }
+	inline bool IsReleased() const { return mIsReleased; }
+	void ReleaseFromHome();
+	void SetGhostState(GhostState state);
+	inline void SetGhostDelegate(GhostDelegate* delegate) { mGhostDelegate = delegate; }
 private:
 
-	void SetGhostState(GhostState state);
+	friend class GhostAI;
 	GhostState mState;
 	double mGhostTimer;
 	uint32_t mScore;
-	glm::vec2 mSpwanPos;
 	bool mCanChangeDirection;
+	bool mIsReleased;
+	GhostDelegate* mGhostDelegate;
 };

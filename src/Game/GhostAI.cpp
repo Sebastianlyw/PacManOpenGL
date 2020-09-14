@@ -2,19 +2,29 @@
 #include "PacmanLevel.h"
 #include "Pacman.h"
 #include <algorithm>
+#include <cassert>
 
-void GhostAI::Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatterTarget, GhostName name)
+namespace {
+	const uint32_t HOME_WAIT_DURATION = 6000;
+	const uint32_t SCATTER_MODE_DURATION = 10000;
+}
+
+
+void GhostAI::Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatterTarget, const vec2& homeTarget, const vec2& exitHomePosition, GhostName name)
 {
 	mGhost = &ghost;
 	mName = name;
 	mLookAheadDistance = lookAheadDistance;
 	mScatterTarget = scatterTarget;
-	SetState(GhostAIState::GHOST_STATE_CHASE);
-	mLastState = GhostAIState::GHOST_STATE_CHASE;
-
-	//std::random_device randomDevice;
-	//mRandomGenerator.seed(randomDevice());
+	SetState(GhostAIState::GHOST_STATE_AT_HOME);
+	mLastState = GhostAIState::GHOST_STATE_AT_HOME;
+	mTimer = 0;
+	std::random_device randomDevice;
+	mRandomGenerator.seed(randomDevice());
+	mHomeTarget = homeTarget;
+	mExitHomePosition = exitHomePosition;
 }
+
 PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts)
 {
 	if (mGhost)
@@ -22,6 +32,38 @@ PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacma
 		if (mState == GhostAIState::GHOST_STATE_START)
 		{
 			return PacmanMovement::PACMAN_MOVEMENT_NONE;
+		}
+		
+		if (mState == GhostAIState::GHOST_STATE_AT_HOME)
+		{
+			mTimer += dt;
+
+			if (mTimer > HOME_WAIT_DURATION)
+			{
+				SetState(GhostAIState::GHOST_STATE_EXIT_HOME);
+			}
+			return PacmanMovement::PACMAN_MOVEMENT_NONE;
+		}
+
+		if (mState == GhostAIState::GHOST_STATE_GO_HOME && mGhost->Position() == mHomeTarget)
+		{
+			SetState(GhostAIState::GHOST_STATE_AT_HOME);
+			mGhost->SetGhostState(GhostState::GHOST_STATE_ALIVE);
+			return PacmanMovement::PACMAN_MOVEMENT_NONE;
+		}
+		
+		if (mState == GhostAIState::GHOST_STATE_EXIT_HOME && mGhost->Position() == mExitHomePosition)
+		{
+			SetState(GhostAIState::GHOST_STATE_SCATTER);
+		}		
+		
+		if (mState == GhostAIState::GHOST_STATE_SCATTER)
+		{
+			mTimer += dt;
+			if (mTimer > SCATTER_MODE_DURATION)
+			{
+				SetState(GhostAIState::GHOST_STATE_CHASE);
+			}
 		}
 
 		PacmanMovement currentDir = mGhost->GetMovementDirection();
@@ -45,7 +87,7 @@ PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacma
 		for (const auto& d : tempDirections)
 		{
 			//If not collided with wall, add back to possible list. 
-			if (!level.WillCollide(mGhost->GetBoundingBox(), d))
+			if (!level.WillCollide(*mGhost, *this, d))
 			{
 				possibleDirections.push_back(d);
 			}
@@ -54,6 +96,12 @@ PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacma
 		std::sort(possibleDirections.begin(), possibleDirections.end(), [](const PacmanMovement& d1, const PacmanMovement& d2) {
 			return d1 < d2;
 		});
+
+		if (mGhost->IsVulnerable() && (mState == GhostAIState::GHOST_STATE_CHASE || mState == GhostAIState::GHOST_STATE_SCATTER))
+		{
+			std::uniform_int_distribution<size_t> distribution(0, possibleDirections.size() - 1);
+			return possibleDirections[static_cast<int>(distribution(mRandomGenerator))];
+		}
 
 		if (mState == GhostAIState::GHOST_STATE_CHASE)
 		{
@@ -90,11 +138,46 @@ PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacma
 			directionToGoIn = GetOppositeDirection(currentDir);
 		}
 
-//		assert(directionToGoIn != PACMAN_MOVEMENT_NONE);
+		//assert(directionToGoIn != PacmanMovement::PACMAN_MOVEMENT_NONE);
 
 		return directionToGoIn;
 	}
 	return PacmanMovement::PACMAN_MOVEMENT_NONE;
+}
+
+void GhostAI::GhostDelegateGhostStateChangeTo(GhostState lastState, GhostState currentState)
+{
+	if (mGhost && mGhost->IsReleased() 
+		&& (lastState == GhostState::GHOST_STATE_VULNERABLE || lastState == GhostState::GHOST_STATE_VULNERABLE_ENDING)
+		&& (IsAtHome() || GoingToLeaveHome()))
+	{
+		mGhost->SetMovementDirection(GetOppositeDirection(mGhost->GetMovementDirection()));
+	}
+
+	if (currentState == GhostState::GHOST_STATE_DEAD)
+	{
+		SetState(GhostAIState::GHOST_STATE_GO_HOME);
+	}
+	else if ((lastState == GhostState::GHOST_STATE_VULNERABLE || lastState == GhostState::GHOST_STATE_VULNERABLE_ENDING) && currentState == GhostState::GHOST_STATE_ALIVE)
+	{
+		if (mState == GhostAIState::GHOST_STATE_CHASE || mState == GhostAIState::GHOST_STATE_SCATTER)
+		{
+			SetState(mLastState);
+		}
+	}
+}
+
+void GhostAI::GhostWasReleasedFromHome()
+{
+	if (mState == GhostAIState::GHOST_STATE_START)
+	{
+		SetState(GhostAIState::GHOST_STATE_EXIT_HOME);
+	}
+}
+
+void GhostAI::GhostWasResetToFirstPosition()
+{
+	SetState(GhostAIState::GHOST_STATE_START);
 }
 
 
@@ -113,6 +196,18 @@ void GhostAI::SetState(GhostAIState state)
 		mTimer = 0;
 		ChangeTarget(mScatterTarget);
 		break;
+	case GhostAIState::GHOST_STATE_AT_HOME:
+		mTimer = 0;
+		break;
+	case GhostAIState::GHOST_STATE_EXIT_HOME: 
+		ChangeTarget(mExitHomePosition);
+		break;
+	case GhostAIState::GHOST_STATE_GO_HOME:
+		{
+			vec2 target = vec2(mHomeTarget.x + mGhost->GetBoundingBox().GetWidth() / 2, mHomeTarget.y - mGhost->GetBoundingBox().GetHeight() / 2); 
+			ChangeTarget(target);
+		}
+		break;
 	default:
 		break;
 	}
@@ -129,14 +224,35 @@ vec2 GhostAI::GetChaseTarget(const Pacman& pacman, const PacmanLevel& level, con
 	vec2 target = pacman.GetBoundingBox().GetCenterPoint();
 
 	//ToDo: more AI for different ghosts.
-	/*switch (mName)
+	switch (mName)
 	{
-	case RED:
-		return  pacman.GetBoundingBox().GetCenterPoint();
-	case PINK:
-	default:
-		return  pacman.GetBoundingBox().GetCenterPoint();
-	}*/
+		case GhostName::RED:
+			target =  pacman.GetBoundingBox().GetCenterPoint();
+			break;
+		case GhostName::PINK:
+			{
+				auto distanceToPacman = glm::distance(mGhost->GetBoundingBox().GetCenterPoint(), pacman.GetBoundingBox().GetCenterPoint());
+
+				if (distanceToPacman > pacman.GetBoundingBox().GetWidth() * 4)
+				{
+					target = pacman.GetBoundingBox().GetCenterPoint();
+				}
+				else
+				{
+					target = mScatterTarget;
+				}
+			}
+			
+			break;
+		case GhostName::BLUE:
+			{
+				vec2 pacmanOffsetPoint = pacman.GetBoundingBox().GetCenterPoint() + (GetMovementVector(pacman.GetMovementDirection()) * pacman.GetBoundingBox().GetWidth());
+				target = (pacmanOffsetPoint - ghosts[static_cast<int>(GhostName::RED)]->GetBoundingBox().GetCenterPoint()) * 2.f + ghosts[static_cast<int>(GhostName::RED)]->GetBoundingBox().GetCenterPoint();
+			}
+			
+			break;
+	}
+
 
 	if (mGhost->IsVulnerable())
 	{

@@ -16,18 +16,24 @@ enum class GhostAIState :unsigned char
 	GHOST_STATE_GO_HOME		= 0x20
 };
 
-class GhostAI
+class GhostAI :public GhostDelegate
 {
 
 public :
-	GhostAI():mGhost(nullptr), mName(GhostName::RED), mState(GhostAIState::GHOST_STATE_CHASE), mLastState(GhostAIState::GHOST_STATE_CHASE)
+	GhostAI():mGhost(nullptr), mName(GhostName::RED), mState(GhostAIState::GHOST_STATE_SCATTER), mLastState(GhostAIState::GHOST_STATE_SCATTER)
 	, mScatterTarget(vec2(0.f)), mTarget(vec2(0.f)),mTimer(0), mLookAheadDistance(0){}
 
-	void Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatterTarget, GhostName name);
+	void Init(Ghost& ghost, uint32_t lookAheadDistance, const vec2& scatterTarget,const vec2& homeTarget, const vec2& exitHomePosition, GhostName name);
 
 	PacmanMovement Update(uint32_t dt, const PacmanLevel& level, const Pacman& pacman, const std::vector<Ghost*>& ghosts);
 
+	virtual void GhostDelegateGhostStateChangeTo(GhostState lastState, GhostState currentState) override;
+	virtual void GhostWasReleasedFromHome() override;
+	virtual void GhostWasResetToFirstPosition() override;
 
+	inline bool GoingToLeaveHome() const { return mState == GhostAIState::GHOST_STATE_EXIT_HOME; }
+	inline bool IsAtHome()  const { return mState == GhostAIState::GHOST_STATE_AT_HOME || mState == GhostAIState::GHOST_STATE_START; }
+	inline bool IsGoBackHome() const { return mState == GhostAIState::GHOST_STATE_GO_HOME; }
 private:
 	void SetState(GhostAIState state);
 	void ChangeTarget(const vec2& target);
@@ -42,7 +48,8 @@ private:
 	GhostAIState mLastState;
 	uint32_t mLookAheadDistance;
 	uint64_t mTimer;
-
-
+	std::default_random_engine mRandomGenerator;
+	vec2 mExitHomePosition;
+	vec2 mHomeTarget;
 
 };

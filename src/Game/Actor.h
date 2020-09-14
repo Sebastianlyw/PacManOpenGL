@@ -46,9 +46,11 @@ protected:
 	inline void ResetDelta() { mDelta = vec2(0.0f); }
 	
 	Sprite* mSprite;
+protected:
+	vec3 mInitialPosition;
 private:
 	vec2 mDelta;
-	vec3 mInitialPosition;
+	
 	PacmanMovement mMovementDirection;
 	float mMovementSpeed;
 	bool mPlayAnimation;
