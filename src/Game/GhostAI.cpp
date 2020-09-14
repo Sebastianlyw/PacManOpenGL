@@ -52,7 +52,7 @@ PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacma
 			return PacmanMovement::PACMAN_MOVEMENT_NONE;
 		}
 		
-		if (mState == GhostAIState::GHOST_STATE_EXIT_HOME && mGhost->Position() == mExitHomePosition)
+		if (mState == GhostAIState::GHOST_STATE_EXIT_HOME && fabs(mGhost->Position().x - mExitHomePosition.x) <30)
 		{
 			SetState(GhostAIState::GHOST_STATE_SCATTER);
 		}		
@@ -138,6 +138,10 @@ PacmanMovement GhostAI::Update(uint32_t dt,const PacmanLevel& level, const Pacma
 			directionToGoIn = GetOppositeDirection(currentDir);
 		}
 
+	//	if (directionToGoIn == PacmanMovement::PACMAN_MOVEMENT_NONE)
+		{
+	//		return GetOppositeDirection(currentDir);
+		}
 		//assert(directionToGoIn != PacmanMovement::PACMAN_MOVEMENT_NONE);
 
 		return directionToGoIn;
@@ -230,18 +234,7 @@ vec2 GhostAI::GetChaseTarget(const Pacman& pacman, const PacmanLevel& level, con
 			target =  pacman.GetBoundingBox().GetCenterPoint();
 			break;
 		case GhostName::PINK:
-			{
-				auto distanceToPacman = glm::distance(mGhost->GetBoundingBox().GetCenterPoint(), pacman.GetBoundingBox().GetCenterPoint());
-
-				if (distanceToPacman > pacman.GetBoundingBox().GetWidth() * 4)
-				{
-					target = pacman.GetBoundingBox().GetCenterPoint();
-				}
-				else
-				{
-					target = mScatterTarget;
-				}
-			}
+			target = pacman.GetBoundingBox().GetCenterPoint() + 2.f * GetMovementVector(pacman.GetMovementDirection()) * pacman.GetBoundingBox().GetWidth();
 			
 			break;
 		case GhostName::BLUE:
@@ -254,9 +247,9 @@ vec2 GhostAI::GetChaseTarget(const Pacman& pacman, const PacmanLevel& level, con
 	}
 
 
-	if (mGhost->IsVulnerable())
-	{
-		target = vec2(WINDOWSIZE.x / 2, 0);
-	}
+	//if (mGhost->IsVulnerable())
+	//{
+	//	target = vec2(WINDOWSIZE.x / 2, 0);
+	//}
 	return target;
 }

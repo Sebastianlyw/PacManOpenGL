@@ -92,7 +92,7 @@ void Ghost::Stop()
 
 void Ghost::SetToVulnerable()
 {
-	if (mState != GhostState::GHOST_STATE_DEAD && IsVulnerable())
+	if (mState != GhostState::GHOST_STATE_DEAD && !IsVulnerable())
 	{
 		SetGhostState(GhostState::GHOST_STATE_VULNERABLE);
 	}

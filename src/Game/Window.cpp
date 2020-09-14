@@ -60,10 +60,10 @@ void Window::Mainloop()
 
 		dtAccumulator += deltaTime;
 		
-		while (dtAccumulator >= dt)
+		//while (dtAccumulator >= dt)
 		{
-			Game.Update(dt);
-			Game.Render(dt);
+			Game.Update(deltaTime);//dt);
+			Game.Render(deltaTime);//dt);
 			dtAccumulator -= dt;
 		}
 

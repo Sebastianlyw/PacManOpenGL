@@ -528,7 +528,7 @@ bool PacmanLevel::WillCollide(const Ghost& ghost, GhostAI& ghostAI, PacmanMoveme
 
 	for (const auto& gate : mGate)
 	{
-		if (!(ghostAI.IsGoBackHome() || ghostAI.GoingToLeaveHome() && gate.HasCollided(abbox, edge)))
+		if (!(ghostAI.IsGoBackHome() || ghostAI.GoingToLeaveHome()) && gate.HasCollided(abbox, edge))
 		{
 			return true;
 		}

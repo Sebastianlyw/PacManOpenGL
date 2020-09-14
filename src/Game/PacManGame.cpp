@@ -32,8 +32,8 @@ void PacmanGame::Init()
 	mGhostAIs.resize(size_t(GhostName::NUM_GHOSTS));
 
 	const vec2 RED_SCATTER_POS = vec2(WINDOWSIZE.x - 72, 0);
-	const vec2 PINK_SCATTER_POS = vec2(WINDOWSIZE.x, WINDOWSIZE.y);
-	const vec2 BLUE_SCATTER_POS = vec2(72, 0);
+	const vec2 PINK_SCATTER_POS = vec2(WINDOWSIZE.x/2-200, -100);
+	const vec2 BLUE_SCATTER_POS = vec2(WINDOWSIZE.x/2+200, -100);
 
 	//setup ghosts
 	Ghost* redGhost = new Ghost();
@@ -47,14 +47,14 @@ void PacmanGame::Init()
 	pinkGhost->Init("./assets/monster-pink.png", mLevel->GetPinkghostSpwanPosition(), GHOST_MOVEMENT_SPEED - 0.01);
 	mGhosts[(int)GhostName::PINK]=(pinkGhost);
 	GhostAI* pinkGhostAI = new GhostAI();
-	pinkGhostAI->Init(*pinkGhost, (uint32_t)pinkGhost->GetBoundingBox().GetWidth(), PINK_SCATTER_POS, mLevel->GetPinkghostSpwanPosition(), mLevel->GetPinkghostSpwanPosition(), GhostName::PINK);
+	pinkGhostAI->Init(*pinkGhost, (uint32_t)pinkGhost->GetBoundingBox().GetWidth(), PINK_SCATTER_POS, mLevel->GetPinkghostSpwanPosition(), mLevel->GetRedghostSpwanPosition(), GhostName::PINK);
 	mGhostAIs[(int)GhostName::PINK]=(pinkGhostAI);
 
 	Ghost* blueGhost = new Ghost();
 	blueGhost->Init("./assets/monster-blue.png", mLevel->GetBlueghostSpwanPosition(), GHOST_MOVEMENT_SPEED);
 	mGhosts[(int)GhostName::BLUE] = (blueGhost);
 	GhostAI* blueGhostAI = new GhostAI();
-	blueGhostAI->Init(*blueGhost, (uint32_t)blueGhost->GetBoundingBox().GetWidth(), BLUE_SCATTER_POS, mLevel->GetPinkghostSpwanPosition(), mLevel->GetRedghostSpwanPosition(), GhostName::BLUE);
+	blueGhostAI->Init(*blueGhost, (uint32_t)blueGhost->GetBoundingBox().GetWidth(), BLUE_SCATTER_POS, mLevel->GetBlueghostSpwanPosition(), mLevel->GetPinkghostSpwanPosition(), GhostName::BLUE);
 	mGhostAIs[(int)GhostName::BLUE] = (blueGhostAI);
 
 	for (size_t i = 0; i <(int)GhostName::NUM_GHOSTS; ++i)
@@ -125,12 +125,6 @@ void PacmanGame::Update(uint32_t dt)
 			Ghost& ghost = *mGhosts[i];
 			GhostAI& ghostAI = *mGhostAIs[i];
 		
-			/*if (mReleaseGhostTimer >= RELEASE_GHOST_DURATION)
-			{
-				std::cout << "is At home: " << ghostAI.IsAtHome()<<std::endl;
-
-				std::cout << "ghost.IsReleased " << ghost.IsReleased() << std::endl;
-			}*/
 			if (mReleaseGhostTimer >= RELEASE_GHOST_DURATION && ghostAI.IsAtHome() && !ghost.IsReleased())
 			{
 				mReleaseGhostTimer = 0;
